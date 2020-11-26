@@ -1,0 +1,3661 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<!-- Mirrored from visualgo.net/vi/hashtable by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 26 Nov 2020 06:40:19 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8">
+<meta name="description" content="Hash Table is a data structure to map key to values (also called Table or Map Abstract Data Type/ADT). It uses a hash function to map large or even non-Integer keys into a small range of Integer indices (typically [0..hash_table_size-1]).The probability of two distinct keys colliding into the same index is relatively high and each of this potential collision needs to be resolved to maintain data integrity.There are several collision resolution strategies that will be highlighted in this visualization: Open Addressing (Linear Probing, Quadratic Probing, and Double Hashing) and Closed Addressing (Separate Chaining). Try clicking Search(8) for a sample animation of searching a value in a Hash Table using Separate Chaining technique.Click &#39;Next&#39; (on the top right)/press &#39;Page Down&#39; to advance this e-Lecture slide, use the drop down list/press &#39;Space&#39; to jump to a specific slide, or Click &#39;X&#39; (on the bottom right)/press &#39;Esc&#39; to go to Exploration mode.">
+<meta name="keywords" content="Hash Table Open Addressing Linear Quadratic Probing Double Hashing Closed Addressing Separate Chaining">
+ 
+<meta name="csrf-token" content="iVivZ7KRPe6XK7pbuGtOoEjljE1xyBVNhLKNFuF8">
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+<meta property="og:image" content="../img/png/hashtable.png">
+<title>VisuAlgo - Hash Table (Open Addressing: Linear Probing, Quadratic Probing, Double Hashing and Closed Addressing: Separate Chaining)</title>
+<link rel="icon" href="../img/favicon.png" type="image/x-icon">
+<link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon">
+<link rel="apple-touch-icon" href="../img/favicon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/favicon.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/favicon.png">
+<link rel="stylesheet" type="text/css" href="../fonts/silkscreen/stylesheet.css">
+<link rel="stylesheet" type="text/css" href="../css/common.css">
+<link rel="stylesheet" href="../css/viz-1.0.1.css">
+<link rel="stylesheet" href="../css/visual.css">
+<link rel="stylesheet" href="../css/drawgraph.css">
+<style>
+      #e-lecture {
+        top: 45px;
+        right: 130px;
+        width: 400px;
+        display: block;
+        background: none;
+        /*overflow: normal;*/
+        white-space: normal;
+        text-align: right;
+        color: black; font-weight: bold; font-size: 20px;
+      }
+      .electure-prev, .electure-next { /* force update, copied from viz.css */
+        position: absolute;
+        /* bottom: -12px; */
+        top: -20px;
+        /*bottom: '';*/
+        padding: 3px 8px;
+        background: #999;
+        color: white;
+        cursor: pointer;
+        border-radius: 2px;
+      }
+      .electure-prev {
+        left: -10px;
+        /* right: 30px; */
+      }
+      .electure-next {
+        right: -10px;
+        color: white;
+      }
+    </style>
+<style>
+.execAction { padding: 5px 8px; }
+.err { padding: 5px 0px; }
+#actions-extras input {
+  width: 35px;
+  padding: 5px 8px 7px;
+}
+
+#insert-input input { width: 100px; }
+
+.create { bottom: 146px; }
+.search { bottom: 119px; }
+.insert { bottom: 92px; }
+.remove { bottom: 65px; }
+</style>
+<script>
+      function changeURL() {
+        var URL = window.location.href.split('https://visualgo.net/');
+        var val = document.getElementById("Language").value;
+        URL[3] = val;
+        window.location.assign(URL.join('https://visualgo.net/'));
+      }
+    </script>
+</head>
+<body>
+<div id="top-bar">
+<a href="http://www.comp.nus.edu.sg/~stevenha"><span class="colour" style="border: 1px solid green; border-radius: 25px;">7</span></a>&nbsp;&nbsp;&nbsp;
+<a id="home" href="https://visualgo.net/">Visu<span class="colour">Algo</span><span style="font-size: 40%">.net</span></a>
+/
+<select id="Language" onchange="changeURL()">
+<option value="en">en</option>
+<option value="zh">zh</option>
+<option value="es">es</option>
+<option value="pt">pt</option>
+<option value="ru">ru</option>
+<option value="id">id</option>
+<option value="de">de</option>
+<option value="bn">bn</option>
+<option value="ja">ja</option>
+<option value="ko">ko</option>
+<option value="vi" selected>vi</option>
+</select>
+/hashtable
+<span class="right-links" id="useraccount">Login</span>
+<span id="title">
+<a id='title-LP' class='selected-viz'>LP</a>
+<a id='title-QP'>QP</a>
+<a id='title-DH'>DH</a>
+<a id='title-SC'>SC</a>
+</span>
+<div id="mode-menu">
+<div id='mode-button' title='exploration'>Chế độ thăm dò &#9663;</div>
+<div id='other-modes'>
+<a title='e-Lecture'>Chế độ Bài giảng trực tuyến</a>
+</div>
+</div>
+</div>
+<div id="dark-overlay"></div>
+<div id="status" class="panel"><p></p></div>
+<div id="status-hide" class="panel-hide"><img src="../img/arrow_white_right.png" alt=">" title="show/hide status panel" /></div>
+<div id="codetrace" class="panel">
+<p id="code1" style="padding-top: 10px;"></p>
+<p id="code2"></p>
+<p id="code3"></p>
+<p id="code4"></p>
+<p id="code5"></p>
+<p id="code6"></p>
+<p id="code7" style="padding-bottom: 10px;"></p>
+</div>
+<div id="codetrace-hide" class="panel-hide"><img src="../img/arrow_white_right.png" alt=">" title="show/hide codetrace panel" /></div>
+<div id="left-bar"></div>
+<div id="right-bar"></div>
+<div id="media-controls">
+<div id='speed-control'>Chậm<div id='speed-input'></div>Nhanh<br></div>
+<span id="go-to-beginning" class="media-control-button" title="go to beginning" onclick=goToBeginning()><img src="../img/goToBeginning.png" alt="go to beginning"></span>
+<span id="previous" class="media-control-button" title="step backward" onclick=stepBackward()><img src="../img/prevFrame.png" alt="previous frame"></span>
+<span id="pause" class="media-control-button" title="pause" onclick=pause()><img src="../img/pause.png" alt="pause"></span>
+<span id="play" class="media-control-button" title="play" onclick=play()><img src="../img/play.png" alt="play"></span>
+<span id="next" class="media-control-button" title="step forward" onclick=stepForward()><img src="../img/nextFrame.png" alt="next frame"></span>
+<span id="go-to-end" class="media-control-button" title="go to end" onclick=goToEnd()><img src="../img/goToEnd.png" alt="go to end"></span>
+<div id="progress-bar" class="media-control-button"></div>
+</div>
+<div id='viz'></div>
+<div id='current-action' class='panel'></div>
+<div id='e-lecture' class='panel'></div>
+<div id="overlay" hidden></div>
+<div id="dropdown-temp-holder" hidden></div>
+<div id="electure-1" class="electure-dialog" style="bottom:60px;left:50%;margin-left:-250px;width:500px;">
+<p>Hash Table is a data structure to map key to values (also called Table or Map Abstract Data Type/ADT). It uses a <b>hash function</b> to map large or even non-Integer keys into a small range of Integer indices (typically [0..hash_table_size-1]).</p><br><p>The probability of two distinct keys colliding into the same index is <a href="hashtablee090.html?slide=3-5"><u>relatively high</u></a> and each of this potential collision needs to be resolved to maintain data integrity.</p><br><p>There are several collision resolution strategies that will be highlighted in this visualization: Open Addressing (Linear Probing, Quadratic Probing, and Double Hashing) and Closed Addressing (Separate Chaining). Try clicking <span class="slide-actions" onclick="doButtonAction82()">Search(8)</span> for a sample animation of searching a value in a Hash Table using Separate Chaining technique.</p><br><p>Click &#39;Next&#39; (on the top right)/press &#39;Page Down&#39; to advance this e-Lecture slide, use the drop down list/press &#39;Space&#39; to jump to a specific slide, or Click &#39;X&#39; (on the bottom right)/press &#39;Esc&#39; to go to Exploration mode.</p>
+<hr>
+<p><b>Remarks</b>: By default, we show e-Lecture Mode for first time (or non logged-in) visitor.<br>
+Please <a href="https://visualgo.net/login"><u>login</u></a> if you are a repeated visitor or <a href="https://visualgo.net/login"><u>register</u></a> for an (optional) free account first.</p>
+<div id='electure-dropdown'>
+<select class="lecture-dropdown" style="width:100%">
+<option value="1">1. Hash Table</option>
+<option value="2">2. Motivation</option>
+<option value="2-1">&nbsp;&nbsp;&nbsp;2-1. Table ADT</option>
+<option value="2-2">&nbsp;&nbsp;&nbsp;2-2. Direct Addressing Table (DAT)</option>
+<option value="2-3">&nbsp;&nbsp;&nbsp;2-3. Example of DAT</option>
+<option value="2-4">&nbsp;&nbsp;&nbsp;2-4. Example of DAT with Satellite Data</option>
+<option value="2-5">&nbsp;&nbsp;&nbsp;2-5. The Answer</option>
+<option value="2-6">&nbsp;&nbsp;&nbsp;2-6. DAT Limitations</option>
+<option value="3">3. Hashing: Ideas</option>
+<option value="3-1">&nbsp;&nbsp;&nbsp;3-1. Phone Numbers Example</option>
+<option value="3-2">&nbsp;&nbsp;&nbsp;3-2. Hash Table Preview</option>
+<option value="3-3">&nbsp;&nbsp;&nbsp;3-3. Hash Table with Satellite Data</option>
+<option value="3-4">&nbsp;&nbsp;&nbsp;3-4. Collision</option>
+<option value="3-5">&nbsp;&nbsp;&nbsp;3-5. Probability of Collision</option>
+<option value="3-6">&nbsp;&nbsp;&nbsp;3-6. The Calculation</option>
+<option value="3-7">&nbsp;&nbsp;&nbsp;3-7. Two Important Issues</option>
+<option value="4">4. Hash Functions</option>
+<option value="4-1">&nbsp;&nbsp;&nbsp;4-1. Preliminaries</option>
+<option value="4-2">&nbsp;&nbsp;&nbsp;4-2. Example of a Bad Hash Function</option>
+<option value="4-3">&nbsp;&nbsp;&nbsp;4-3. The Answer</option>
+<option value="4-4">&nbsp;&nbsp;&nbsp;4-4. Perfect Hash Function</option>
+<option value="4-5">&nbsp;&nbsp;&nbsp;4-5. Hashing Integer - Best Practice</option>
+<option value="4-6">&nbsp;&nbsp;&nbsp;4-6. The Answer</option>
+<option value="4-7">&nbsp;&nbsp;&nbsp;4-7. Hashing String - Best Practice</option>
+<option value="4-8">&nbsp;&nbsp;&nbsp;4-8. The Answer</option>
+<option value="5">5. Collision Resolution</option>
+<option value="5-1">&nbsp;&nbsp;&nbsp;5-1. Open Addressing (OA)</option>
+<option value="5-2">&nbsp;&nbsp;&nbsp;5-2. Separate Chaining (SC)</option>
+<option value="6">6. Visualisation</option>
+<option value="6-1">&nbsp;&nbsp;&nbsp;6-1. Open Addressing Version</option>
+<option value="6-2">&nbsp;&nbsp;&nbsp;6-2. Separate Chaining Version</option>
+<option value="7">7. Linear Probing (LP)</option>
+<option value="7-1">&nbsp;&nbsp;&nbsp;7-1. Insert([18, 14, 21)</option>
+<option value="7-2">&nbsp;&nbsp;&nbsp;7-2. Insert([1, 35])</option>
+<option value="7-3">&nbsp;&nbsp;&nbsp;7-3. Search(35) and Search(8)</option>
+<option value="7-4">&nbsp;&nbsp;&nbsp;7-4. Remove(v) - Preliminary</option>
+<option value="7-5">&nbsp;&nbsp;&nbsp;7-5. The Answer</option>
+<option value="7-6">&nbsp;&nbsp;&nbsp;7-6. Remove(21)</option>
+<option value="7-7">&nbsp;&nbsp;&nbsp;7-7. Search(35) Again</option>
+<option value="7-8">&nbsp;&nbsp;&nbsp;7-8. Insert(28) - Overwriting DEL</option>
+<option value="7-9">&nbsp;&nbsp;&nbsp;7-9. Primary Clustering</option>
+<option value="7-10">&nbsp;&nbsp;&nbsp;7-10. Linear Probing Sequence</option>
+<option value="8">8. Quadratic Probing (QP)</option>
+<option value="8-1">&nbsp;&nbsp;&nbsp;8-1. Insert(38)</option>
+<option value="8-2">&nbsp;&nbsp;&nbsp;8-2. Remove(18) and Search(38) Again</option>
+<option value="8-3">&nbsp;&nbsp;&nbsp;8-3. Better than Linear Probing?</option>
+<option value="8-4">&nbsp;&nbsp;&nbsp;8-4. The Details</option>
+<option value="8-5">&nbsp;&nbsp;&nbsp;8-5. A Theorem</option>
+<option value="8-6">&nbsp;&nbsp;&nbsp;8-6. A Proof</option>
+<option value="8-7">&nbsp;&nbsp;&nbsp;8-7. Better Quadratic Probing</option>
+<option value="8-8">&nbsp;&nbsp;&nbsp;8-8. Secondary Clustering</option>
+<option value="9">9. Double Hashing (DH)</option>
+<option value="9-1">&nbsp;&nbsp;&nbsp;9-1. Secondary Hash Function h2(v)</option>
+<option value="9-2">&nbsp;&nbsp;&nbsp;9-2. Insert([35, 42])</option>
+<option value="9-3">&nbsp;&nbsp;&nbsp;9-3. Remove(17) and Search(35) Again</option>
+<option value="9-4">&nbsp;&nbsp;&nbsp;9-4. Good OA Collision Resolution Technique</option>
+<option value="10">10. Separate Chaining (SC)</option>
+<option value="10-1">&nbsp;&nbsp;&nbsp;10-1. Search(35) and Remove(7)</option>
+<option value="10-2">&nbsp;&nbsp;&nbsp;10-2. Open Addressing vs Separate Chaining?</option>
+<option value="10-3">&nbsp;&nbsp;&nbsp;10-3. The (Current) Answer</option>
+<option value="11">11. Extras</option>
+<option value="11-1">&nbsp;&nbsp;&nbsp;11-1. Rehash</option>
+<option value="11-2">&nbsp;&nbsp;&nbsp;11-2. Hash Table Implementation</option>
+<option value="11-3">&nbsp;&nbsp;&nbsp;11-3. Data Structure Combo?</option>
+<option value="11-4">&nbsp;&nbsp;&nbsp;11-4. Alternative Data Structure for Table ADT</option>
+<option value="11-5">&nbsp;&nbsp;&nbsp;11-5. Online Quiz</option>
+<option value="11-6">&nbsp;&nbsp;&nbsp;11-6. Online Judge Exercises</option>
+<option value="99">99. Status Panel</option>
+<option value="99-1">&nbsp;&nbsp;&nbsp;99-1. Codetrace Panel</option>
+<option value="99-2">&nbsp;&nbsp;&nbsp;99-2. Media Control</option>
+<option value="99-3">&nbsp;&nbsp;&nbsp;99-3. Return to &#39;Exploration Mode&#39;</option>
+</select>
+</div>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-next' data-nextid="2">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-2" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<p>Hashing is an algorithm (via a hash function) that maps large data sets of variable length, called keys, not necessarily Integers, into smaller Integer data sets of a fixed length.</p><br><p>A Hash Table is a data structure that uses a hash function to efficiently map keys to values (Table or Map ADT), for efficient search/retrieval, insertion, and/or removals.</p><br><p>Hash Table is widely used in many kinds of computer software, particularly for <a href="https://en.wikipedia.org/wiki/Associative_array" target="_blank"><u>associative arrays</u></a>, database indexing, caches, and sets.</p><br><p>In this e-Lecture, we will digress to Table ADT, the basic ideas of <a href="hashtable0c37.html?slide=3"><u>Hashing</u></a>, the discussion of <a href="hashtable1438.html?slide=4"><u>Hash Functions</u></a> before going into the details of <a href="hashtable3254.html?slide=5"><u>Hash Table</u></a> data structure itself.</p>
+<hr>
+<p>Pro-tip: Since you are not <a href="https://visualgo.net/login"><u>logged-in</u></a>, you may be a first time visitor who are not aware of the following keyboard shortcuts to navigate this e-Lecture mode: <b>[PageDown]</b> to advance to the next slide, <b>[PageUp]</b> to go back to the previous slide, <b>[Esc]</b> to toggle between this e-Lecture mode and exploration mode.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="1">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="2-1">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-2-1" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<p>A Table ADT must support <b>at least</b> the following three operations as efficient as possible:</p><ol><li>Search(v) — determine if <b>v</b> exists in the ADT or not,</li><li>Insert(v) — insert <b>v</b> into the ADT,</li><li>Remove(v) — remove <b>v</b> from the ADT.</li></ol><p>Hash Table is one possible good implementation for this Table ADT (the other one is <a href="bstbc83.html?slide=1"><u>this</u></a>).</p><hr><p>PS1: For two weaker implementations of Table ADT, you can click the respective link: <a href="bst48df.html?slide=3-2"><u>unsorted array</u></a> or a <a href="bste0b3.html?slide=3-3"><u>sorted array</u></a> to read the detailed discussions.</p><hr><p>PS2: In live class, you may want to compare the requirements of Table ADT vs <a href="https://visualgo.net/en/list?slide=2-1" target="_blank"><u>List ADT</u></a>.</p>
+<hr>
+<p>Another pro-tip: We designed this visualization and this e-Lecture mode to look good on 1366x768 resolution <b>or larger</b> (typical modern laptop resolution in 2017). We recommend using Google Chrome to access VisuAlgo. Go to full screen mode (<b>F11</b>) to enjoy this setup. However, you can use zoom-in (<b>Ctrl +</b>) or zoom-out (<b>Ctrl -</b>) to calibrate this.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="2">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="2-2">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-2-2" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<p>When the range of the <b>Integer</b> keys is <b>small</b>, e.g. [0..<b>M</b>-1], we can use an initially empty (Boolean) array <b>A</b> of size <b>M</b> and implement the following Table ADT operations <b>directly</b>:</p><ol><li>Search(v): Check if <b>A[v]</b> is true (filled) or false (empty),</li><li>Insert(v): Set <b>A[v]</b> to be true (filled),</li><li>Remove(v): Set <b>A[v]</b> to be false (empty).</li></ol><p>That&#39;s it, we use the small Integer key itself to determine the address in array <b>A</b>, hence the name <b>Direct Addressing</b>. It is clear that all three major Table ADT operations are O(<b>1</b>).</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="2-1">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="2-3">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-2-3" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<p>In Singapore (<a href="https://en.wikipedia.org/wiki/List_of_bus_routes_in_Singapore" target="_blank"><u>as of Mar 2018</u></a>), bus routes are numbered from [2..990].</p><br><p>Not all integers between [2..990] are currently used, e.g. there is no bus route 989 — Search(989) should return false. A new bus route <b>x</b> may be introduced, i.e. Insert(x) or an existing bus route <b>y</b> may be discontinued, i.e. Remove(y).</p><br><p>As the range of possible bus routes is <b>small</b>, to record the data whether a bus route number exists or not, we can use a DAT with a Boolean array of size 1 000.</p><br><p>Discussion: In real life class, we may discuss on why we use 1 000 instead of 990 (or 991).</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="2-2">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="2-4">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-2-4" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<p>Notice that we can always add <b>satellite data</b> instead of just using a Boolean array to record the existence of the keys.</p><br><p>For example, we can use an <b>associative</b> String array <b>A</b> instead to map a bus route number to its operator name, e.g.<br><pre>A[2] = "Go-Ahead Singapore",<br>A[10] = "SBS Transit",<br>A[183] = "Tower Transit Singapore",<br>A[188] = "SMRT Buses", etc.</pre><p>Discussion: Can you think of a few other real-life DAT examples?</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="2-3">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="2-5">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-2-5" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<div style="background-color: white; color: black;">
+<p>e-Lecture: The content of this slide is hidden and only available for legitimate CS lecturer worldwide. Drop an email to visualgo.info at gmail dot com if you want to activate this CS lecturer-only feature <b>and you are really a CS lecturer (show your University staff profile)</b>.</p>
+</div>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="2-4">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="2-6">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-2-6" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<p>The keys must be (or can be easily mapped to) <b>non-negative Integer</b> values.<br>Basic DAT has problem in the full version of the example in the previous two slides as there are actually variations of bus route numbers in Singapore, e.g. 96B, 151A, NR10, etc.</p><br><p>The range of keys must be <b>small</b>.<br>The memory usage will be (insanely) large if we have (insanely) large range.</p><br><p>The keys must be dense, i.e. not many gaps in the key values.<br>DAT will contain too many empty cells otherwise.</p><br><p>We will overcome these restrictions with hashing.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="2-5">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="3">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-3" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<p>Using hashing, we can:</p><ol><li>Map (some) <b>non-Integer</b> keys to Integers keys,</li><li>Map <b>large</b> Integers to <b>smaller</b> Integers,</li><li>Influence the density, or load factor <b>&alpha;</b> = <b>N/M</b>, of the Hash Table where <b>N</b> is the number of keys and <b>M</b> is the size of the Hash Table.</li></ol>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="2-6">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="3-1">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-3-1" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<p>For example, we have <b>N</b> = 400 Singapore phone numbers (Singapore phone number has 8 digits, so there are up to 10^8 = 100M possible phone numbers in Singapore).</p><br><p>Instead of using a DAT and use a <b>gigantic</b> array up to size <b>M</b> = 100 Million, we can use the following simple hash function <b>h(v) = v%997</b>.</p><br><p>This way, we map 8 digits phone numbers <b>6675&thinsp;2378</b> and <b>6874&thinsp;4483</b> into up to 3 digits <b>h(6675&thinsp;2378) = 237</b> and <b>h(6874&thinsp;4483) = 336</b>, respectively. Therefore, we only need to prepare array of size <b>M</b> = 997 (or 1000) instead of <b>M</b> = 100 Million.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="3">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="3-2">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-3-2" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<p>With hashing, we can now implement the following Table ADT operations using Integer array (instead of Boolean array) as follows:</p><ol><li>Search(v): Check if <b>A[h(v)] != -1</b> (we use -1 for an empty cell assuming <b>v &ge; 0</b>),</li><li>Insert(v): Set <b>A[h(v)] = v</b> (we hash <b>v</b> into <b>h(v)</b> so we need to somehow record key <b>v</b>),</li><li>Remove(v): Set <b>A[h(v)] = -1</b> &mdash; to be elaborated further.</li></ol>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="3-1">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="3-3">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-3-3" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<p>If we have keys that map to satellite data and we want to record the original keys too, we can implement the Hash Table using pair of (Integer, satellite-data-type) array as follows:</p><ol><li>Search(v): Return <b>A[h(v)]</b>, which is a <b>pair (v, satellite-data)</b>, possibly empty,</li><li>Insert(v, satellite-data): Set <b>A[h(v)] = pair(v, satellite-data)</b>,</li><li>Remove(v): Set <b>A[h(v)] = (empty pair)</b> &mdash; to be elaborated further.</li></ol><p>However, by now you should notice that something is incomplete...</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="3-2">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="3-4">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-3-4" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<p>A hash function may, and quite likely, map <b>different keys (Integer or not)</b> into the <b>same Integer slot</b>, i.e. a <b>many-to-one</b> mapping instead of <b>one-to-one</b> mapping.</p><br><p>For example, <b>h(6675&thinsp;2378) = 237</b> from <a href="hashtable8592.html?slide=3-1"><u>three slides earlier</u></a> and if we want to insert another phone number <b>6675&thinsp;4372</b>, we will have a problem as <b>h(6675&thinsp;4372) = 237</b> too.</p><br><p>This situation is called a <b>collision</b>, i.e. two (or more) keys have the <b>same hash value</b>.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="3-3">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="3-5">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-3-5" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<p>The Birthday (von Mises) Paradox asks: &#39;How many people (number of keys) must be in a room (Hash Table) of size 365 seats (cells) before the probability that some person&nbsp;<b>share a birthday</b> (collision, two keys are hashed to the same cell), ignoring the leap years (i.e. all years have 365 days), becomes &gt; 50 percent (i.e. more likely than not)?&#39;</p><br><p>The answer, which maybe surprising for some of us, is <span id="vonmises" style="color: red;"><span class="slide-actions" onclick="doButtonAction88()">Reveal</span></span>.</p><br><p>Let&#39;s do some calculation.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="3-4">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="3-6">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-3-6" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<p>Let <b>Q(n)</b> be the probability of <b>unique</b> birthday for <b>n</b> people in a room.<br><b>Q(n) = 365/365 × 364/365 × 363/365 × ... × (365-n+1)/365</b>,<br>i.e. the first person&#39;s birthday can be any of the 365 days, the second person&#39;s birthday can be any of the 365 days except the first person&#39;s birthday, and so on.</p><br><p>Let <b>P(n)</b> be the probability of <b>same birthday</b> (collision) for <b>n</b> people in a room.<br><b>P(n) = 1-Q(n)</b>.</p><br><p>We compute that&nbsp;<b><a href="https://www.wolframalpha.com/input/?i=1.00-(365%2F365*364%2F365*...*343%2F365)" target="_blank"><u>P(23) = 0.507</u></a> &gt; 0.5 (50%)</b>.</p><br><p>Thus, we only need <b>23 people</b> (a small amount of keys) in the room (Hash Table) of size 365 seats (cells) for a (more than) 50% chance collision to happen (the birthday of two different people in that room is one of 365 days/slots).</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="3-5">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="3-7">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-3-7" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<p>Issue 1: We have seen a simple hash function like the <b>h(v) = v%997</b> used in <a href="hashtable8592.html?slide=3-1"><u>Phone Numbers example</u></a> that maps large range of Integer keys into a smaller range of Integer keys, but how about non Integer keys? How to do such hashing efficiently?</p><br><p>Issue 2: We have seen that by hashing, or mapping, large range into smaller range, there will very likely be a collision. How to deal with them?</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="3-6">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="4">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-4" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<p>How to create a good hash function with these desirable properties?</p><ol><li>Fast to compute, i.e. in O(<b>1</b>),</li><li>Uses as minimum slots/Hash Table size <b>M</b> as possible,</li><li>Scatter the keys into different base addresses as uniformly as possible &in; [0..<b>M</b>-1],</li><li>Experience as minimum collisions as possible.</li></ol>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="3-7">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="4-1">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-4-1" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<p>Suppose we have a hash table of size <b>M</b> where keys are used to identify the satellite-data and a specific hash function is used to compute a hash value.</p><br><p>A <b>hash value/hash code</b> of key <b>v</b> is computed from the key <b>v</b> with the use of a hash function to get an Integer in the range 0 to <b>M</b>-1. This hash value is used as the base/home index/address of the Hash Table entry for the satellite-data.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="4">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="4-2">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-4-2" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<p>Using the <a href="hashtable8592.html?slide=3-1"><u>Phone Numbers</u></a> example, if we we define <b>h(v) = floor(v/1&thinsp;000&thinsp;000)</b>,<br>i.e. we select the first two digits a phone number.</p><pre>h(<span style="color: red;">66</span>&thinsp;75&thinsp;2378) = 66<br>h(<span style="color: red;">68</span>&thinsp;74&thinsp;4483) = 68</pre><p>Discuss: What happen when you use that hash function? Hint: See <a href="https://en.wikipedia.org/wiki/Telephone_numbers_in_Singapore#Numbering_plan" target="_blank"><u>this</u></a>.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="4-1">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="4-3">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-4-3" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<div style="background-color: white; color: black;">
+<p>e-Lecture: The content of this slide is hidden and only available for legitimate CS lecturer worldwide. Drop an email to visualgo.info at gmail dot com if you want to activate this CS lecturer-only feature <b>and you are really a CS lecturer (show your University staff profile)</b>.</p>
+</div>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="4-2">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="4-4">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-4-4" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<p>Before discussing the reality, let&#39;s discuss the ideal case: <b>perfect hash functions</b>.</p><br><p>A perfect hash function is a <b>one-to-one</b> mapping between keys and hash values, i.e. no collision at all. It is possible if all keys are known beforehand. For example, a compiler/interpreter search for reserved keywords. However, such cases are rare.</p><br><p>A minimal perfect hash function is achieved when the table size is the same as the number of keywords supplied. This case is even rarer.</p><br><p>If you are interested, you can explore <a href="https://www.gnu.org/software/gperf/"><u>GNU gperf</u></a>, a freely available perfect hash function generator written in C++ that automatically constructs perfect functions (a C++ program) from a user supplied list of keywords.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="4-3">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="4-5">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-4-5" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<p>People has tried various ways to hash a large range of Integers into a smaller range of Integers as uniformly as possible. In this e-Lecture, we jump directly to one of the best and most popular version: <b>h(v) = v%M</b>, i.e. map <b>v</b> into Hash Table of size <b>M</b> slots. The (%) is a modulo operator that gives the remainder after division. This is clearly fast, i.e. O(<b>1</b>) assuming that <b>v</b> does not exceed natural Integer data type limit.</p><br><p>The Hash Table size <b>M</b> is set to be a reasonably large prime not near a power of 2, about 2+ times larger than the expected number of keys <b>N</b> that will ever be used in the Hash Table. This way, the load factor &alpha; = N/M &lt; 0.5 &mdash; we shall see later that having low load factor, thereby sacrificing empty spaces, help improving Hash Table performance.</p><br><p>Discuss: What if we set <b>M</b> to be a power of 10 (decimal) or power of 2 (binary)?</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="4-4">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="4-6">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-4-6" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<div style="background-color: white; color: black;">
+<p>e-Lecture: The content of this slide is hidden and only available for legitimate CS lecturer worldwide. Drop an email to visualgo.info at gmail dot com if you want to activate this CS lecturer-only feature <b>and you are really a CS lecturer (show your University staff profile)</b>.</p>
+</div>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="4-5">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="4-7">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-4-7" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<p>People has also tried various ways to hash Strings into a small range of Integers as uniformly as possible. In this e-Lecture, we jump directly to one of the best and most popular version, shown below:</p><pre>int hash_function(string v) { // assumption 1: v uses [&#39;A&#39;..&#39;Z&#39;] only<br>  int sum = 0;                // assumption 2: v is a short string<br>  for (auto &c : v) // for each character c in v<br>    sum = ((sum*26)%M + (c-&#39;A&#39;+1))%M; // M is table size<br>  return sum;<br>}</pre><p>Discussion: In real life class, discuss the components of the hash function above, e.g. why loop through all characters?, will that be slower than O(<b>1</b>)?, why multiply with 26?, what if the string v uses more than just UPPERCASE chars?, etc</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="4-6">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="4-8">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-4-8" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<div style="background-color: white; color: black;">
+<p>e-Lecture: The content of this slide is hidden and only available for legitimate CS lecturer worldwide. Drop an email to visualgo.info at gmail dot com if you want to activate this CS lecturer-only feature <b>and you are really a CS lecturer (show your University staff profile)</b>.</p>
+</div>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="4-7">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="5">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-5" class="electure-dialog" style="top:60px;left:200px;width:500px;">
+<p>There are two major ideas: <b>Open Addressing</b> versus <b>Closed Addressing</b> method.</p><br><p>In Open Addressing, all hashed keys are located in a single array. The hash code of a key gives its base address. Collision is resolved by checking/probing multiple alternative addresses (hence the name <b>open</b>) in the table based on a certain rule.</p><br><p>In Closed Addressing, the Hash Table looks like an <a href="graphds.html"><u>Adjacency List</u></a> (a graph data structure). The hash code of a key gives its fixed/<b>closed</b> base address. Collision is resolved by appending the collided keys inside a <a href="list058a.html?mode=DLL"><u>(Doubly) Linked List</u></a> identified by the base address.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="4-8">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="5-1">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-5-1" class="electure-dialog" style="top:60px;left:220px;width:500px;">
+<p>There are three Open Addressing (OA) collision resolution techniques discussed in this visualization: Linear Probing (LP), Quadratic Probing (QP), and Double Hashing (DH).</p><br><p>To switch between the three modes, please click on the respective header.</p><br><p>Let:<br><b>M</b> = HT.length = the current hash table size,<br>base = (key%HT.length),<br>step = the current probing step,<br>secondary = smaller_prime - key%smaller_prime (to avoid zero &mdash; elaborated soon)<br><br>We will soon see that the probing sequences of the three modes are:<br>Linear Probing: i=(base+step*1) % M,<br>Quadratic Probing: i=(base+step*step) % M, and<br>Double Hashing: i=(base+step*secondary) % M.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="5">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="5-2">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-5-2" class="electure-dialog" style="top:60px;left:250px;width:500px;">
+<p>Separate Chaining (SC) collision resolution technique is simple. We use <b>M</b> copies of auxiliary data structures, usually <a href="list058a.html?mode=DLL"><u>Doubly Linked Lists</u></a>. If two keys <b>a</b> and <b>b</b> both have the same hash value <b>i</b>, both will be appended to the (front/back) of Doubly Linked List <b>i</b> (in this visualization, we append to the back in O(<b>1</b>) with help of tail pointer). That&#39;s it, where the keys will be slotted in is completely dependent on the hash function itself, hence we also call Separate Chaining as Closed Addressing collision resolution technique.</p><br><p>If we use Separate Chaining, the load factor &alpha; = <b>N/M</b> describes the average length of the <b>M</b> lists and it will determine the performance of Search(v) as we may have to explore &alpha; elements on average. As Remove(v) &mdash; also requires Search(v), its performance will be similar as Search(v). Insert(v) is clearly O(<b>1</b>).</p><br><p>If we can bound &alpha; to be a small constant, all Search(v), Insert(v), and Remove(v) operations using Separate Chaining will be O(<b>1</b>).</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="5-1">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="6">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-6" class="electure-dialog" style="top:230px;left:50%;margin-left:-250px;width:500px;">
+<p>View the visualisation of Hash Table above.</p><br><p>In this visualization, we prevent insertion of duplicate keys.</p><br><p>Due to limited screen space, we limit the maximum Hash Table size to be <b>M = 19</b>.</p><br><p>The Hash Table is visualized horizontally like an array where index 0 is placed leftmost and index <b>M</b>-1 is placed rightmost but the details are different when we are visualizing Open Addressing versus Separate Chaining collision resolution techniques.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="5-2">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="6-1">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-6-1" class="electure-dialog" style="top:230px;left:50%;margin-left:-250px;width:500px;">
+<p>There are three Open Addressing collision resolution techniques discussed in this visualization: Linear Probing (LP), Quadratic Probing (QP), and Double Hashing (DH).</p><br><p>For all three techniques, each Hash Table cell is displayed as a vertex with cell value of [0..99] displayed as the vertex label. Without loss of generality, we do not show any satellite data in this visualization as we concentrate only on the arrangement of the keys. We reserve value -1 to indicate an &#39;EMPTY cell&#39; (visualized as a blank vertex) and -2 to indicate a &#39;DELETED cell&#39; (visualized as a vertex with abbreviated label "DEL"). The cell indices ranging from [0..<b>M</b>-1] are shown as <span style="color: red;">red label</span> below each vertex.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="6">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="6-2">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-6-2" class="electure-dialog" style="bottom:40%;left:50%;margin-left:-250px;width:500px;">
+<p>For Separate Chaining (SC) collision resolution technique, the first row contains the <b>M</b> "H" (Head) pointers of <b>M</b> <a href="list058a.html?mode=DLL"><u>Doubly Linked Lists</u></a>.</p><br><p>Then, each Doubly Linked List <b>i</b> contains all keys that are hashed into <b>i</b> in arbitrary order. Mathematically, all keys that can be expressed as <b>i</b> (mod <b>M</b>) are hashed into DLL <b>i</b>. Again, we do not store any satellite data in this visualization.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="6-1">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="7">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-7" class="electure-dialog" style="top:230px;left:50%;margin-left:-250px;width:500px;">
+<p>In <b>Linear Probing</b> collision resolution technique, we scan forwards one index at a time for the <b>next empty/deleted slot</b> (wrapping around when we have reached the last slot) whenever there is a collision.</p><br><p>For example, let&#39;s assume we start with an empty Hash Table <b>HT</b> with table size <b>M = HT.length = 7</b> as shown above that uses index 0 to <b>M</b>-1 = 7-1 = 6. Notice that 7 is a prime number. The (primary) hash function is simple, <b>h(v) = v%M</b>.</p><br><p>This walk-through will show you the steps taken by Insert(v), Search(v), and Remove(v) operations when using Linear Probing as collision resolution technique.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="6-2">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="7-1">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-7-1" class="electure-dialog" style="top:230px;left:50%;margin-left:-250px;width:500px;">
+<p>Now click <span class="slide-actions" onclick="doButtonAction79()">Insert([18,14,21])</span> &mdash; three individual insertions in one command.</p><br><p><span id="recap1">Recap (to be shown after you click the button above).</span></p><br><p>Formally, we describe <a href="hashtable787b.html?slide=5-1"><u>Linear Probing index <b>i</b></u></a> as <b>i = (base+step*1) % M</b> where <b>base</b> is the (primary) hash value of key <b>v</b>, i.e. <b>h(v)</b> and <b>step</b> is the Linear Probing step starting from 1.</p><br><p>Tips: To do a quick mental calculation of a (small) Integer <b>V</b> modulo <b>M</b>, we simply subtract <b>V</b> with the largest multiple of <b>M</b> &le; <b>V</b>, e.g. 18%7 = 18-14 = 4, as 14 is the largest multiple of 7 that is &le; 18.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="7">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="7-2">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-7-2" class="electure-dialog" style="top:230px;left:50%;margin-left:-250px;width:500px;">
+<p>Now click <span class="slide-actions" onclick="doButtonAction80()">Insert([1,35])</span> (on top of the first three values inserted in the previous slide).</p><br><p><span id="recap2">Recap (to be shown after you click the button above)</span></p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="7-1">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="7-3">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-7-3" class="electure-dialog" style="top:230px;left:50%;margin-left:-250px;width:500px;">
+<p>Now we illustrate Search(v) operation while using Linear Probing as collision resolution technique. The steps taken are very similar as with Insert(v) operation, i.e. we start from the (primary) hash key value and check if we have found <b>v</b>, otherwise we move one index forward at a time (wrapping around if necessary) and recheck on whether we have found <b>v</b>. We stop when we encounter an empty cell which implies that <b>v</b> is not in Hash Table at all (as earlier Insert(v) operation would have placed <b>v</b> there otherwise).</p><br><p>Now click <span class="slide-actions" onclick="doButtonAction81()">Search(35)</span> &mdash; you should see probing sequence [0,1,2,3 (key 35 found)].</p><br><p>Now click <span class="slide-actions" onclick="doButtonAction82()">Search(8)</span> &mdash; [1,2,3,4, 5 (empty cell, so key 8 is not found in the Hash Table)].</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="7-2">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="7-4">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-7-4" class="electure-dialog" style="top:230px;left:50%;margin-left:-250px;width:500px;">
+<p>Now let&#39;s discuss Remove(v) operation.</p><br><p>If we just set <b>HT[i] = EMPTY</b> cell straightaway where <b>i</b> is the index that contains <b>v</b> (after linear probing if necessary), do you realize that we will cause a problem? Why?</p><br><p>Hint: Review the past three slides on how Insert(v) and Search(v) behave.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="7-3">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="7-5">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-7-5" class="electure-dialog" style="top:230px;left:50%;margin-left:-250px;width:500px;">
+<div style="background-color: white; color: black;">
+<p>e-Lecture: The content of this slide is hidden and only available for legitimate CS lecturer worldwide. Drop an email to visualgo.info at gmail dot com if you want to activate this CS lecturer-only feature <b>and you are really a CS lecturer (show your University staff profile)</b>.</p>
+</div>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="7-4">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="7-6">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-7-6" class="electure-dialog" style="top:230px;left:50%;margin-left:-250px;width:500px;">
+<p>Now let&#39;s see the complete Remove(v). If we find <b>v</b> at index <b>i</b> (after Linear Probing if necessary), we have to set <b>HT[i] = DELETED</b> (abbreviated as <b>DEL</b> in this visualization) where <b>DEL</b> is a special symbol (generally you should only use a symbol that is <b>not</b> used in your application) to indicate that cell can be by-passed if necessary by future Search(v), but can be overwritten by future Insert(w). This strategy is called <b>Lazy Deletion</b>.</p><br><p>Now click <span class="slide-actions" onclick="doButtonAction83()">Remove(21)</span> — [0,1 (key 21 found and we set <b>H[1] = DEL</b>)].</p><br><p>Afterwards, please continue the discussion in the next slide.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="7-5">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="7-7">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-7-7" class="electure-dialog" style="top:230px;left:50%;margin-left:-250px;width:500px;">
+<p>Now click <span class="slide-actions" onclick="doButtonAction81()">Search(35)</span> &mdash; [0,1 (bypassing that DELETED cell), 2,3 (found key 35)].</p><br><p>Imagine what would have happened if we <i>wrongly</i> set <b>H[1] = EMPTY</b>.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="7-6">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="7-8">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-7-8" class="electure-dialog" style="top:230px;left:50%;margin-left:-250px;width:500px;">
+<p>Now click <span class="slide-actions" onclick="doButtonAction84()">Insert(28)</span> &mdash; you should see probing sequence [0,1 (found a cell with DEL symbol)], so it is actually can be overwritten with a new value without affecting the correctness of future Search(v). Therefore, we put 28 in index 1.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="7-7">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="7-9">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-7-9" class="electure-dialog" style="top:230px;left:50%;margin-left:-250px;width:500px;">
+<p>Although we can resolve collision with Linear Probing, it is not the most effective way.</p><br><p>We define a <b>cluster</b> to be a collection of consecutive occupied slots. A cluster that covers the base address of a key is called the <b>primary cluster</b> of the key.</p><br><p>Now notice that Linear Probing can create large primary clusters that will increase the running time of Search(v)/Insert(v)/Remove(v) operations beyond the advertised O(<b>1</b>).</p><br><p>See an example above with <b>M</b> = 11 and we have inserted keys that are all 6 (modulo 11), i.e. all have remainder 6 when divided by 11. Now see how &#39;slow&#39; <span class="slide-actions" onclick="doButtonAction92()">Insert(94)</span> is.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="7-8">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="7-10">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-7-10" class="electure-dialog" style="top:230px;left:50%;margin-left:-250px;width:500px;">
+<p>The probe sequence of Linear Probing can be formally described as follows:</p><pre> h(v) // base address<br>(h(v) + 1*<span style="color: red;">1</span>) % M // 1st probing step if there is a collision<br>(h(v) + 2*<span style="color: red;">1</span>) % M // 2nd probing step if there is still a collision<br>(h(v) + 3*<span style="color: red;">1</span>) % M // 3rd probing step if there is still a collision<br>...<br>(h(v) + k*<span style="color: red;">1</span>) % M // k-th probing step, etc...</pre><p>During Insert(v), if there is a collision but there is an empty (or DEL) slot remains in the Hash Table, we are sure to find it after at most <b>M</b> Linear Probing steps. And when we do, the collision will be resolved, but the primary cluster of the key <b>v</b> is expanded as a result and future Hash Table operations will get slower too.</p><br><p>The primary cluster size can be very big due to the annexation (or combination) of neighbouring (but previously disjointed) clusters.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="7-9">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="8">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-8" class="electure-dialog" style="top:230px;left:50%;margin-left:-250px;width:500px;">
+<p>To reduce primary clustering, we can modify the probe sequence to:</p><pre> h(v) // base address<br>(h(v) + 1*<span style="color: red;">1</span>) % M // 1st probing step if there is a collision<br>(h(v) + 2*<span style="color: red;">2</span>) % M // 2nd probing step if there is still a collision<br>(h(v) + 3*<span style="color: red;">3</span>) % M // 3rd probing step if there is still a collision<br>...<br>(h(v) + k*<span style="color: red;">k</span>) % M // k-th probing step, etc...</pre><p>That&#39;s it, the probe jumps quadratically, wrapping around the Hash Table as necessary.</p><br><p><font color="red">A very common mistake</font> as this is a different kind of Quadratic Probing:<br>Doing h(v), (h(v)+1) % M, (h(v)+1+4) % M, (h(v)+1+4+9) % M, ... </p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="7-10">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="8-1">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-8-1" class="electure-dialog" style="top:230px;left:50%;margin-left:-250px;width:500px;">
+<p>Assume that we have called Insert(18) and Insert(10) into an initially empty Hash Table of size <b>M = HT.length = 7</b>. As 18%7 = 4 and 10%7 = 3, 18 and 3 do not collide and both reside in index 4 and 3 respectively as shown above.</p><br><p>Now, let&#39;s click <span class="slide-actions" onclick="doButtonAction85()">Insert(38)</span>.</p><br><p><span id="recap3">Recap (to be shown after you click the button above).</span></p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="8">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="8-2">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-8-2" class="electure-dialog" style="top:230px;left:50%;margin-left:-250px;width:500px;">
+<p>Remove(x) and Search(y) operations are defined similarly. Just that this time we use Quadratic Probing instead of Linear Probing.</p><br><p>For example, assume that we have called Remove(18) after the previous slide and we mark <b>HT[4] = DEL</b>. If we then call <span class="slide-actions" onclick="doButtonAction91()">Search(38)</span>, we will use the same Quadratic Probing sequence as with previous slide, but passing through <b>HT[4]</b> which marked as DELETED.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="8-1">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="8-3">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-8-3" class="electure-dialog" style="top:230px;left:50%;margin-left:-250px;width:500px;">
+<p>In a glance, Quadratic Probing that jumps +1, +4, +9, +16, ... quadratically seems able to solve the primary clustering issue that we have with Linear Probing earlier, but is it the perfect collision resolution technique?</p><br><p>Try <span class="slide-actions" onclick="doButtonAction86()">Insert([12,17])</span>.</p><br><p>Do you realized what has just happened?</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="8-2">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="8-4">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-8-4" class="electure-dialog" style="top:230px;left:50%;margin-left:-250px;width:500px;">
+<p>We can insert 12 easily as h(12) = 12%7 = 5 was empty previously (see above).</p><br><p>However we have major problem inserting key 17 even if we still have 3 empty slots as:<br>h(17) = 17%7 = 3 is already occupied by key 10,<br>(3+1*1) % 7 = 4 is already occupied by key 18, <br>(3+2*2) % 7 = 0 is already occupied by key 38, <br>(3+3*3) % 7 = 5 is already occupied by key 12, <br>(3+4*4) % 7 = 5 again is already occupied by key 12,<br>(3+5*5) % 7 = 0 again is already occupied by key 38,<br>(3+6*6) % 7 = 4 again is already occupied by key 18,<br>(3+7*7) % 7 = 3 again is already occupied by key 10,<br>it will <b>cycle forever</b> if we continue the Quadratic Probing...</p><br><p>Although we still have a few (3) empty cells, we are unable to insert this new value 17 into the Hash Table...</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="8-3">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="8-5">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-8-5" class="electure-dialog" style="top:230px;left:50%;margin-left:-250px;width:500px;">
+<p>If &alpha; &lt; 0.5 and <b>M</b> is a prime (&gt; 3), then we can always find an empty slot using Quadratic Probing. Recall: &alpha; is the load factor and <b>M</b> is the Hash Table size (HT.length).</p><br><p>If the two requirements above are satisfied, we can prove that the first <b>M</b>/2 Quadratic Probing indices, including the base address <samp>h(v)</samp> are all distinct and unique.</p><br><p>But there is no such guarantee beyond that. Hence if we want to use Quadratic Probing, we need to ensure that &alpha; &lt; 0.5 (not enforced in this visualization but we do break the loop after <b>M</b> steps to prevent infinite loop).</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="8-4">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="8-6">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-8-6" class="electure-dialog" style="top:230px;left:50%;margin-left:-250px;width:500px;">
+<p>We will use proof by contradiction. We first assume that two Quadratic Probing steps:<br>x and y, x != y (let&#39;s say x &lt; y), can yield the same address modulo <b>M</b>.</p><pre>h(v) + x*x = h(v) + y*y (mod M)<br>x*x = y*y (mod M) // strike out h(v) from both sides<br>x*x - y*y = 0 (mod M) // move y*y to LHS<br>(x-y)*(x+y) = 0 (mod M) // rearrange the formula</pre><p>Now, either <samp>(x-y)</samp> or <samp>(x+y)</samp> has to be equal to zero.<br>As our assumption says <samp>x != y</samp>, then <samp>(x-y)</samp> cannot be 0.<br>As <samp>0 &le; x &lt; y &le; (M/2)</samp> and <samp>M</samp> is a prime &gt; 3 (an odd Integer),<br>then <samp>(x+y)</samp> also cannot be 0 modulo <samp>M</samp>.</p><br><p>Contradiction!</p><br><p>So the first <samp>M/2</samp> Quadratic Probing steps cannot yield the same address modulo <samp>M</samp><br>(if we set <b>M</b> to be a prime number greater than 3).</p><br><p>Discussion: Can we make Quadratic Probing able to use the other ~50% of the table cells?</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="8-5">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="8-7">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-8-7" class="electure-dialog" style="top:230px;left:50%;margin-left:-250px;width:500px;">
+<div style="background-color: white; color: black;">
+<p>e-Lecture: The content of this slide is hidden and only available for legitimate CS lecturer worldwide. Drop an email to visualgo.info at gmail dot com if you want to activate this CS lecturer-only feature <b>and you are really a CS lecturer (show your University staff profile)</b>.</p>
+</div>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="8-6">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="8-8">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-8-8" class="electure-dialog" style="top:230px;left:50%;margin-left:-250px;width:500px;">
+<p>In Quadratic Probing, clusters are formed along the path of probing, instead of around the base address like in Linear Probing. These clusters are called <b>Secondary Clusters</b>.</p><br><p>Secondary clusters are formed as a result of using the same pattern in probing by all keys. Notice that if two distinct keys have the same base address, their Quadratic Probing sequences are going to be the same.</p><br><p>Secondary clustering in Quadratic Probing is not as bad as primary clustering in Linear Probing as a good hash function should theoretically disperse the keys into different base addresses &in; [0..<b>M</b>-1] in the first place.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="8-7">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="9">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-9" class="electure-dialog" style="top:230px;left:50%;margin-left:-250px;width:500px;">
+<p>To reduce primary and secondary clustering, we can modify the probe sequence to:</p><pre> h(v) // base address<br>(h(v) + 1*<span style="color: red;">h2(v)</span>) % M // 1st probing step if there is a collision<br>(h(v) + 2*<span style="color: red;">h2(v)</span>) % M // 2nd probing step if there is still a collision<br>(h(v) + 3*<span style="color: red;">h2(v)</span>) % M // 3rd probing step if there is still a collision<br>...<br>(h(v) + k*<span style="color: red;">h2(v)</span>) % M // k-th probing step, etc...</pre><p>That&#39;s it, the probe jumps according to the value of the <b>second hash function</b> <samp>h2(v)</samp>, wrapping around the Hash Table as necessary.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="8-8">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="9-1">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-9-1" class="electure-dialog" style="top:230px;left:50%;margin-left:-250px;width:500px;">
+<p>If <samp>h2(v) = 1</samp>, then Double Hashing works exactly the same as Linear Probing.<br>So we generally wants <samp>h2(v) &gt; 1</samp> to avoid primary clustering.</p><br><p>If <samp>h2(v) = 0</samp>, then Double Hashing does not work for an obvious reason as any probing step multiplied by 0 remains 0, i.e. we stay at the base address forever during a collision. We need to avoid this.</p><br><p>Usually (for Integer keys), <samp>h2(v) = M&#39; - v%M&#39;</samp> where <samp>M&#39;</samp> is a smaller prime than <samp>M</samp>.<br>This makes <samp>h2(v)</samp> &in; [1..<b>M&#39;</b>], which is diverse enough to avoid secondary clustering.</p><br><p>The usage of the secondary hash function makes it theoretically hard to have either primary or secondary clustering issue.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="9">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="9-2">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-9-2" class="electure-dialog" style="top:230px;left:50%;margin-left:-250px;width:500px;">
+<p>Click <span class="slide-actions" onclick="doButtonAction87()">Insert([35,42])</span> to insert 35 and then 42 to the current Hash Table above.</p><br><p><span id="recap4">Recap (to be shown after you click the button above).</span></p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="9-1">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="9-3">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-9-3" class="electure-dialog" style="top:230px;left:50%;margin-left:-250px;width:500px;">
+<p>Remove(x) and Search(y) operations are defined similarly. Just that this time we use Double Hashing instead of Linear Probing or Quadratic Probing.</p><br><p>For example, assume that we have called Remove(17) after the previous slide and we mark <b>HT[3] = DEL</b>. If we then call <span class="slide-actions" onclick="doButtonAction81()">Search(35)</span>, we will use the same Double Hashing sequence as with previous slide, but passing through <b>HT[3]</b> which marked as DELETED.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="9-2">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="9-4">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-9-4" class="electure-dialog" style="top:230px;left:50%;margin-left:-250px;width:500px;">
+<p>In summary, a good Open Addressing collision resolution technique needs to:</p><ol><li>Always find an empty slot if it exists,</li><li>Minimize clustering (of any kind),</li><li>Give different probe sequences when 2 different keys collide,</li><li>Fast, O(<b>1</b>).</li></ol><p>Discussion: Double Hashing seems to fit the bill. But... Is Double Hashing strategy flexible enough to be used as the default library implementation of a Hash Table? Let&#39;s see...</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="9-3">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="10">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-10" class="electure-dialog" style="bottom:60px;left:50%;margin-left:-250px;width:500px;">
+<p>Try <span class="slide-actions" onclick="doButtonAction93()">Insert([9,16,23,30,37,44])</span> to see how Insert(v) operation works if we use Separate Chaining as collision resolution technique. Note that all Integers {9,16,23,30,37,44} are 2 (modulo 7) so all of them will be appended into the (back of) Doubly Linked List 2 and each insertion is clearly O(<b>1</b>).</p><br><p>Due to the screen limitation, we limit the length of each Doubly Linked List to be 6.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="9-4">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="10-1">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-10-1" class="electure-dialog" style="bottom:60px;left:50%;margin-left:-250px;width:500px;">
+<p>Try <span class="slide-actions" onclick="doButtonAction81()">Search(35)</span> to see that Search(v) can be made to run in O(<b>1+&alpha;</b>).</p><br><p>Try <span class="slide-actions" onclick="doButtonAction94()">Remove(7)</span> to see that Remove(v) can be made to run in O(<b>1+&alpha;</b>) too.</p><br><p>If <b>&alpha;</b> is large, Separate Chaining performance is not really O(<b>1</b>). However, if we roughly know the potential number of keys <b>n</b> that our application will ever use, then we can set table size <b>m</b> accordingly such that <b>&alpha; = n/m</b> is a very low positive number, thereby making Separate Chaining performances all O(<b>1</b>).</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="10">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="10-2">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-10-2" class="electure-dialog" style="bottom:60px;left:50%;margin-left:-250px;width:500px;">
+Discussion: After all these explanations, which of the two collision resolution technique is the better one?
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="10-1">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="10-3">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-10-3" class="electure-dialog" style="bottom:60px;left:50%;margin-left:-250px;width:500px;">
+<div style="background-color: white; color: black;">
+<p>e-Lecture: The content of this slide is hidden and only available for legitimate CS lecturer worldwide. Drop an email to visualgo.info at gmail dot com if you want to activate this CS lecturer-only feature <b>and you are really a CS lecturer (show your University staff profile)</b>.</p>
+</div>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="10-2">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="11">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-11" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<p>You have reached the end of the basic stuffs of this Hash Table data structure and we encourage you to explore further in the <b>Exploration Mode</b>.</p><br><p>However, we still have a few more interesting Hash Table challenges for you that are outlined in this section.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="10-3">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="11-1">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-11-1" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<p>The performance of Hash Table degrades when the load factor α gets higher. For (standard) Quadratic Probing collision resolution technique, insertions might fail when the Hash Table has α &gt; 0.5.</p><br><p>If that happens, we can <b>rehash</b>. We build another Hash Table about twice as big with a new hash function. We go through all keys in the original Hash Table, recompute the new hash values, and re-insert the keys (with their satellite-data) into the new, bigger Hash Table, before finally we delete the older, smaller Hash Table.</p><br><p>A rule of thumb is to rehash when α &ge; 0.5 if using Open Addressing and when α &gt; small constant (close to 1.0, as per requirement) if using Separate Chaining.</p><br><p>If we know the maximum number of total possible keys, we can always influence &alpha; to be a low number.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="11">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="11-2">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-11-2" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<p>However, if you ever need to implement a Hash Table in C++ or Java and your keys are either Integers or Strings, you can use the built-in C++ STL or Java API. They already have good built-in implementation of default hash functions for Integers or Strings.</p><br><p>See C++ STL <a href="http://en.cppreference.com/w/cpp/container/unordered_map" target="_blank"><u>unordered_map</u></a>, <a href="http://en.cppreference.com/w/cpp/container/unordered_set" target="_blank"><u>unordered_set</u></a> or Java <a href="https://docs.oracle.com/javase/8/docs/api/java/util/HashMap.html" target="_blank"><u>HashMap</u></a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/util/HashSet.html" target="_blank"><u>HashSet</u></a>.</p><br><p>Notice that multimap/multiset implementations also exist (duplicate keys are allowed).</p><br><p>For Python, we can use <a href="https://docs.python.org/3/tutorial/datastructures.html#dictionaries" target="_blank"><u>dict</u></a>/<a href="https://docs.python.org/3/tutorial/datastructures.html#sets" target="_blank"><u>set</u></a>. For OCaml, we can use <a href="https://caml.inria.fr/pub/docs/manual-ocaml/libref/Hashtbl.html" target="_blank"><u>Hashtbl</u></a>.</p><br><p>However, here is our take of a simple <a href="http://www.comp.nus.edu.sg/~stevenha/cs2040c/demos/HashTableDemo.cpp" target="_blank"><u>Separate Chaining implementation</u></a> in C++<br>(not generic enough though).</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="11-1">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="11-3">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-11-3" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<div style="background-color: white; color: black;">
+<p>e-Lecture: The content of this slide is hidden and only available for legitimate CS lecturer worldwide. Drop an email to visualgo.info at gmail dot com if you want to activate this CS lecturer-only feature <b>and you are really a CS lecturer (show your University staff profile)</b>.</p>
+</div>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="11-2">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="11-4">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-11-4" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<p>Hash Table is an extremely good data structure to implement Table ADT if the (Integer or String) keys only need to be mapped to satellite-data, with O(<b>1</b>) performance for Search(v), Insert(v), and Remove(v) operations if the Hash Table is set up properly.</p><br><p>However, if we need to do <a href="bste090.html?slide=3-5"><u>much more with the keys</u></a>, we may need to use an alternative data structure.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="11-3">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="11-5">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-11-5" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<p>For a few more interesting questions about this data structure, please practice on <a href="https://visualgo.net/training?diff=Medium&amp;n=7&amp;tl=0&amp;module=hashtable"><u>Hash Table</u></a> training module (no login is required, but short and of medium difficulty setting only).</p><br><p>However, for registered users, you should login and then go to the <a href="https://visualgo.net/training"><u>Main Training Page</u></a> to officially clear this module and such achievement will be recorded in your user account.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="11-4">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="11-6">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-11-6" class="electure-dialog" style="top:60px;left:60px;width:500px;">
+<p>Try to solve a few basic programming problems that somewhat requires the usage of Hash Table (especially if the input size is much larger):<ol><li><a href="https://open.kattis.com/problems/cd" target="_blank"><u>Kattis - cd</u></a> (the inputs are already sorted so alternative, non Hash Table solution exists; if the inputs are not sorted, this set intersection problem is best solved with help of a Hash Table),</li><li><a href="https://open.kattis.com/problems/oddmanout" target="_blank"><u>Kattis - oddmanout</u></a> (we can map large invitation codes into smaller range of integers; this is a practice of hashing (large range) of integers),</li><li><a href="https://open.kattis.com/problems/whatdoesthefoxsay" target="_blank"><u>Kattis - whatdoesthefoxsay</u></a> (we put sounds that are not fox into an unordered set; this is a practice of hashing strings).</li></ol>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="11-5">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="99">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-99" class="electure-dialog" style="right:150px;bottom:335px;width:500px;">
+<p>As the action is being carried out, each step will be described in the status panel.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="11-6">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="99-1">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-99-1" class="electure-dialog" style="right:170px;bottom:275px;width:180px;">
+<div style="background-color: white; color: black;">
+<p>e-Lecture: The content of this slide is hidden and only available for legitimate CS lecturer worldwide. Drop an email to visualgo.info at gmail dot com if you want to activate this CS lecturer-only feature <b>and you are really a CS lecturer (show your University staff profile)</b>.</p>
+</div>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="99">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="99-2">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-99-2" class="electure-dialog" style="bottom:70px;left:50%;margin-left:-120px;width:260px;">
+<p>Control the animation with the player controls! Keyboard shortcuts are:<br></p><div style="margin-top: 8px;"><strong>Spacebar:</strong> play/pause/replay</div><strong>Left/right arrows:</strong> step backward/step forward<br><strong>-/+:</strong> decrease/increase speed<br>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="99-1">Trước đó <u>PgUp</u></div>
+<div class='electure-next' data-nextid="99-3">Tiếp theo <u>PgDn</u></div>
+</div>
+<div id="electure-99-3" class="electure-dialog" style="top:70px;right:60px;width:300px;">
+<p>Return to &#39;Exploration Mode&#39; to start exploring!</p><br><p>Note that if you notice any bug in this visualization or if you want to request for a new visualization feature, do not hesitate to drop an email to the project leader: Dr Steven Halim via his email address: stevenhalim at gmail dot com.</p>
+<div class='electure-end'>X <u>Esc</u></div>
+<div class='electure-prev' data-nextid="99-2">Trước đó <u>PgUp</u></div>
+</div>
+<div id="popup" hidden>
+<div id="popup-content"></div>
+<span id="hide-popup" hidden>X <u>Close</u></span>
+</div>
+<div id="actions" class="panel">
+<p id="create">Tạo</p>
+<p id="search">Tìm kiếm(v)</p>
+<p id="insert">Chèn(v)</p>
+<p id="remove">Di chuyển(v)</p>
+</div>
+<div id="actions-hide" class="panel-hide"><img src="../img/arrow_white_right.png" alt=">" title="show/hide actions panel" /></div>
+<div id="actions-extras">
+<div class="create action-menu-pullout">
+<div id="create-input" class="new-menu-option"><p>Create empty hash table of size = <input type="number" id="v-create" title="Enter an Integer" autocomplete="off" min=0 max=19 value=13></p></div>
+<div id="create-go" class="execAction coloured-menu-option" onclick="createTable()"><p>Go</p></div>
+<div id="create-err" class="err"></div>
+</div>
+<div class="search action-menu-pullout">
+<div id="search-input" class="new-menu-option">v = <input type="number" id="v-search" title="Enter an Integer" autocomplete="off" min=0 value=7></div>
+<div id="search-go" class="execAction coloured-menu-option" onclick="searchInteger()"><p>Go</p></div>
+<div id="search-err" class="err"></div>
+</div>
+<div class="insert action-menu-pullout">
+<div id="insert-input" class="new-menu-option">v = <input type="text" id="v-insert" title="Enter an Integer or comma-separated array of Integers" autocomplete="off" value="35,77"></div>
+<div id="insert-go" class="execAction coloured-menu-option" onclick="insertInteger()"><p>Go</p></div>
+<div id="insert-err" class="err"></div>
+</div>
+<div class="remove action-menu-pullout">
+<div id="remove-input" class="new-menu-option">v = <input type="number" id="v-remove" title="Enter an Integer" autocomplete="off" min=0 value=21></div>
+<div id="remove-go" class="execAction coloured-menu-option" onclick="removeInteger()"><p>Go</p></div>
+<div id="remove-err" class="err"></div>
+</div>
+</div>
+<div id="bottom-bar">
+<a id="trigger-about">Về</a>
+<a id="trigger-team">Nhóm</a>
+<a id="trigger-terms">Điều khoản sử dụng</a>
+</div>
+<div id="about" class="overlays">
+<h4>Về</h4><span class='close-overlay'>&#x2715;</span>
+<div class='content'>
+VisuAlgo được lên ý tưởng vào năm 2011 bởi tiến sĩ Steven Halim như là một công cụ để giúp những sinh viên của ông ấy có thể hiểu rõ hơn về các cấu trúc dữ liệu và thuật toán, bằng cách cho phép họ tự học những nội dung cơ bản nhất với tiến độ phù hợp với riêng họ.<br>VisuAlgo chứa rất nhiều thuật toán nâng cao đã được thảo luận trong cuốn sách của Tiến sĩ Steven Halim (&#39;Competitive Programming&#39;, đồng tác giả với anh trai của ông ấy, tiến sĩ Felix Halim) và hơn thế nữa. Hiện tại, một số mô phỏng/hiệu ứng hoạt hình của các thuật toán nâng cao này chỉ có thể tìm thấy ở VisuAlgo.<div>Mặc dù được thiết kế đặc biệt cho những sinh viên đại học quốc gia Singapore (phải học rất nhiều môn học về cấu trúc dữ liệu và thuật toán - ví dụ: CS1010, CS1020, CS2010, CS2020, CS3230, and CS3230), như những người ủng hộ việc học trực tuyến, chúng tôi hi vọng rằng những người quan tâm tới cấu trúc dữ liệu và thuật toán trên toàn thế giới cũng có thể thấy những mô tả này là hữu dụng.<br>Ngay từ đầu, VisuAlgo không được thiết kế để làm việc tốt trên những màn hình cảm ứng nhỏ (ví dụ như smartphones) do việc mô phỏng các thuật toán phức tạp cần rất nhiều điểm ảnh và cử chỉ nhấp và kéo để tương tác. Độ phân giải màn ảnh nhỏ nhất cho trải nghiệm người dùng chấp nhận được là 1024x768 và chỉ có duy nhất trang đích là tương đối thân thiện với bản di động.</div><div>VisuAlgo là một dự án liên tục và nhiều mô phỏng phức tạp vẫn đang được phát triển.<br>Cải tiến thú vị nhất là tạo và duyệt câu hỏi tự động (hệ thống câu hỏi trực tuyến) cho phép sinh viên kiểm tra kiến thức cơ bản về các cấu trúc dữ liệu và thuật toán. Các câu hỏi được tạo ngẫu nhiên thông qua những quy luật và câu trả lời của sinh viên sẽ được chấm điểm tự động và ngay lập tức dựa trên việc nộp bài tới server chấm điểm của chúng tôi. Hệ thống câu hỏi trực tuyến này, khi mà nó được chấp nhận bởi nhiều giảng viên CS trên toàn thế giới, sẽ xóa bỏ mặt kĩ thuật các câu hỏi về cấu trúc dữ liệu và thuật toán cơ bản khỏi các kỳ thi khoa học máy tính điển hình tại rất nhiều trường đại học. Bằng cách đặt một tiêu chí chấm điểm nhỏ (nhưng khác 0) vào việc vượt qua các câu hỏi trực tuyến, giảng viên CS có thể làm tăng (một cách đáng kể) sự thành thạo của những sinh viên trên những câu hỏi cơ bản này khi họ một lượng vô số các câu hỏi thực tế cho sự luyện tập cái mà có thể được kiểm chứng ngay lập tức trước khi họ làm câu hỏi trực tuyến. Hiện tại, chế độ hướng dẫn bao gồm các câu hỏi cho 12 module mô phỏng. Chúng tôi sẽ sớm thêm vào 8 module mô phỏng còn lại để cho tất cả các module mô phỏng ở VisuAlgo đều có phần câu hỏi trực tuyến.<br>Một cải tiến hấp dẫn khác là việc quốc tế hóa các dự án nhánh của VisuAlgo. Chúng tôi muốn chuẩn bị cơ sở dữ liệu các thuật ngữ CS cho các văn bản tiếng Anh đã từng xuất hiện trên hệ thống VisuAlgo. Đây là một nhiệm vụ lớn và cần điện toán đám đông. Một khi hệ thống đã sẵn sàng, chúng tôi sẽ mời người dùng VisuAlgo đóng góp, đặc biệt là khi bạn không phải là người nói tiếng Anh bản ngữ. Hiện tại, chúng tôi cũng đang viết những ghi chú về VisuAlgo bằng những ngôn ngữ khác nhau.<br></div>
+<a href="https://weibo.com/p/230418436e9ee80102v4rk" target='_blank'><u>zh</u></a>, <a href='https://www.facebook.com/notes/steven-halim/httpidvisualgonet-visualisasi-struktur-data-dan-algoritma-dengan-animasi/10153236934439689' target='_blank'><u>id</u></a>, <a href="https://blog.naver.com/visualgo_nus" target='_blank'><u>kr</u></a>, <a href='https://www.facebook.com/groups/163215593699283/permalink/824003417620494/' target='_blank'><u>vn</u></a>, <a href='http://pantip.com/topic/32736343' target='_blank'><u>th</u></a>.</p>
+</div>
+</div>
+<div id="team" class="overlays">
+<h4>Nhóm</h4><span class='close-overlay'>&#x2715;</span>
+<div class='content'>
+<p>
+<strong><span style='line-height: 150%;'>Trưởng dự án và cố vấn (từ tháng 7/2011 đến nay)</span></strong><br>
+<a href='http://www.comp.nus.edu.sg/~stevenha/' target='_blank'>Dr Steven Halim</a>, Senior Lecturer, School of Computing (SoC), National University of Singapore (NUS)<br>
+<a href='http://felix-halim.net/' target='_blank'>Dr Felix Halim</a>, Software Engineer, Google (Mountain View)
+</p>
+<p>
+<strong><span style='line-height: 150%;'>Những nhà nghiên cứu sinh viên 1 (Jul 2011-Apr 2012)</span></strong><br>
+Koh Zi Chun, <a href='http://roticv.rantx.com/' target='_blank'>Victor Loh Bo Huai</a>
+</p>
+<p>
+<strong><span style='line-height: 150%;'>Đồ án năm cuối/ sinh viên UROP 1 (Jul 2012-Dec 2013)</span></strong><br>
+Phan Thi Quynh Trang, Peter Phandi, Albert Millardo Tjindradinata, Nguyen Hoang Duy
+</p>
+<p>
+<strong><span style='line-height: 150%;'>Đồ án năm cuối/ sinh viên UROP 2 (Jun 2013-Apr 2014)</span></strong><br>
+<a href='http://www.rosemarietan.com/' target='_blank'>Rose Marie Tan Zhao Yun</a>, Ivan Reinaldo
+</p>
+<p>
+<strong><span style='line-height: 150%;'>Những nhà nghiên cứu sinh viên 2 (May 2014-Jul 2014)</span></strong><br>
+Jonathan Irvin Gunawan, Nathan Azaria, Ian Leow Tze Wei, Nguyen Viet Dung, Nguyen Khac Tung, Steven Kester Yuwono, Cao Shengze, Mohan Jishnu
+</p>
+<p>
+<strong><span style='line-height: 150%;'>Đồ án năm cuối/ sinh viên UROP 3 (Jun 2014-Apr 2015)</span></strong><br>
+Erin Teo Yi Ling, Wang Zi
+</p>
+<p>
+<strong><span style='line-height: 150%;'>Đồ án năm cuối/ sinh viên UROP 4 (Jun 2016-Dec 2017)</span></strong><br>
+Truong Ngoc Khanh, John Kevin Tjahjadi, Gabriella Michelle, Muhammad Rais Fathin Mudzakir
+</p>
+<p>
+List of translators who have contributed &ge;100 translations can be found at <a href="https://visualgo.net/statistics">statistics</a> page.
+</p>
+<p>
+<strong><span style='line-height: 150%;'>Lời cảm ơn</span></strong><br>
+This project is made possible by the generous <a href="http://www.cdtl.nus.edu.sg/teg/" target="_blank">Teaching Enhancement Grant</a> from NUS Centre for Development of Teaching and Learning (CDTL).
+</p>
+</div>
+</div>
+<div id="termsofuse" class="overlays">
+<h4>Điều khoản sử dụng</h4><span class='close-overlay'>&#x2715;</span>
+<div class='content'>
+VisuAlgo miễn phí đối với cộng đồng Khoa học Máy tính trên toàn thế giới. Nếu bạn yêu thích VisuAlgo, khoản chi phí duy nhất mà chúng tôi muốn bạn chi trả chính là hãy nói cho những <b>sinh viên/ giảng viên ngành khoa học máy tính</b> mà bạn biết<b> về sự tồn tại của VisuAlgo</b> =) thông qua Facebook, Twitter, trang web về khóa học, blog review, email , v.v &amp; v.v. Nếu bạn là một<b> sinh viên/ giảng viên</b> ngành cấu trúc dữ liệu và thuật toán, bạn được phép sử dụng website này một cách trực tiếp trong các lớp học của bạn. Nếu bạn lấy những ảnh chụp màn hình (videos) từ website này, bạn có thể sử dụng chúng ở bất kỳ đâu, miễn là có dẫn nguồn URL của website này (http://visualgo.net) và/hoặc liệt kê các công bố ở dưới như là tài liệu tham khảo. Tuy nhiên, bạn <b>KHÔNG</b> được phép tải xuống các tập tin VisuAlgo (phía máy trạm) và lưu trữ nó ở website riêng của bạn vì nó được coi là <b>đạo ý tưởng</b> .Hiện tại, chúng tôi <b>KHÔNG</b> cho phép những người khác chia nhỏ dự án này và tạo ra những phiên bản khác của VisuAlgo. Việc sử dụng bản sao ngoại tuyến của VisuAlgo (phía máy trạm) cho mục đích cá nhân của bạn thì có thể chấp nhận được.<br>Lưu ý rằng hệ thống câu hỏi trực tuyến của VisuAlgo có phần dữ liệu phía máy chủ rất lớn và không dễ dàng để lưu lại mã kịch bản phía máy chủ và cơ sở dữ liệu một cách cục bộ. Hiện tại, mọi người chỉ có thể sử dụng "chế độ đào tạo" để truy cập hệ thống câu hỏi trực tuyến này. Chế độ kiểm tra hiện là môi trường có kiểm soát hơn cho việc sử dụng những câu hỏi được tạo ngẫu nhiên này và tự động kiểm duyệt cho kỳ thi <b>thật sự</b> tại Đại học Quốc gia Singapore<span style="white-space: normal;">.</span> Những giảng viên quan tâm tới khoa học máy tính có thể liên hệ với Steven nếu muốn trải nghiệm "chế độ kiểm tra"<br><b>Danh sách phát hành</b><br>Dự án này đươc trình bày một cách vắn tắt ở Hội thảo CLI tại ACM ICPC World Finals 2012 (Warsaw, Ba Lan) và tại Hội nghị IOI 2012 (Sirmione-Montichiari, Italy). Bạn có thể nhấn vào link này để đọc bài viết năm 2012 của chúng tôi về hệ thống này (nó không được gọi là VisuAlgo vào năm 2012)<br>Dự án này được hoàn thiện hầu hết bởi những cựu sinh viên của tôi. Báo cáo cuối cùng gần đây nhất là của: <a href="http://188.166.247.199/visualgo/visualgo-laravel/public/translation/fyp/erin-report.pdf" target="_blank">Erin</a>, <a href="http://188.166.247.199/visualgo/visualgo-laravel/public/translation/fyp/wangzi-report.pdf" target="_blank">Wang Zi</a>, <a href="http://188.166.247.199/visualgo/visualgo-laravel/public/translation/fyp/rose-report.pdf" target="_blank">Rose</a>, <a href="http://188.166.247.199/visualgo/visualgo-laravel/public/translation/fyp/ivan-report.pdf" target="_blank">Ivan</a>.<br><b>Báo cáo lỗi hoặc đề xuất tính năng mới</b><br>VisuAlgo là một dự án chưa hoàn thiện. Tiến sĩ Steven Halim vẫn đang tiếp tục phát triển VisuAlgo một cách tích cực/ Nếu bạn đang sử dụng VisuAlgo và phát hiện ra lỗi ở bất kỳ trang mô phỏng/ công cụ câu hỏi trực tuyến nào của chúng tôi hoặc nếu bạn muốn đề xuất những tính năng mới, hãy liên lạc với Tiến sĩ Steven Halim. Địa chỉ liên lạc của ông ấy là stevenhalim@gmail.com<br>
+</div>
+</div>
+
+<script src="../js/jquery-3.3.1.min.js"></script>
+<script>
+      var PHP_DOMAIN = "";
+
+      // surprise colour!
+      // Referenced to in  home.js and viz.js also
+      var colourArray = ["#52bc69", "#d65775"/*"#ed5a7d"*/, "#2ebbd1", "#d9513c", "#fec515", "#4b65ba", "#ff8a27", "#a7d41e"]; // green, pink, blue, red, yellow, indigo, orange, lime
+
+      function disableScroll() { $('html').css('overflow', 'hidden'); }
+
+      function enableScroll() { $('html').css('overflow', 'visible'); }
+
+      function replaceAll(find, replace, str) { return str.replace(new RegExp(find, 'g'), replace); }
+
+      function getColours() {
+        var generatedColours = new Array();
+        while (generatedColours.length < 4) {
+          var n = (Math.floor(Math.random() * colourArray.length));
+          if ($.inArray(n, generatedColours) == -1)
+            generatedColours.push(n);
+        }
+        return generatedColours;
+      }
+
+      function isOn(value, position) {
+        return (value>>position) & 1 === 1;
+      }
+
+      function customAlert(msg) {
+        $('#custom-alert p').html(msg);
+        var m = -1 * ($('#custom-alert').outerHeight()/2);
+        $('#custom-alert').css('margin-top', m+'px');
+        $('#dark-overlay').fadeIn(function() {
+          $('#custom-alert').fadeIn(function() {
+            setTimeout(function() {
+              $('#custom-alert').fadeOut(function() {
+                $('#dark-overlay').fadeOut();
+              });
+            }, 1000);
+          });
+        });
+      }
+
+      function showLoadingScreen() {
+        $('#loading-overlay').show();
+        $('#loading-message').show();
+      }
+
+      function hideLoadingScreen() {
+        $('#loading-overlay').hide();
+      }
+
+      function commonAction(retval, msg) {
+        //setTimeout(function() {
+          if (retval) { // mode == "exploration" && // now not only for exploration mode, but check if this opens other problems
+            $('#current-action').show();
+            $('#current-action').html(mode == "exploration" ? msg : ("e-Lecture Example (auto play until done)<br>" + msg));
+            $('#progress-bar').slider("option", "max", gw.getTotalIteration()-1);
+            triggerRightPanels();
+            isPlaying = true;
+          }
+        //}, 500);
+      }
+
+      function getQueryVariable(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split('&');
+        for (var i = 0; i < vars.length; i++) {
+          var pair = vars[i].split('=');
+          if (decodeURIComponent(pair[0]) == variable)
+            return decodeURIComponent(pair[1]);
+        }
+        return "";
+      }
+
+      var generatedColours = getColours();
+      var surpriseColour = colourArray[generatedColours[0]];
+      var colourTheSecond = colourArray[generatedColours[1]];
+      var colourTheThird = colourArray[generatedColours[2]];
+      var colourTheFourth = colourArray[generatedColours[3]];
+
+      $(function() {
+        $('.links').css('background', surpriseColour);
+        $('.right-links').css('background', surpriseColour);
+        $('#login-go').css('background', surpriseColour);
+
+        $('.colour').css("color", surpriseColour); // name
+        $('h4').css("background-color", surpriseColour); // about, contact us etc. button background
+
+        // title
+        $('#title a').click(function() {
+          $('#title a').removeClass('selected-viz');
+          $(this).addClass('selected-viz');
+          // temporary quick fix for Google Chrome Aug 2016 issue...
+          setTimeout(function(){ document.body.style.zoom = "100.1%"; }, 100); // force resize/redraw...
+          setTimeout(function(){ document.body.style.zoom = "100%"; }, 600);
+        });
+
+        // overlays stuffs
+        $('#trigger-about').click(function() {
+          if ($(window).width() > 600) {
+            $('#dark-overlay').fadeIn(function() {
+              $('#about').fadeIn();
+            });
+          }
+          else
+            alert('Sorry, this dialog is too big. Please load it on bigger screen');
+        });
+
+        $('#trigger-team').click(function() {
+          if ($(window).width() > 600) {
+            $('#dark-overlay').fadeIn(function() {
+              $('#team').fadeIn();
+            });
+          }
+          else
+            alert('Sorry, this dialog is too big. Please load it on bigger screen');
+        });
+
+        $('#trigger-terms').click(function() {
+          if ($(window).width() > 600) {
+            $('#dark-overlay').fadeIn(function() {
+              $('#termsofuse').fadeIn();
+            });
+          }
+          else
+            alert('Sorry, this dialog is too big. Please load it on bigger screen');
+        });
+
+        $('.close-overlay').click(function() {
+          $('.overlays').fadeOut(function() {
+            $('#dark-overlay').fadeOut();
+          });
+        });
+
+        $('#dark-overlay').click(function() {
+          $('.overlays').fadeOut();
+          $('#dark-overlay').fadeOut();
+        });
+
+        $.get('/isloggedin', function(data) {
+          var isLoggedIn = data['isloggedin'] == '1';
+          var element;
+          if (isLoggedIn) {
+            // element = '<a onclick="verifyLogout()">Đăng Xuất<div><br></div></a>';
+            element = '<a href="https://visualgo.net/profile">Profile</a>'; 
+          }
+          else {
+            element = '<a href="https://visualgo.net/login">Đăng nhập</a>'
+          }
+          $('#useraccount').html(element);
+        });
+      });
+
+      function verifyLogout() {
+        // Steven's remarks: use a better 'confirm' than the default :(
+        var doesLogout = confirm('Are you sure to logout?');
+        if (doesLogout == true) {
+          window.location = "https://visualgo.net/logout";
+        }
+      }
+
+      function checkLogin() {
+        $.get('/checklogin', function(data) {
+          var url = data['url'];
+          window.location.href = '/' + url;
+        });
+      }
+
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','../../www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-1566631-4', 'auto');
+      ga('send', 'pageview');
+    </script>
+
+<script src="../js/jquery-ui.min.js"></script>
+
+<script src="../js/d3.min.js"></script>
+<script src="../js/viz-1.0.3.js"></script>
+<script src="../js/visualgo_print.js"></script>
+<script src="../js/graph_library.js"></script>
+<script>
+      function runSlide(slide) {
+        if (slide == '1') {
+          $("#e-lecture").html("slide " + slide + " (" + 1 + "%)");
+          $('#title-SC').click();
+$("#v-search").val(8);
+$("#search").click().addClass("menu-highlighted");
+          showActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '2') {
+          $("#e-lecture").html("slide " + slide + " (" + 2 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '2-1') {
+          $("#e-lecture").html("slide " + slide + " (" + 4 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '2-2') {
+          $("#e-lecture").html("slide " + slide + " (" + 5 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '2-3') {
+          $("#e-lecture").html("slide " + slide + " (" + 7 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '2-4') {
+          $("#e-lecture").html("slide " + slide + " (" + 8 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '2-5') {
+          $("#e-lecture").html("slide " + slide + " (" + 9 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '2-6') {
+          $("#e-lecture").html("slide " + slide + " (" + 11 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '3') {
+          $("#e-lecture").html("slide " + slide + " (" + 12 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '3-1') {
+          $("#e-lecture").html("slide " + slide + " (" + 14 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '3-2') {
+          $("#e-lecture").html("slide " + slide + " (" + 15 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '3-3') {
+          $("#e-lecture").html("slide " + slide + " (" + 16 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '3-4') {
+          $("#e-lecture").html("slide " + slide + " (" + 18 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '3-5') {
+          $("#e-lecture").html("slide " + slide + " (" + 19 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '3-6') {
+          $("#e-lecture").html("slide " + slide + " (" + 21 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '3-7') {
+          $("#e-lecture").html("slide " + slide + " (" + 22 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '4') {
+          $("#e-lecture").html("slide " + slide + " (" + 23 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '4-1') {
+          $("#e-lecture").html("slide " + slide + " (" + 25 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '4-2') {
+          $("#e-lecture").html("slide " + slide + " (" + 26 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '4-3') {
+          $("#e-lecture").html("slide " + slide + " (" + 28 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '4-4') {
+          $("#e-lecture").html("slide " + slide + " (" + 29 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '4-5') {
+          $("#e-lecture").html("slide " + slide + " (" + 30 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '4-6') {
+          $("#e-lecture").html("slide " + slide + " (" + 32 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '4-7') {
+          $("#e-lecture").html("slide " + slide + " (" + 33 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '4-8') {
+          $("#e-lecture").html("slide " + slide + " (" + 35 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '5') {
+          $("#e-lecture").html("slide " + slide + " (" + 36 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '5-1') {
+          $("#e-lecture").html("slide " + slide + " (" + 38 + "%)");
+          $('#title-LP').click();
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '5-2') {
+          $("#e-lecture").html("slide " + slide + " (" + 39 + "%)");
+          $('#title-SC').click();
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '6') {
+          $("#e-lecture").html("slide " + slide + " (" + 40 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '6-1') {
+          $("#e-lecture").html("slide " + slide + " (" + 42 + "%)");
+          $('#title-LP').click();
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '6-2') {
+          $("#e-lecture").html("slide " + slide + " (" + 43 + "%)");
+          $('#title-SC').click();
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '7') {
+          $("#e-lecture").html("slide " + slide + " (" + 45 + "%)");
+          $('#title-LP').click();
+$("#create").click().addClass("menu-highlighted");
+$("#v-create").val(7);
+createTable();
+          showActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '7-1') {
+          $("#e-lecture").html("slide " + slide + " (" + 46 + "%)");
+          $('#title-LP').click();
+$("#v-create").val(7);
+createTable();
+$("#v-insert").val("18,14,21");
+$("#insert").click().addClass("menu-highlighted");
+          showActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '7-2') {
+          $("#e-lecture").html("slide " + slide + " (" + 47 + "%)");
+          $('#title-LP').click();
+createTableSpecial([14,21,-1,-1,18,-1,-1]);
+$("#v-insert").val("1,35");
+$("#insert").click().addClass("menu-highlighted");
+          showActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '7-3') {
+          $("#e-lecture").html("slide " + slide + " (" + 49 + "%)");
+          $('#title-LP').click();
+createTableSpecial([14,21,1,35,18,-1,-1]);
+$("#v-search").val(35);
+$("#search").click().addClass("menu-highlighted");
+          showActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '7-4') {
+          $("#e-lecture").html("slide " + slide + " (" + 50 + "%)");
+          $('#title-LP').click();
+createTableSpecial([14,21,1,35,18,-1,-1]);
+$("#v-remove").val(21);
+$("#remove").click().addClass("menu-highlighted");
+          showActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '7-5') {
+          $("#e-lecture").html("slide " + slide + " (" + 52 + "%)");
+          $('#title-LP').click();
+createTableSpecial([14,21,1,35,18,-1,-1]);
+$("#v-remove").val(21);
+$("#remove").click().addClass("menu-highlighted");
+          showActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '7-6') {
+          $("#e-lecture").html("slide " + slide + " (" + 53 + "%)");
+          $('#title-LP').click();
+createTableSpecial([14,21,1,35,18,-1,-1]);
+$("#v-remove").val(21);
+$("#remove").click().addClass("menu-highlighted");
+          showActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '7-7') {
+          $("#e-lecture").html("slide " + slide + " (" + 54 + "%)");
+          $('#title-LP').click();
+createTableSpecial([14,-2,1,35,18,-1,-1]);
+$("#v-search").val(35);
+$("#search").click().addClass("menu-highlighted");
+          showActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '7-8') {
+          $("#e-lecture").html("slide " + slide + " (" + 56 + "%)");
+          $('#title-LP').click();
+createTableSpecial([14,-2,1,35,18,-1,-1]);
+$("#v-insert").val(15);
+$("#insert").click().addClass("menu-highlighted");
+          showActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '7-9') {
+          $("#e-lecture").html("slide " + slide + " (" + 57 + "%)");
+          $('#title-LP').click();
+createTableSpecial([61,72,83,-1,-1,-1,6,17,28,39,50]);
+          showActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '7-10') {
+          $("#e-lecture").html("slide " + slide + " (" + 59 + "%)");
+          $('#title-LP').click();
+createTableSpecial([14,15,1,35,18,-1,-1]);
+          showActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '8') {
+          $("#e-lecture").html("slide " + slide + " (" + 60 + "%)");
+          $('#title-QP').click();
+          showActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '8-1') {
+          $("#e-lecture").html("slide " + slide + " (" + 61 + "%)");
+          $('#title-QP').click();
+createTableSpecial([-1,-1,-1,10,18,-1,-1]);
+$("#v-insert").val("38");
+$("#insert").click().addClass("menu-highlighted");
+          showActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '8-2') {
+          $("#e-lecture").html("slide " + slide + " (" + 63 + "%)");
+          $('#title-QP').click();
+createTableSpecial([38,-1,-1,10,-2,-1,-1]);
+$("#v-search").val("38");
+$("#search").click().addClass("menu-highlighted");
+          showActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '8-3') {
+          $("#e-lecture").html("slide " + slide + " (" + 64 + "%)");
+          $('#title-QP').click();
+createTableSpecial([38,-1,-1,10,18,-1,-1]);
+$("#v-insert").val("12,17");
+$("#insert").click().addClass("menu-highlighted");
+          showActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '8-4') {
+          $("#e-lecture").html("slide " + slide + " (" + 66 + "%)");
+          $('#title-QP').click();
+createTableSpecial([38,-1,-1,10,18,12,-1]);
+$("#v-insert").val("17");
+$("#insert").click().addClass("menu-highlighted");
+          showActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '8-5') {
+          $("#e-lecture").html("slide " + slide + " (" + 67 + "%)");
+          
+          showActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '8-6') {
+          $("#e-lecture").html("slide " + slide + " (" + 69 + "%)");
+          
+          showActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '8-7') {
+          $("#e-lecture").html("slide " + slide + " (" + 70 + "%)");
+          
+          showActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '8-8') {
+          $("#e-lecture").html("slide " + slide + " (" + 71 + "%)");
+          
+          showActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '9') {
+          $("#e-lecture").html("slide " + slide + " (" + 73 + "%)");
+          $('#title-DH').click();
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '9-1') {
+          $("#e-lecture").html("slide " + slide + " (" + 74 + "%)");
+          $('#title-DH').click();
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '9-2') {
+          $("#e-lecture").html("slide " + slide + " (" + 76 + "%)");
+          $('#title-DH').click();
+createTableSpecial([14,-1,-1,17,-1,12,-1]);
+$("#v-insert").val("35,42");
+$("#insert").click().addClass("menu-highlighted");
+          showActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '9-3') {
+          $("#e-lecture").html("slide " + slide + " (" + 77 + "%)");
+          $('#title-DH').click();
+createTableSpecial([14,35,-1,-2,-1,12,42]);
+$("#v-search").val(35);
+$("#search").click().addClass("menu-highlighted");
+          showActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '9-4') {
+          $("#e-lecture").html("slide " + slide + " (" + 78 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '10') {
+          $("#e-lecture").html("slide " + slide + " (" + 80 + "%)");
+          $('#title-SC').click();
+$("#v-insert").val("9,16,23,30,37,44");
+$("#insert").click().addClass("menu-highlighted");
+          showActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '10-1') {
+          $("#e-lecture").html("slide " + slide + " (" + 81 + "%)");
+          $('#title-SC').click();
+$("#v-search").val(35);
+$("#search").click().addClass("menu-highlighted");
+          showActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '10-2') {
+          $("#e-lecture").html("slide " + slide + " (" + 83 + "%)");
+          $('#title-SC').click();
+$("#v-search").val(35);
+$("#search").click().addClass("menu-highlighted");
+          showActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '10-3') {
+          $("#e-lecture").html("slide " + slide + " (" + 84 + "%)");
+          $('#title-SC').click();
+$("#v-search").val(35);
+$("#search").click().addClass("menu-highlighted");
+          showActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '11') {
+          $("#e-lecture").html("slide " + slide + " (" + 85 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '11-1') {
+          $("#e-lecture").html("slide " + slide + " (" + 87 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '11-2') {
+          $("#e-lecture").html("slide " + slide + " (" + 88 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '11-3') {
+          $("#e-lecture").html("slide " + slide + " (" + 90 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '11-4') {
+          $("#e-lecture").html("slide " + slide + " (" + 91 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '11-5') {
+          $("#e-lecture").html("slide " + slide + " (" + 92 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '11-6') {
+          $("#e-lecture").html("slide " + slide + " (" + 94 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '99') {
+          $("#e-lecture").html("slide " + slide + " (" + 95 + "%)");
+          
+          hideEntireActionsPanel();
+ 
+          showStatusPanel();
+          showCodetracePanel();
+      
+        }
+        if (slide == '99-1') {
+          $("#e-lecture").html("slide " + slide + " (" + 97 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '99-2') {
+          $("#e-lecture").html("slide " + slide + " (" + 98 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+        if (slide == '99-3') {
+          $("#e-lecture").html("slide " + slide + " (" + 100 + "%)");
+          
+          hideEntireActionsPanel();
+          hideStatusPanel();
+          hideCodetracePanel();
+      
+        }
+      }
+
+      window.onpopstate = function(event) {
+        var slide = event.state['slide'];
+        openSlide(slide, function() {
+          runSlide(slide);
+        });
+      };
+
+      function getUrlParameter(sParam) {
+        var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'), sParameterName, i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+          sParameterName = sURLVariables[i].split('=');
+          if (sParameterName[0] === sParam) return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+      };
+
+      function pushState(slideValue) {
+        var url = '/vi/hashtable';
+        if (typeof slideValue != 'undefined' && slideValue != null) url += '?slide=' + slideValue;
+        window.history.pushState({slide: slideValue}, "slide " + slideValue, url);
+      }
+
+      function showPopup(callback) {
+        $('#popup').fadeIn(100, callback);
+      }
+
+      function hidePopup(callback) {
+        $('#popup').fadeOut(100, callback);
+      }
+
+      function showOverlay() {
+        $('#overlay').css('opacity', 0.5); 
+        $('#overlay').show();
+      }
+
+      function hideOverlay() {
+        $('#overlay').hide();
+        $("#e-lecture").html("");
+      }
+
+      function makeOverlayTransparent() {
+        $('#overlay').css('opacity', 0);
+      }
+
+      function hideSlide(callback) {
+        isPlaying = true;
+        closeSlide(cur_slide, function() {
+          makeOverlayTransparent();
+          setTimeout(callback, 700); // don't immediately run the animation, wait for 500ms+ first
+        });
+      }
+
+      function showSlide() {
+        isPlaying = false;
+        openSlide(cur_slide);
+        showOverlay();
+      }
+
+      $(function() {
+        var slide = getUrlParameter('slide');
+        
+        $.get('/hasvisited' + '/hashtable', function(data) {
+          var hasVisited = data['hasvisited'] == '1';
+          if (!hasVisited) {
+            var postData = {
+              '_token': 'iVivZ7KRPe6XK7pbuGtOoEjljE1xyBVNhLKNFuF8',
+              'page': '/hashtable'.substring(1),
+            };
+
+            $.post("/visitpage", postData, function(data) {
+              // non critical request...
+            });
+
+            if (typeof slide != undefined && slide != null) {
+              cur_slide = slide;
+            }
+
+            $("#mode-menu a").trigger("click");
+          }
+          else {
+            if (typeof slide != undefined && slide != null) {
+              cur_slide = slide;
+              $('#mode-menu a').click();
+            }    
+          }
+        }).fail(function() {
+          if (typeof slide != undefined && slide != null) {
+            cur_slide = slide;
+            $('#mode-menu a').click();
+          }
+        });
+
+        $('.mcq-submit').click(function() {
+          var questionId = parseInt($(this).attr('id').split('-')[1]);
+          var answer = $('#mcq-answer-' + questionId).val();
+          var userAnswer = $('input[type=radio][name=mcq-'+questionId+'-choice]:checked').val();
+
+          if (answer === userAnswer) {
+            $('#answer-status-' + questionId).html('<font color="green"><b>Correct!</b></font>');
+          }
+          else {
+            $('#answer-status-' + questionId).html('<font color="red"><b>Wrong Answer! Try again...</b></font>');
+          }
+          $('#answer-status-' + questionId).show();
+          setTimeout(function() {
+            $('#answer-status-' + questionId).fadeOut(1000);
+          }, 1000);
+        });
+
+        $('.msq-submit').click(function() {
+          var questionId = parseInt($(this).attr('id').split('-')[1]);
+          var answer = $('#msq-answer-' + questionId).val();
+
+          var answers = [];
+          $('input[type=checkbox][class=msq-choice]:checked').each(function() {
+            answers.push($(this).attr('id').split('-')[3]);
+          });
+          answers.sort();
+          var userAnswer = answers.join(',');
+
+          if (answer === userAnswer) {
+            $('#answer-status-' + questionId).html('<font color="green">Correct!</font>');
+          }
+          else {
+            $('#answer-status-' + questionId).html('<font color="red">Wrong Answer! Try again...</font>');
+          }
+          $('#answer-status-' + questionId).show();
+          setTimeout(function() {
+            $('#answer-status-' + questionId).fadeOut(1000);
+          }, 1000);
+        });
+
+        $('select.lecture-dropdown').change(function() {
+          var nextSlide = $(this).val();
+          openSlide(nextSlide, function() {
+            runSlide(nextSlide);
+            pushState(nextSlide);
+          });
+        });
+
+        $('#hide-popup').click(function() {
+          hidePopup();
+        });
+
+        $('#popup').hover(function() {
+          $('#hide-popup').show();
+        }, function() {
+          $('#hide-popup').hide();
+        });
+
+        $('#electure-1 .electure-next').click(function() {
+          hidePopup();
+          runSlide('2');
+          pushState('2');
+        });
+      
+        $('#electure-2 .electure-next').click(function() {
+          hidePopup();
+          runSlide('2-1');
+          pushState('2-1');
+        });
+        $('#electure-2 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('1');
+          pushState('1');
+        });
+      
+        $('#electure-2-1 .electure-next').click(function() {
+          hidePopup();
+          runSlide('2-2');
+          pushState('2-2');
+        });
+        $('#electure-2-1 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('2');
+          pushState('2');
+        });
+      
+        $('#electure-2-2 .electure-next').click(function() {
+          hidePopup();
+          runSlide('2-3');
+          pushState('2-3');
+        });
+        $('#electure-2-2 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('2-1');
+          pushState('2-1');
+        });
+      
+        $('#electure-2-3 .electure-next').click(function() {
+          hidePopup();
+          runSlide('2-4');
+          pushState('2-4');
+        });
+        $('#electure-2-3 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('2-2');
+          pushState('2-2');
+        });
+      
+        $('#electure-2-4 .electure-next').click(function() {
+          hidePopup();
+          runSlide('2-5');
+          pushState('2-5');
+        });
+        $('#electure-2-4 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('2-3');
+          pushState('2-3');
+        });
+      
+        $('#electure-2-5 .electure-next').click(function() {
+          hidePopup();
+          runSlide('2-6');
+          pushState('2-6');
+        });
+        $('#electure-2-5 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('2-4');
+          pushState('2-4');
+        });
+      
+        $('#electure-2-6 .electure-next').click(function() {
+          hidePopup();
+          runSlide('3');
+          pushState('3');
+        });
+        $('#electure-2-6 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('2-5');
+          pushState('2-5');
+        });
+      
+        $('#electure-3 .electure-next').click(function() {
+          hidePopup();
+          runSlide('3-1');
+          pushState('3-1');
+        });
+        $('#electure-3 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('2-6');
+          pushState('2-6');
+        });
+      
+        $('#electure-3-1 .electure-next').click(function() {
+          hidePopup();
+          runSlide('3-2');
+          pushState('3-2');
+        });
+        $('#electure-3-1 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('3');
+          pushState('3');
+        });
+      
+        $('#electure-3-2 .electure-next').click(function() {
+          hidePopup();
+          runSlide('3-3');
+          pushState('3-3');
+        });
+        $('#electure-3-2 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('3-1');
+          pushState('3-1');
+        });
+      
+        $('#electure-3-3 .electure-next').click(function() {
+          hidePopup();
+          runSlide('3-4');
+          pushState('3-4');
+        });
+        $('#electure-3-3 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('3-2');
+          pushState('3-2');
+        });
+      
+        $('#electure-3-4 .electure-next').click(function() {
+          hidePopup();
+          runSlide('3-5');
+          pushState('3-5');
+        });
+        $('#electure-3-4 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('3-3');
+          pushState('3-3');
+        });
+      
+        $('#electure-3-5 .electure-next').click(function() {
+          hidePopup();
+          runSlide('3-6');
+          pushState('3-6');
+        });
+        $('#electure-3-5 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('3-4');
+          pushState('3-4');
+        });
+      
+        $('#electure-3-6 .electure-next').click(function() {
+          hidePopup();
+          runSlide('3-7');
+          pushState('3-7');
+        });
+        $('#electure-3-6 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('3-5');
+          pushState('3-5');
+        });
+      
+        $('#electure-3-7 .electure-next').click(function() {
+          hidePopup();
+          runSlide('4');
+          pushState('4');
+        });
+        $('#electure-3-7 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('3-6');
+          pushState('3-6');
+        });
+      
+        $('#electure-4 .electure-next').click(function() {
+          hidePopup();
+          runSlide('4-1');
+          pushState('4-1');
+        });
+        $('#electure-4 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('3-7');
+          pushState('3-7');
+        });
+      
+        $('#electure-4-1 .electure-next').click(function() {
+          hidePopup();
+          runSlide('4-2');
+          pushState('4-2');
+        });
+        $('#electure-4-1 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('4');
+          pushState('4');
+        });
+      
+        $('#electure-4-2 .electure-next').click(function() {
+          hidePopup();
+          runSlide('4-3');
+          pushState('4-3');
+        });
+        $('#electure-4-2 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('4-1');
+          pushState('4-1');
+        });
+      
+        $('#electure-4-3 .electure-next').click(function() {
+          hidePopup();
+          runSlide('4-4');
+          pushState('4-4');
+        });
+        $('#electure-4-3 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('4-2');
+          pushState('4-2');
+        });
+      
+        $('#electure-4-4 .electure-next').click(function() {
+          hidePopup();
+          runSlide('4-5');
+          pushState('4-5');
+        });
+        $('#electure-4-4 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('4-3');
+          pushState('4-3');
+        });
+      
+        $('#electure-4-5 .electure-next').click(function() {
+          hidePopup();
+          runSlide('4-6');
+          pushState('4-6');
+        });
+        $('#electure-4-5 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('4-4');
+          pushState('4-4');
+        });
+      
+        $('#electure-4-6 .electure-next').click(function() {
+          hidePopup();
+          runSlide('4-7');
+          pushState('4-7');
+        });
+        $('#electure-4-6 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('4-5');
+          pushState('4-5');
+        });
+      
+        $('#electure-4-7 .electure-next').click(function() {
+          hidePopup();
+          runSlide('4-8');
+          pushState('4-8');
+        });
+        $('#electure-4-7 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('4-6');
+          pushState('4-6');
+        });
+      
+        $('#electure-4-8 .electure-next').click(function() {
+          hidePopup();
+          runSlide('5');
+          pushState('5');
+        });
+        $('#electure-4-8 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('4-7');
+          pushState('4-7');
+        });
+      
+        $('#electure-5 .electure-next').click(function() {
+          hidePopup();
+          runSlide('5-1');
+          pushState('5-1');
+        });
+        $('#electure-5 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('4-8');
+          pushState('4-8');
+        });
+      
+        $('#electure-5-1 .electure-next').click(function() {
+          hidePopup();
+          runSlide('5-2');
+          pushState('5-2');
+        });
+        $('#electure-5-1 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('5');
+          pushState('5');
+        });
+      
+        $('#electure-5-2 .electure-next').click(function() {
+          hidePopup();
+          runSlide('6');
+          pushState('6');
+        });
+        $('#electure-5-2 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('5-1');
+          pushState('5-1');
+        });
+      
+        $('#electure-6 .electure-next').click(function() {
+          hidePopup();
+          runSlide('6-1');
+          pushState('6-1');
+        });
+        $('#electure-6 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('5-2');
+          pushState('5-2');
+        });
+      
+        $('#electure-6-1 .electure-next').click(function() {
+          hidePopup();
+          runSlide('6-2');
+          pushState('6-2');
+        });
+        $('#electure-6-1 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('6');
+          pushState('6');
+        });
+      
+        $('#electure-6-2 .electure-next').click(function() {
+          hidePopup();
+          runSlide('7');
+          pushState('7');
+        });
+        $('#electure-6-2 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('6-1');
+          pushState('6-1');
+        });
+      
+        $('#electure-7 .electure-next').click(function() {
+          hidePopup();
+          runSlide('7-1');
+          pushState('7-1');
+        });
+        $('#electure-7 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('6-2');
+          pushState('6-2');
+        });
+      
+        $('#electure-7-1 .electure-next').click(function() {
+          hidePopup();
+          runSlide('7-2');
+          pushState('7-2');
+        });
+        $('#electure-7-1 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('7');
+          pushState('7');
+        });
+      
+        $('#electure-7-2 .electure-next').click(function() {
+          hidePopup();
+          runSlide('7-3');
+          pushState('7-3');
+        });
+        $('#electure-7-2 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('7-1');
+          pushState('7-1');
+        });
+      
+        $('#electure-7-3 .electure-next').click(function() {
+          hidePopup();
+          runSlide('7-4');
+          pushState('7-4');
+        });
+        $('#electure-7-3 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('7-2');
+          pushState('7-2');
+        });
+      
+        $('#electure-7-4 .electure-next').click(function() {
+          hidePopup();
+          runSlide('7-5');
+          pushState('7-5');
+        });
+        $('#electure-7-4 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('7-3');
+          pushState('7-3');
+        });
+      
+        $('#electure-7-5 .electure-next').click(function() {
+          hidePopup();
+          runSlide('7-6');
+          pushState('7-6');
+        });
+        $('#electure-7-5 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('7-4');
+          pushState('7-4');
+        });
+      
+        $('#electure-7-6 .electure-next').click(function() {
+          hidePopup();
+          runSlide('7-7');
+          pushState('7-7');
+        });
+        $('#electure-7-6 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('7-5');
+          pushState('7-5');
+        });
+      
+        $('#electure-7-7 .electure-next').click(function() {
+          hidePopup();
+          runSlide('7-8');
+          pushState('7-8');
+        });
+        $('#electure-7-7 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('7-6');
+          pushState('7-6');
+        });
+      
+        $('#electure-7-8 .electure-next').click(function() {
+          hidePopup();
+          runSlide('7-9');
+          pushState('7-9');
+        });
+        $('#electure-7-8 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('7-7');
+          pushState('7-7');
+        });
+      
+        $('#electure-7-9 .electure-next').click(function() {
+          hidePopup();
+          runSlide('7-10');
+          pushState('7-10');
+        });
+        $('#electure-7-9 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('7-8');
+          pushState('7-8');
+        });
+      
+        $('#electure-7-10 .electure-next').click(function() {
+          hidePopup();
+          runSlide('8');
+          pushState('8');
+        });
+        $('#electure-7-10 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('7-9');
+          pushState('7-9');
+        });
+      
+        $('#electure-8 .electure-next').click(function() {
+          hidePopup();
+          runSlide('8-1');
+          pushState('8-1');
+        });
+        $('#electure-8 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('7-10');
+          pushState('7-10');
+        });
+      
+        $('#electure-8-1 .electure-next').click(function() {
+          hidePopup();
+          runSlide('8-2');
+          pushState('8-2');
+        });
+        $('#electure-8-1 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('8');
+          pushState('8');
+        });
+      
+        $('#electure-8-2 .electure-next').click(function() {
+          hidePopup();
+          runSlide('8-3');
+          pushState('8-3');
+        });
+        $('#electure-8-2 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('8-1');
+          pushState('8-1');
+        });
+      
+        $('#electure-8-3 .electure-next').click(function() {
+          hidePopup();
+          runSlide('8-4');
+          pushState('8-4');
+        });
+        $('#electure-8-3 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('8-2');
+          pushState('8-2');
+        });
+      
+        $('#electure-8-4 .electure-next').click(function() {
+          hidePopup();
+          runSlide('8-5');
+          pushState('8-5');
+        });
+        $('#electure-8-4 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('8-3');
+          pushState('8-3');
+        });
+      
+        $('#electure-8-5 .electure-next').click(function() {
+          hidePopup();
+          runSlide('8-6');
+          pushState('8-6');
+        });
+        $('#electure-8-5 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('8-4');
+          pushState('8-4');
+        });
+      
+        $('#electure-8-6 .electure-next').click(function() {
+          hidePopup();
+          runSlide('8-7');
+          pushState('8-7');
+        });
+        $('#electure-8-6 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('8-5');
+          pushState('8-5');
+        });
+      
+        $('#electure-8-7 .electure-next').click(function() {
+          hidePopup();
+          runSlide('8-8');
+          pushState('8-8');
+        });
+        $('#electure-8-7 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('8-6');
+          pushState('8-6');
+        });
+      
+        $('#electure-8-8 .electure-next').click(function() {
+          hidePopup();
+          runSlide('9');
+          pushState('9');
+        });
+        $('#electure-8-8 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('8-7');
+          pushState('8-7');
+        });
+      
+        $('#electure-9 .electure-next').click(function() {
+          hidePopup();
+          runSlide('9-1');
+          pushState('9-1');
+        });
+        $('#electure-9 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('8-8');
+          pushState('8-8');
+        });
+      
+        $('#electure-9-1 .electure-next').click(function() {
+          hidePopup();
+          runSlide('9-2');
+          pushState('9-2');
+        });
+        $('#electure-9-1 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('9');
+          pushState('9');
+        });
+      
+        $('#electure-9-2 .electure-next').click(function() {
+          hidePopup();
+          runSlide('9-3');
+          pushState('9-3');
+        });
+        $('#electure-9-2 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('9-1');
+          pushState('9-1');
+        });
+      
+        $('#electure-9-3 .electure-next').click(function() {
+          hidePopup();
+          runSlide('9-4');
+          pushState('9-4');
+        });
+        $('#electure-9-3 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('9-2');
+          pushState('9-2');
+        });
+      
+        $('#electure-9-4 .electure-next').click(function() {
+          hidePopup();
+          runSlide('10');
+          pushState('10');
+        });
+        $('#electure-9-4 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('9-3');
+          pushState('9-3');
+        });
+      
+        $('#electure-10 .electure-next').click(function() {
+          hidePopup();
+          runSlide('10-1');
+          pushState('10-1');
+        });
+        $('#electure-10 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('9-4');
+          pushState('9-4');
+        });
+      
+        $('#electure-10-1 .electure-next').click(function() {
+          hidePopup();
+          runSlide('10-2');
+          pushState('10-2');
+        });
+        $('#electure-10-1 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('10');
+          pushState('10');
+        });
+      
+        $('#electure-10-2 .electure-next').click(function() {
+          hidePopup();
+          runSlide('10-3');
+          pushState('10-3');
+        });
+        $('#electure-10-2 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('10-1');
+          pushState('10-1');
+        });
+      
+        $('#electure-10-3 .electure-next').click(function() {
+          hidePopup();
+          runSlide('11');
+          pushState('11');
+        });
+        $('#electure-10-3 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('10-2');
+          pushState('10-2');
+        });
+      
+        $('#electure-11 .electure-next').click(function() {
+          hidePopup();
+          runSlide('11-1');
+          pushState('11-1');
+        });
+        $('#electure-11 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('10-3');
+          pushState('10-3');
+        });
+      
+        $('#electure-11-1 .electure-next').click(function() {
+          hidePopup();
+          runSlide('11-2');
+          pushState('11-2');
+        });
+        $('#electure-11-1 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('11');
+          pushState('11');
+        });
+      
+        $('#electure-11-2 .electure-next').click(function() {
+          hidePopup();
+          runSlide('11-3');
+          pushState('11-3');
+        });
+        $('#electure-11-2 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('11-1');
+          pushState('11-1');
+        });
+      
+        $('#electure-11-3 .electure-next').click(function() {
+          hidePopup();
+          runSlide('11-4');
+          pushState('11-4');
+        });
+        $('#electure-11-3 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('11-2');
+          pushState('11-2');
+        });
+      
+        $('#electure-11-4 .electure-next').click(function() {
+          hidePopup();
+          runSlide('11-5');
+          pushState('11-5');
+        });
+        $('#electure-11-4 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('11-3');
+          pushState('11-3');
+        });
+      
+        $('#electure-11-5 .electure-next').click(function() {
+          hidePopup();
+          runSlide('11-6');
+          pushState('11-6');
+        });
+        $('#electure-11-5 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('11-4');
+          pushState('11-4');
+        });
+      
+        $('#electure-11-6 .electure-next').click(function() {
+          hidePopup();
+          runSlide('99');
+          pushState('99');
+        });
+        $('#electure-11-6 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('11-5');
+          pushState('11-5');
+        });
+      
+        $('#electure-99 .electure-next').click(function() {
+          hidePopup();
+          runSlide('99-1');
+          pushState('99-1');
+        });
+        $('#electure-99 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('11-6');
+          pushState('11-6');
+        });
+      
+        $('#electure-99-1 .electure-next').click(function() {
+          hidePopup();
+          runSlide('99-2');
+          pushState('99-2');
+        });
+        $('#electure-99-1 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('99');
+          pushState('99');
+        });
+      
+        $('#electure-99-2 .electure-next').click(function() {
+          hidePopup();
+          runSlide('99-3');
+          pushState('99-3');
+        });
+        $('#electure-99-2 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('99-1');
+          pushState('99-1');
+        });
+      
+        $('#electure-99-3 .electure-prev').click(function() {
+          hidePopup();
+          runSlide('99-2');
+          pushState('99-2');
+        });
+      
+ 
+
+        // temporary quick fix for Google Chrome Aug 2016 issue..., put at last part so that everything else has been loaded
+        // setTimeout(function(){ document.body.style.zoom = "100.1%"; }, 500);
+        // setTimeout(function(){ document.body.style.zoom = "100%"; }, 600);
+        // I turn it off on 14 June 2018, seems 'ok'?
+      });
+
+      function doButtonAction79() {
+        $("#v-create").val(7);
+createTable();
+CUSTOM_ACTION('insert','18,14,21');
+$("#recap1").html("First, we Insert(18). h(18) = 18%7 = 4. As HT[4] is clearly empty, we put 18 there.<br>Second, we Insert(14). h(14) = 14%7 = 0. As HT[0] is clearly empty, we put 14 there.<br><br>Third, we Insert(21). h(21) = 21%7 = 0 too. As HT[0] is already occupied by key 14 above, we cannot put 21 there. Since we use linear probing as the collision resolution technique, we look for the next empty slot. HT[1] happens to be empty and we put 21 there.");
+      }
+      function doButtonAction80() {
+        createTableSpecial([14,21,-1,-1,18,-1,-1]);
+CUSTOM_ACTION('insert','1,35');
+$("#recap2").html("Fourth, we Insert(1). h(1) = 1%7 = 1. As HT[1] is already occupied by key 21 from earlier slide, we cannot put 1 there. Using Linear Probing, we look for the next available slot. HT[2] happens to be empty and we put 1 there.<br><br>Fifth, we Insert(35). h(35) = 35%7 = 0 too. As HT[0] and the next two adjacent slots: HT[1] and HT[2] have been occupied from previous insertions, we cannot put 35 in those three slots. Linear Probing will continue and find HT[3] is empty and put 35 there.");
+      }
+      function doButtonAction81() {
+        CUSTOM_ACTION('search','35');
+      }
+      function doButtonAction82() {
+        CUSTOM_ACTION('search','8');
+      }
+      function doButtonAction83() {
+        createTableSpecial([14,21,1,35,18,-1,-1]);
+CUSTOM_ACTION('remove','21');
+      }
+      function doButtonAction84() {
+        createTableSpecial([14,-2,1,35,18,-1,-1]);
+CUSTOM_ACTION('insert','28');
+      }
+      function doButtonAction85() {
+        createTableSpecial([-1,-1,-1,10,18,-1,-1]);
+CUSTOM_ACTION('insert','38');
+$("#recap3").html("We will first try to put 38 at base address index h(38) = 38%7 = 3, but we are unable to do so as key 10 is already there.<br><br>Then, we try to put 38 at base address 3 + 1*1 = 4, but again we are unable to do so as key 18 is already there.<br><br>So, we try to put 38 at base address 3 + 2*2 = 7. But index 7 exceeds the last index <b>M</b>-1 = 7-1 = 6 in this Hash Table. We need the modulo operation to help us wrap around and reach index (3+4) % 7 = 0. We put 38 in this empty cell.");
+      }
+      function doButtonAction86() {
+        createTableSpecial([38,-1,-1,10,18,-1,-1]);
+CUSTOM_ACTION('insert','12,17');
+      }
+      function doButtonAction87() {
+        createTableSpecial([14,-1,-1,17,-1,12,-1]);
+CUSTOM_ACTION('insert','35,42');
+$("#recap4").html("As the Hash Table size <b>M = 7</b>, the smaller prime is <b>M' = 5</b>.<br>Then, <samp>h2(35) = 5 - 35%5 = 5</samp> and <samp>h2(42) = 5 - 42%5 = 3</samp>.<br><br>Thus, Insert(35) will check indices [0,5,3,1 (found empty slot)] and insert 35 at index 1.<br>Then, Insert(42) will check indices [0,3,6 (found empty slot)] and insert 42 at index 6.<br>While <samp>h(35) = h(42) = 0</samp>, their probing sequences are different as <samp>h2(35) &ne; h2(42)</samp>.");
+      }
+      function doButtonAction88() {
+        $("#vonmises").html("after having just 23 people (keys) in the room (the hash table of size 365 cells), it is more likely (&gt; 50% chance) to have a collision than not... We do not need 365/2 ~= 180+ people");
+      }
+      function doButtonAction91() {
+        CUSTOM_ACTION('search','38');
+      }
+      function doButtonAction92() {
+        createTableSpecial([61,72,83,-1,-1,-1,6,17,28,39,50]);
+CUSTOM_ACTION('insert','94');
+      }
+      function doButtonAction93() {
+        $('#title-SC').click();
+CUSTOM_ACTION('insert','9,16,23,30,37,44');
+      }
+      function doButtonAction94() {
+        CUSTOM_ACTION('remove','7');
+      }
+
+      function adjustPopupToImageSize() {
+        var width = $('#popup-image').prop('width');
+        var height = $('#popup-image').prop('height');
+        $('#popup').width(width + 20);
+        $('#popup').height(height + 20);
+        if (width == 0 && height == 0) {
+          setTimeout(adjustPopupToImageSize, 200);
+        } else {
+          showPopup();  
+        }
+      }
+
+      function POPUP_IMAGE(url) {
+        $('#popup-content').html('<img id="popup-image" src="' + url + '">');
+        adjustPopupToImageSize();
+      }
+
+      function URL(url.html) {
+        window.open(url, '_blank');
+      }
+
+      // Implement these functions in each visualisation
+      // This function will be called before entering e-Lecture Mode
+      function ENTER_LECTURE_MODE() {}
+
+      // This function will be called before returning to Explore Mode
+      function ENTER_EXPLORE_MODE() {}
+
+      // Lecture action functions
+      function CUSTOM_ACTION(action, data, mode) {}
+    </script>
+<script type="text/javascript">
+// HashTable Widget
+// original author: Steven Halim
+// Defines a HashTable object; keeps implementation of Hash Table internally and interact with GraphWidget to display Hash Table visualizations
+// will add Separate Chaining sometime soon...
+
+var HashTable = function() {
+  var self = this;
+  var gw = new GraphWidget();
+  var activeStatus = "-";
+  var maxHashTableSize = 19; // we only allow primes up to 17
+  var primes = [3, 5, 7, 11, 13, 17, 19]; // OK, only these 5 primes are actually within our range of allowed Hash Table size
+  var EMPTY = -1; // use -1 to indicate EMPTY element
+  var DELETED = -2; // use -2 to indicate DELETED element
+  var HT;  // HT: the Array that represents the state of the Hash Table in Open Addressing
+  var HT_SC; // HT_SC: Adjacency List like structure to represent the state of the Hash Table in Separate Chaining
+  var N = 4; // number of elements actually present in the hash table
+
+  this.setActiveStatus = function(newActiveStatus) {
+    if (activeStatus != newActiveStatus) {
+      activeStatus = newActiveStatus;
+      if (activeStatus == "SC") { // Separate Chaining
+        HT_SC = [[11], [1], [24,13,35], [14], [], [27], [28], [18,7], [8], [], [21,10]];
+        N = 13;
+        initSC(HT_SC);
+      }
+      else { // Open Addressing
+        if (activeStatus == "LP") {
+          HT = [14, 21, 1, EMPTY, 18, EMPTY, EMPTY];
+          N = 4;
+        }
+        else if (activeStatus == "QP") {
+          HT = [38, EMPTY, EMPTY, 3, 18, EMPTY, EMPTY];
+          N = 3;
+        }
+        else if (activeStatus == "DH") {
+          HT = [14, EMPTY, EMPTY, 7, 18, EMPTY, EMPTY];
+          N = 3;
+        }
+        init(HT);
+      }
+    }
+  }
+
+  this.getActiveStatus = function() { return activeStatus; }
+
+  this.getGraphWidget = function() { return gw; }
+
+  this.createTable = function(sz) {
+    if (sz > maxHashTableSize) {
+      // Sorry, maximum allowed Hash Table size is
+      $('#create-err').html('Sorry, maximum allowed Hash Table is ' + maxHashTableSize);
+      return false;
+    }
+    else if (sz < 5) {
+      // Sorry, Hash Table size should be ≥
+      $('#create-err').html('Sorry, Hash Table size should be &ge; ' + "5");
+      return false;
+    }
+
+    N = 0;
+    if (activeStatus == "SC") { // Separate Chaining
+      HT_SC = new Array(sz);
+      for (var i = 0; i < sz; i++) HT_SC[i] = [];
+      initSC(HT_SC);
+    }
+    else if (activeStatus != "SC") { // NOT Separate Chaining means Open Addressing where we cannot have big table
+      HT = new Array(sz);
+      for (var i = 0; i < sz; i++) HT[i] = EMPTY;
+      init(HT);
+    }
+  };
+
+  this.createTableSpecial = function(_HT) {
+    HT = _HT;
+    N = 0;
+    for (var i = 0; i < HT.length; i++) if (HT[i] != EMPTY) N++;
+    init(HT);
+  }
+
+  this.generate = function(arr) {
+    if (arr.length > maxHashTableSize) {
+      // Sorry, maximum allowed Hash Table size is
+      $('#create-err').html('Sorry, maximum allowed Hash Table is ' + maxHashTableSize);
+      return;
+    }
+    if (arr.length < 5) {
+      // Sorry, Hash Table size should be ≥
+      $('#create-err').html('Sorry, Hash Table size should be &ge; ' + "5");
+      return;
+    }
+
+    for (var i = 0; i < arr.length; i++) {
+      arr[i] = parseInt(arr[i]);
+      if (arr[i] < EMPTY) { 
+        $('#create-err').html('Sorry, Hash Table cannot contain negative integers'); // put in variable soon
+        return; // can't create this hashtable
+      }
+    }
+    init(arr);
+  };
+
+  function init(initArr) {
+    var scale = (1000-100) / (initArr.length-1);
+
+    // remove old ones first (if exist)
+    try {
+      for (var i = 0; i < 20*8; i++) { // I don't record how many but not more than 19*7
+        gw.removeVertex(i);
+        gw.removeEdge(i);
+      }
+    }
+    catch (e) { // do nothing if that vertex actually not yet exist
+
+    }
+
+    HT = new Array(); // destroy previous content first...
+    for (var i = 0; i < initArr.length; i++) {
+      HT[i] = initArr[i];
+      gw.addVertex(50 + i*scale, 100, (HT[i] == EMPTY ? '' : (HT[i] == DELETED ? 'DEL' : HT[i])), i, true, "i:" + i);
+    }
+  }
+
+  function initSC(arr) {
+    var M = arr.length;
+    var scale = (1000-100) / (M-1);
+
+    // remove old ones first (if exist)
+    try {
+      for (var i = 0; i < 20*8; i++) { // I don't record how many but not more than 19*7
+        gw.removeVertex(i);
+        gw.removeEdge(i);
+      }
+    }
+    catch (e) { // do nothing if that vertex actually not yet exist
+
+    }
+
+    for (var i = 0; i < M; i++) gw.addVertex(50 + i*scale, 100, "H", i*7, true, "i:" + i);
+    N = 0;
+    for (var i = 0; i < M; i++) {
+      for (var j = 0; j < arr[i].length; j++) {
+        gw.addVertex(80 + i*scale, 100 + (j+1)*70, arr[i][j], i*7+(j+1), 1, "");
+        gw.addEdge(i*7+j, i*7+(j+1), i*7+(j+1), (j == 0) ? EDGE_TYPE_DE : EDGE_TYPE_UDE, 1, true);
+      }
+    }
+  }
+
+  this.search = function(key, callback) {
+    var stateList = [];
+    var vertexTraversed = {};
+    var edgeTraversed = {};
+    var cs;
+
+    if (key < 0 || key > 99) {
+      cs = createState(vertexTraversed, edgeTraversed);
+      // key = {key}, it must be between [0..99] in this visualization.
+      // -1 = empty cell (blank) and -2 = deleted item.
+      cs["status"] = 'key = {key}, it must be between [0..99] in this visualization.<br>-1 = empty cell (blank) and -2 = deleted item.'.replace("{key}", key);
+      stateList.push(cs);
+    }
+    else {
+      var i = key%(HT.length), base = i;
+      var i_next;
+      var jump = 1;
+      var step = 1;
+      var k = 5, smallerPrime = primes[k]; // start from 17
+      while (smallerPrime >= HT.length)
+        smallerPrime = primes[k--];
+      var secondary = smallerPrime - key%smallerPrime; // so it will always be positive
+      var strategy = "linear probing";
+
+      cs = createState(vertexTraversed, edgeTraversed);
+      // key = {key} is hashed to i = base = {key}%{length} = {i}.
+      cs["status"] = 'key = {key} is hashed to i = base = {key}%{length} = {i}.'.replace("{key}", key).replace("{key}", key).replace("{length}", HT.length).replace("{i}", i);
+      cs["vl"][i]["state"] = VERTEX_HIGHLIGHTED;
+      cs["lineNo"] = 1;
+      stateList.push(cs);
+      vertexTraversed[i] = true; // this is traversed in future iteration
+
+      while (true) {
+        if (HT[i] == EMPTY) { // Not Found
+          cs = createState(vertexTraversed, edgeTraversed);
+          // HT[{i}] is empty.
+          // Therefore key = {key} is not found in Hash Table HT.
+          cs["status"] = 'HT[{i}] is empty.<br>Therefore key = {key} is not found in Hash Table HT.'.replace("{i}", i).replace("{key}", key);
+          cs["vl"][i]["state"] = VERTEX_HIGHLIGHTED;
+          cs["lineNo"] = 3;
+          stateList.push(cs);
+          break;
+        }
+        else if (HT[i] == key) { // Found
+          cs = createState(vertexTraversed, edgeTraversed);
+          // HT[{i}] = {key}.
+          // Therefore key = {key} is found in Hash Table HT at index {i}.
+          cs["status"] = 'HT[{i}] = {key}.<br>Therefore key = {key} is found in Hash Table HT at index {i}.'.replace("{i}", i).replace("{key}", key).replace("{key}", key).replace("{i}", i);
+          cs["vl"][i]["state"] = VERTEX_HIGHLIGHTED;
+          cs["lineNo"] = 4;
+          stateList.push(cs);
+          break;
+        }
+        else {
+          if (step == HT.length) {
+            cs = createState(vertexTraversed, edgeTraversed);
+            // After probing all possibilities, key = {key} is not found in Hash Table HT.
+            cs["status"] = 'After probing all possibilities, key = {key} is not found in Hash Table HT.'.replace("{key}", key);
+            stateList.push(cs);
+            break;
+          }
+
+          if (activeStatus == "LP") {
+            jump = 1;
+            strategy = "linear probing";
+          }
+          else if (activeStatus == "QP") {
+            jump = step;
+            strategy = "quadratic probing";
+          }
+          else if (activeStatus == "DH") {
+            jump = secondary;
+            strategy = "double hashing";
+          }
+
+          i_next = (base + step*jump) % HT.length;
+
+          cs = createState(vertexTraversed, edgeTraversed);
+          // HT[{i}] = {val} != key.
+          // Use {strategy} to check the next index i_next = ({base}+{step}*{jump})%{length} = {i_next}.
+          cs["status"] = 'HT[{i}] = {val} != key.<br>Use {strategy} to check the next index i_next = ({base}+{step}*{jump})%{length} = {i_next}.'
+                            .replace("{i}", i).replace("{val}", HT[i]).replace("{strategy}", strategy)
+                            .replace("{base}", base).replace("{step}", step).replace("{jump}", jump).replace("{length}", HT.length).replace("{i_next}", i_next);
+          cs["vl"][i_next]["state"] = VERTEX_HIGHLIGHTED;
+          cs["lineNo"] = 5;
+          stateList.push(cs);
+          vertexTraversed[i_next] = true; // this is traversed in future iteration
+          i = i_next;
+          step++;
+        }
+      }
+    }
+
+    gw.startAnimation(stateList, callback);
+    populatePseudocode(0);
+    return true;
+  }
+
+  this.searchSC = function(key, callback) {
+    var stateList = [];
+    var vertexTraversed = {};
+    var edgeTraversed = {};
+    var cs;
+
+    if (key < 0 || key > 99) {
+      cs = createStateSC(vertexTraversed, edgeTraversed);
+      // key = {key}, it must be between [0..99] in this visualization.
+      // -1 = empty cell (blank) and -2 = deleted item.
+      cs["status"] = 'key = {key}, it must be between [0..99] in this visualization.<br>-1 = empty cell (blank) and -2 = deleted item.'.replace("{key}", key);
+      stateList.push(cs);
+    }
+    else {
+      var M = HT_SC.length;
+      var i = key%M;
+      var j = 0;
+
+      cs = createStateSC(vertexTraversed, edgeTraversed);
+      // key = {key} is hashed to i = base = {key}%{length} = {i}.
+      cs["status"] = 'key = {key} is hashed to i = base = {key}%{length} = {i}.'.replace("{key}", key).replace("{key}", key).replace("{length}", M).replace("{i}", i);
+      cs["vl"][i*7]["state"] = VERTEX_HIGHLIGHTED;
+      cs["lineNo"] = 1;
+      stateList.push(cs);
+      vertexTraversed[i*7] = true; // this is traversed in future iteration
+
+      for (var j = 0; j < HT_SC[i].length; j++) {
+        cs = createStateSC(vertexTraversed, edgeTraversed);
+        cs["status"] = 'Checking this vertex';
+        cs["vl"][i*7+(j+1)]["state"] = VERTEX_HIGHLIGHTED;
+        cs["lineNo"] = [2, 3];
+        stateList.push(cs);
+        vertexTraversed[i*7+(j+1)] = true; // this is traversed in future iteration
+        if (HT_SC[i][j] == key) {
+          cs = createStateSC(vertexTraversed, edgeTraversed);
+          cs["status"] = '{key} is found in Hash Table'.replace("{key}", key);
+          cs["vl"][i*7+(j+1)]["state"] = VERTEX_HIGHLIGHTED;
+          cs["lineNo"] = [4];
+          stateList.push(cs);
+          break;
+        }
+      }
+
+      if (j == HT_SC[i].length) { // not found
+        cs = createStateSC(vertexTraversed, edgeTraversed);
+        cs["status"] = '{key} is not found in Hash Table'.replace("{key}", key);
+        cs["lineNo"] = 5;
+        stateList.push(cs);
+      }
+    }
+
+    gw.startAnimation(stateList, callback);
+    populatePseudocode(3);
+    return true;
+  }
+
+  this.insert = function(keys, callback) {
+    var stateList = [];
+    var vertexTraversed = {};
+    var edgeTraversed = {};
+    var cs;
+
+    var the_keys = keys.split(",");
+    for (idx in the_keys) {
+      key = parseInt(the_keys[idx]);
+
+      if (key < 0 || key > 99) {
+        cs = createState(vertexTraversed, edgeTraversed);
+        // key = {key}, it must be between [0..99] in this visualization.
+        // -1 = empty cell (blank) and -2 = deleted item.
+        cs["status"] = 'key = {key}, it must be between [0..99] in this visualization.<br>-1 = empty cell (blank) and -2 = deleted item.'.replace("{key}", key);
+        stateList.push(cs);
+      }
+      else if (HT.indexOf(key) != -1) {
+        cs = createState(vertexTraversed, edgeTraversed);
+        // key = {key} is already in the Hash Table.
+        // We prevent insertion of duplicate keys.
+        cs["status"] = 'key = {key} is already in the Hash Table.<br>We prevent insertion of duplicate keys.'.replace("{key}", key);
+        stateList.push(cs);
+      }
+      else {
+        if (N+1 == HT.length) { // one item before full (if we allow full, our search can get into infinite loop)
+          cs = createState(vertexTraversed, edgeTraversed);
+          // Sorry, the Hash Table HT is nearly full (load factor too high).
+          // We cannot insert a new integer.
+          cs["status"] = 'Sorry, the Hash Table HT is nearly full (load factor too high).<br>We cannot insert a new integer.';
+          cs["lineNo"] = 1;
+          stateList.push(cs);
+        }
+        else { // not yet full, do the insertion
+          var i = key%(HT.length), base = i;
+          var i_next;
+          var jump = 1;
+          var step = 1;
+          var k = 5, smallerPrime = primes[k]; // start from 17
+          while (smallerPrime >= HT.length)
+            smallerPrime = primes[k--];
+          var secondary = smallerPrime - key%smallerPrime; // so it will always be positive
+          var strategy = "linear probing";
+
+          cs = createState(vertexTraversed, edgeTraversed);
+          // The hash table is not yet full.
+          // key = {key} is hashed to i = base = {key}%{length} = {i}.
+          cs["status"] = 'The hash table is not yet full.<br>key = {key} is hashed to i = base = {key}%{length} = {i}.'.replace("{key}", key).replace("{key}", key).replace("{length}", HT.length).replace("{i}", i);
+          cs["vl"][i]["state"] = VERTEX_HIGHLIGHTED;
+          cs["lineNo"] = 2;
+          stateList.push(cs);
+          vertexTraversed[i] = true; // this is traversed in future iteration
+
+          while (HT[i] > 0 && step < HT.length) {
+            if (activeStatus == "LP") {
+              jump = 1;
+              strategy = "linear probing";
+            }
+            else if (activeStatus == "QP") {
+              jump = step;
+              strategy = "quadratic probing";
+            }
+            else if (activeStatus == "DH") {
+              jump = secondary;
+              strategy = "double hashing";
+            }
+
+            i_next = (base + step*jump) % HT.length;
+
+            var special = (HT[i] == key ? '&nbsp;(actually a duplicate key)' : ""); // ' (actually a duplicate key)'
+            cs = createState(vertexTraversed, edgeTraversed);
+            // HT[{i}] = {val} is occupied{special}.
+            // Use {strategy} to check the next index i_next ({base}+{step}*{jump})%{length} = {i_next}.
+            cs["status"] = 'HT[{i}] = {val} is occupied{special}.<br>Use {strategy} to check the next index i_next ({base}+{step}*{jump})%{length} = {i_next}.'
+                              .replace("{i}", i).replace("{val}", HT[i]).replace("{special}", special)
+                              .replace("{strategy}", strategy).replace("{base}", base).replace("{step}", step).replace("{jump}", jump).replace("{length}", HT.length).replace("{i_next}", i_next);
+            cs["vl"][i_next]["state"] = VERTEX_HIGHLIGHTED;
+            cs["lineNo"] = 3;
+            stateList.push(cs);
+            vertexTraversed[i_next] = true; // this is traversed in future iteration
+            i = i_next;
+            step++;
+          }
+
+          if (step == HT.length) {
+            cs = createState(vertexTraversed, edgeTraversed);
+            // After {step} probe steps, we still cannot find an insertion point.
+            // Reporting failure...
+            cs["status"] = 'After {step} probe steps, we still cannot find an insertion point.<br>Reporting failure...'.replace("{step}", step);
+            stateList.push(cs);
+          }
+          else {
+            HT[i] = key;
+            N++;
+            cs = createState(vertexTraversed, edgeTraversed);
+            // Found insertion point: Insert {key} at HT[{i}].
+            // There are now {N} items in the Hash Table.
+            cs["status"] = 'Found insertion point: Insert {key} at HT[{i}].<br>There are now {N} items in the Hash Table.'.replace("{key}", key).replace("{i}", i).replace("{N}", N);
+            cs["vl"][i]["state"] = VERTEX_TRAVERSED;
+            cs["lineNo"] = 4;
+            stateList.push(cs);
+          }
+        }
+      }
+    }
+
+    gw.startAnimation(stateList, callback);
+    populatePseudocode(1);
+    return true;
+  }
+
+  this.insertSC = function(keys, callback) {
+    var stateList = [];
+    var vertexTraversed = {};
+    var edgeTraversed = {};
+    var cs;
+
+    var the_keys = keys.split(",");
+    for (idx in the_keys) {
+      key = parseInt(the_keys[idx]);
+
+      if (key < 0 || key > 99) {
+        cs = createStateSC(vertexTraversed, edgeTraversed);
+        // key = {key}, it must be between [0..99] in this visualization.
+        // -1 = empty cell (blank) and -2 = deleted item.
+        cs["status"] = 'key = {key}, it must be between [0..99] in this visualization.<br>-1 = empty cell (blank) and -2 = deleted item.'.replace("{key}", key);
+        stateList.push(cs);
+      }
+      else {
+        var already_inside = false;
+        var M = HT_SC.length;
+        for (var i = 0; i < M; i++)
+          if (HT_SC[i].indexOf(key) != -1)
+            already_inside = true;
+
+        if (already_inside) {
+          cs = createStateSC(vertexTraversed, edgeTraversed);
+          // key = {key} is already in the Hash Table.
+          // We prevent insertion of duplicate keys.
+          cs["status"] = 'key = {key} is already in the Hash Table.<br>We prevent insertion of duplicate keys.'.replace("{key}", key);
+          stateList.push(cs);
+        }
+        else { // key [0..99] and not inside
+          var i = key%M;
+          cs = createStateSC(vertexTraversed, edgeTraversed);
+          // The hash table is not yet full.
+          // key = {key} is hashed to i = base = {key}%{length} = {i}.
+          cs["status"] = 'The hash table is not yet full.<br>key = {key} is hashed to i = base = {key}%{length} = {i}.'.replace("{key}", key).replace("{key}", key).replace("{length}", M).replace("{i}", i);
+          cs["vl"][i*7]["state"] = VERTEX_HIGHLIGHTED;
+          cs["lineNo"] = 1;
+          stateList.push(cs);
+          vertexTraversed[i*7] = true; // this is traversed in future iteration
+
+          if (HT_SC[i].length == 6) {
+            cs = createStateSC(vertexTraversed, edgeTraversed);
+            cs["status"] = 'Sorry, due to the limitation of this visualization<br>We do not allow any more extension to linked list {i}'.replace("{i}", i);
+            cs["vl"][i*7]["state"] = VERTEX_HIGHLIGHTED;
+            cs["lineNo"] = 2;
+            stateList.push(cs);
+          }
+          else {
+            HT_SC[i].push(key); // put at the back of this doubly linked list (assume that we have access to tail pointer)
+            cs = createStateSC(vertexTraversed, edgeTraversed);
+            cs["status"] = 'We append {key} to the back of Doubly Linked List {i}<br>This is O(1) with tail pointer'.replace("{key}", key).replace("{i}", i);
+            cs["vl"][i*7+(HT_SC[i].length-1)]["state"] = VERTEX_HIGHLIGHTED;
+            cs["vl"][i*7+(HT_SC[i].length)]["state"] = VERTEX_HIGHLIGHTED;
+            cs["lineNo"] = 3;
+            stateList.push(cs);
+          }
+        }
+      }
+    }
+
+    gw.startAnimation(stateList, callback);
+    populatePseudocode(4);
+    return true;
+  }
+
+  this.remove = function(key, callback) {
+    var stateList = [];
+    var vertexTraversed = {};
+    var edgeTraversed = {};
+    var cs;
+
+    if (key < 0 || key > 99) {
+      cs = createState(vertexTraversed, edgeTraversed);
+      // key = {key}, it must be between [0..99] in this visualization.
+      // -1 = empty cell (blank) and -2 = deleted item.
+      cs["status"] = 'key = {key}, it must be between [0..99] in this visualization.<br>-1 = empty cell (blank) and -2 = deleted item.'.replace("{key}", key);
+      stateList.push(cs);
+    }
+    else {
+      var i = key % (HT.length), base = i;
+      var i_next;
+      var jump = 1;
+      var step = 1;
+      var k = 5, smallerPrime = primes[k]; // start from 17
+      while (smallerPrime >= HT.length)
+        smallerPrime = primes[k--];
+      var secondary = smallerPrime - key%smallerPrime; // so it will always be positive
+      var strategy = "linear probing";
+
+      cs = createState(vertexTraversed, edgeTraversed);
+      // key = {key} is hashed to i = base = {key}%{length} = {i}.
+      cs["status"] = 'key = {key} is hashed to i = base = {key}%{length} = {i}.'.replace("{key}", key).replace("{key}", key).replace("{length}", HT.length).replace("{i}", i);
+      cs["vl"][i]["state"] = VERTEX_HIGHLIGHTED;
+      cs["lineNo"] = 1;
+      stateList.push(cs);
+      vertexTraversed[i] = true; // this is traversed in future iteration
+
+      while (true) {
+        if (HT[i] == EMPTY) { // Not Found
+          cs = createState(vertexTraversed, edgeTraversed);
+          // HT[{i}] is empty.
+          // Therefore key = {key} is not found in Hash Table HT.
+          cs["status"] = 'HT[{i}] is empty.<br>Therefore key = {key} is not found in Hash Table HT.'.replace("{i}", i).replace("{key}", key);
+          cs["vl"][i]["state"] = VERTEX_HIGHLIGHTED;
+          cs["lineNo"] = 3;
+          stateList.push(cs);
+          break;
+        }
+        else if (HT[i] == key) { // Found
+          cs = createState(vertexTraversed, edgeTraversed);
+          // HT[{i}] = {key}.
+          // Therefore key = {key} is found in Hash Table HT at index {i}.
+          cs["status"] = 'HT[{i}] = {key}.<br>Therefore key = {key} is found in Hash Table HT at index {i}.'.replace("{i}", i).replace("{key}", key).replace("{key}", key).replace("{i}", i);
+          cs["vl"][i]["state"] = VERTEX_HIGHLIGHTED;
+          cs["lineNo"] = 4;
+          stateList.push(cs);
+
+          HT[i] = DELETED;
+          N--;
+          cs = createState(vertexTraversed, edgeTraversed);
+          // Now we mark HT[{i}] as deleted.
+          // There are now {N} items in the Hash Table.
+          cs["status"] = 'Now we mark HT[{i}] as deleted<br>There are now {N} items in the Hash Table.'.replace("{i}", i).replace("{N}", N);
+          cs["vl"][i]["state"] = VERTEX_HIGHLIGHTED;
+          cs["lineNo"] = 5;
+          stateList.push(cs);
+          break;
+        }
+        else {
+          if (activeStatus == "LP") {
+            jump = 1;
+            strategy = "linear probing";
+          }
+          else if (activeStatus == "QP") {
+            jump = step;
+            strategy = "quadratic probing";
+          }
+          else if (activeStatus == "DH") {
+            jump = secondary;
+            strategy = "double hashing";
+          }
+
+          i_next = (base + step * jump) % HT.length;
+
+          cs = createState(vertexTraversed, edgeTraversed);
+          // HT[{i}] = {val} != key.
+          // Use {strategy} to check the next index i_next = ({base}+{step}*{jump})%{length} = {i_next}.
+          cs["status"] = 'HT[{i}] = {val} != key.<br>Use {strategy} to check the next index i_next = ({base}+{step}*{jump})%{length} = {i_next}.'
+                            .replace("{i}", i).replace("{val}", HT[i])
+                            .replace("{strategy}", strategy).replace("{base}", base).replace("{step}", step).replace("{jump}", jump).replace("{length}", HT.length).replace("{i_next}", i_next);
+          cs["vl"][i_next]["state"] = VERTEX_HIGHLIGHTED;
+          cs["lineNo"] = 6;
+          stateList.push(cs);
+          vertexTraversed[i_next] = true; // this is traversed in future iteration
+          i = i_next;
+          step++;
+        }
+      }
+    }
+
+    gw.startAnimation(stateList, callback);
+    populatePseudocode(2);
+    return true;
+  }
+
+  this.removeSC = function(key, callback) {
+    var stateList = [];
+    var vertexTraversed = {};
+    var edgeTraversed = {};
+    var cs;
+
+    if (key < 0 || key > 99) {
+      cs = createStateSC(vertexTraversed, edgeTraversed);
+      // key = {key}, it must be between [0..99] in this visualization.
+      // -1 = empty cell (blank) and -2 = deleted item.
+      cs["status"] = 'key = {key}, it must be between [0..99] in this visualization.<br>-1 = empty cell (blank) and -2 = deleted item.'.replace("{key}", key);
+      stateList.push(cs);
+    }
+    else {
+      var M = HT_SC.length;
+      var i = key%M;
+      var j = 0;
+
+      cs = createStateSC(vertexTraversed, edgeTraversed);
+      // key = {key} is hashed to i = base = {key}%{length} = {i}.
+      cs["status"] = 'key = {key} is hashed to i = base = {key}%{length} = {i}.'.replace("{key}", key).replace("{key}", key).replace("{length}", M).replace("{i}", i);
+      cs["vl"][i*7]["state"] = VERTEX_HIGHLIGHTED;
+      cs["lineNo"] = 1;
+      stateList.push(cs);
+      vertexTraversed[i*7] = true; // this is traversed in future iteration
+
+      var found_and_deleted = false;
+      for (var j = 0; j < HT_SC[i].length; j++) {
+        cs = createStateSC(vertexTraversed, edgeTraversed);
+        cs["status"] = 'Checking this vertex';
+        cs["vl"][i*7+(j+1)]["state"] = VERTEX_HIGHLIGHTED;
+        cs["lineNo"] = [2, 3];
+        stateList.push(cs);
+        vertexTraversed[i*7+(j+1)] = true; // this is traversed in future iteration
+        if (HT_SC[i][j] == key) {
+          cs = createStateSC(vertexTraversed, edgeTraversed);
+          cs["status"] = '{key} is found in Hash Table'.replace("{key}", key).replace("{i}", i);
+          cs["vl"][i*7+(j+1)]["state"] = VERTEX_HIGHLIGHTED;
+          cs["lineNo"] = [4];
+          stateList.push(cs);
+
+          HT_SC[i].splice(j, 1);
+          delete vertexTraversed[i*7+(j+1)];
+          cs = createStateSC(vertexTraversed, edgeTraversed);
+          cs["status"] = 'It is removed from list {i} in O(1+&alpha;)<br>Deletion is fast if we use Doubly Linked List'.replace("{key}", key).replace("{i}", i);
+          cs["lineNo"] = [4];
+          stateList.push(cs);
+
+          found_and_deleted = true;
+          break;
+        }
+      }
+
+      if (!found_and_deleted) { // not found
+        cs = createStateSC(vertexTraversed, edgeTraversed);
+        cs["status"] = '{key} is not found in Hash Table'.replace("{key}", key);
+        cs["lineNo"] = 5;
+        stateList.push(cs);
+      }
+    }
+
+    gw.startAnimation(stateList, callback);
+    populatePseudocode(5);
+    return true;
+  }
+
+  /*
+   * vertexTraversed: JS object with the vertexes of the List which are to be marked as traversed as the key
+   * edgeTraversed: JS object with the edges of the List which are to be marked as traversed as the key
+   */
+
+  function createState(vertexTraversed, edgeTraversed) {
+    if (vertexTraversed == null || vertexTraversed == undefined || !(vertexTraversed instanceof Object))
+      vertexTraversed = {};
+    if (edgeTraversed == null || edgeTraversed == undefined || !(edgeTraversed instanceof Object))
+      edgeTraversed = {};
+
+    var scale = (1000-100) / (HT.length-1);
+
+    var state = {
+      "vl": {},
+      "el": {}
+    };
+
+    for (var i = 0; i < HT.length; i++) {
+      state["vl"][i] = {};
+      state["vl"][i]["cx"] = 50 + i*scale;
+      state["vl"][i]["cy"] = 100;
+      state["vl"][i]["text"] = (HT[i] == EMPTY ? '' : (HT[i] == DELETED ? 'DEL' : HT[i]));
+      state["vl"][i]["extratext"] = "i:" + i;
+      state["vl"][i]["state"] = VERTEX_DEFAULT;
+    }
+
+    for (var key in vertexTraversed)
+      state["vl"][key]["state"] = VERTEX_TRAVERSED;
+
+    return state;
+  }
+
+  function createStateSC(vertexTraversed, edgeTraversed) {
+    if (vertexTraversed == null || vertexTraversed == undefined || !(vertexTraversed instanceof Object))
+      vertexTraversed = {};
+    if (edgeTraversed == null || edgeTraversed == undefined || !(edgeTraversed instanceof Object))
+      edgeTraversed = {};
+
+    var M = HT_SC.length;
+    var scale = (1000-100) / (M-1);
+
+    var state = {
+      "vl": {},
+      "el": {}
+    };
+
+    for (var i = 0; i < M; i++) {
+      state["vl"][i*7] = {};
+      state["vl"][i*7]["cx"] = 50 + i*scale;
+      state["vl"][i*7]["cy"] = 100;
+      state["vl"][i*7]["text"] = "H";
+      state["vl"][i*7]["extratext"] = "i:" + i;
+      state["vl"][i*7]["state"] = VERTEX_DEFAULT;
+    }
+
+    for (var i = 0; i < M; i++) {
+      for (var j = 0; j < HT_SC[i].length; j++) {
+        state["vl"][i*7+(j+1)] = {};
+        state["vl"][i*7+(j+1)]["cx"] = 80 + i*scale;
+        state["vl"][i*7+(j+1)]["cy"] = 100 + (j+1)*70;
+        state["vl"][i*7+(j+1)]["text"] = HT_SC[i][j];
+        state["vl"][i*7+(j+1)]["state"] = VERTEX_DEFAULT;
+
+        state["el"][i*7+(j+1)] = {};
+        state["el"][i*7+(j+1)]["vertexA"] = i*7+j;
+        state["el"][i*7+(j+1)]["vertexB"] = i*7+(j+1);
+        state["el"][i*7+(j+1)]["type"] = (j == 0) ? EDGE_TYPE_DE : EDGE_TYPE_UDE;
+        state["el"][i*7+(j+1)]["weight"] = 1;
+        state["el"][i*7+(j+1)]["state"] = EDGE_DEFAULT;
+        state["el"][i*7+(j+1)]["animateHighlighted"] = false;
+      }
+    }
+
+    for (var key in vertexTraversed)
+      state["vl"][key]["state"] = VERTEX_TRAVERSED;
+
+    return state;
+  }
+
+  function populatePseudocode(act) {
+    var jump = '1';
+    if (activeStatus == "LP")
+      jump = '1';
+    else if (activeStatus == "QP")
+      jump = 'step';
+    else if (activeStatus == "DH")
+      jump = 'sec';
+
+    switch (act) {
+      case 0: // search
+        $('#code1').html('step = 0; i = base = key%HT.length;');
+        $('#code2').html('while (true)');
+        $('#code3').html('&nbsp&nbspif (HT[i] == EMPTY) return "not found"');
+        $('#code4').html('&nbsp&nbspelse if (HT[i] == key) return "found at index i"');
+        $('#code5').html('&nbsp;&nbsp;else step++; i = (base+step*{jump})%HT.length'.replace('{jump}', jump));
+        $('#code6').html((activeStatus == 'DH' ? '// sec = prime - key%prime' : ''));
+        $('#code7').html('');
+        break;
+      case 1: // insert
+        $('#code1').html('if N+1 == M, prevent insertion');
+        $('#code2').html('step = 0; i = base = key%HT.length;');
+        $('#code3').html('while (HT[i] != EMPTY &amp;&amp; HT[i] != DELETED)');
+        $('#code4').html('&nbsp;&nbsp;step++; i = (base+step*{jump})%HT.length'.replace('{jump}', jump));
+        $('#code5').html('found insertion point, insert key at HT[i]');
+        $('#code6').html((activeStatus == 'DH' ? '// sec = prime - key%prime' : ''));
+        $('#code7').html('');
+        break;
+      case 2: // remove
+        $('#code1').html('step = 0; i = base = key%HT.length;');
+        $('#code2').html('while (true)');
+        $('#code3').html('&nbsp&nbspif (HT[i] == EMPTY) break // &nbsp&nbspif (HT[i] == EMPTY) break // key not found');
+        $('#code4').html('&nbsp&nbspelse if (HT[i] == key) // &nbsp&nbspelse if (HT[i] == key)');
+        $('#code5').html('&nbsp&nbsp&nbsp&nbspHT[i] = DELETED, break // &nbsp;&nbsp;&nbsp;&nbsp;HT[i] = DELETED');
+        $('#code6').html('&nbsp&nbspelse step++; i = (base+step*{jump})%HT.length'.replace('{jump}', jump));
+        $('#code7').html((activeStatus == 'DH' ? '// sec = prime - key%prime' : ''));
+        break;
+      case 3: // search SC
+        $('#code1').html('i = key%HT.length;');
+        $('#code2').html('for j = 0 to HT_SC[i].length');
+        $('#code3').html('&nbsp&nbspif (HT_SC[i][j] == key)');
+        $('#code4').html('&nbsp&nbsp&nbsp&nbspreturn "found at index i"');
+        $('#code5').html('return "not found"');
+        $('#code6').html('');
+        $('#code7').html('');
+        break;
+      case 4: // insert SC
+        $('#code1').html('i = key%HT.length;');
+        $('#code2').html('if HT_SC[i].length == 6, prevent insertion');
+        $('#code3').html('insert key to the back of this list i');
+        $('#code4').html('');
+        $('#code5').html('');
+        $('#code6').html('');
+        $('#code7').html('');
+        break;
+      case 5: // remove SC
+        $('#code1').html('i = key%HT.length;');
+        $('#code2').html('for j = 0 to HT_SC[i].length');
+        $('#code3').html('&nbsp&nbspif (HT_SC[i][j] == key)');
+        $('#code4').html('&nbsp&nbsp&nbsp&nbspremove key from list i');
+        $('#code5').html('// do nothing, not found');
+        $('#code6').html('');
+        $('#code7').html('');
+        break;
+    }
+  }
+}
+
+
+
+// HashTable_action.js
+// actions panel stuff
+var actionsWidth = 150;
+var statusCodetraceWidth = 420;
+
+var isCreateOpen = false;
+var isSearchOpen = false;
+var isInsertOpen = false;
+var isRemoveOpen = false;
+
+function openCreate() {
+  $(".create").css("bottom", "146px");
+  $('#createfixedsize-input').hide();
+  $('#createuserdefined-input').hide();
+  if (!isCreateOpen) {
+    $('.create').fadeIn('fast');
+    isCreateOpen = true;
+  }
+}
+
+function closeCreate() {
+  if (isCreateOpen) {
+    $('.create').fadeOut('fast');
+    $('#create-err').html("");
+    isCreateOpen = false;
+  }
+}
+
+function openSearch() {
+  if (!isSearchOpen) {
+    $('.search').fadeIn('fast');
+    isSearchOpen = true;
+  }
+}
+
+function closeSearch() {
+  if (isSearchOpen) {
+    $('.search').fadeOut('fast');
+    $('#search-err').html("");
+    isSearchOpen = false;
+  }
+}
+
+function openInsert() {
+  $(".insert").css("bottom", "92px");
+  $('#insertkth-input').hide();
+  $('#inserthead-input').hide();
+  $('#inserttail-input').hide();
+  if (!isInsertOpen) {
+    $('.insert').fadeIn('fast');
+    isInsertOpen = true;
+  }
+}
+
+function closeInsert() {
+  if (isInsertOpen) {
+    $('.insert').fadeOut('fast');
+    $('#insert-err').html("");
+    isInsertOpen = false;
+  }
+}
+
+function openRemove() {
+  $(".remove").css("bottom", "65px");
+  $('#removekth-input').hide();
+  if (!isRemoveOpen) {
+    $('.remove').fadeIn('fast');
+    isRemoveOpen = true;
+  }
+}
+
+function closeRemove() {
+  if (isRemoveOpen) {
+    $('.remove').fadeOut('fast');
+    $('#remove-err').html("");
+    isRemoveOpen = false;
+  }
+}
+
+function hideEntireActionsPanel() {
+  closeCreate();
+  closeSearch();
+  closeInsert();
+  closeRemove();
+  hideActionsPanel();
+}
+
+
+// title changing
+function AbbreviateTitle() {
+  $('#title-LP').text("LP");
+  $('#title-QP').text("QP");
+  $('#title-DH').text("DH");
+  $('#title-SC').text("SC");
+}
+$('#title-LP').click(function() {
+  if (isPlaying) stop();
+  htw.setActiveStatus("LP");
+  AbbreviateTitle();
+  $('#title-LP').text('Linear Probing');
+});
+$('#title-QP').click(function() {
+  if (isPlaying) stop();
+  htw.setActiveStatus("QP");
+  AbbreviateTitle();
+  $('#title-QP').text('Quadratic Probing');
+});
+$('#title-DH').click(function() {
+  if (isPlaying) stop();
+  htw.setActiveStatus("DH");
+  AbbreviateTitle();
+  $('#title-DH').text('Double Hashing');
+});
+$('#title-SC').click(function() {
+  if (isPlaying) stop();
+  htw.setActiveStatus("SC");
+  AbbreviateTitle();
+  $('#title-SC').text('Separate Chaining');
+});
+
+
+
+// local
+$('#play').hide();
+var htw = new HashTable();
+var gw = htw.getGraphWidget();
+
+$(function() {
+  var four_modes = ["LP", "QP", "DH", "SC"];
+  $('#title-'+four_modes[Math.floor(Math.random()*4)]).click(); // randomly open one of the four default example every time
+
+  var hashMode = getQueryVariable("mode");
+  if (hashMode.length > 0) {
+    $('#title-'+hashMode).click();
+  }
+  var createHT = getQueryVariable("create");
+  if (createHT.length > 0) {
+    var newHT = createHT.split(",");
+    if (newHT.length == 1)
+      htw.createTable(createHT);
+    else
+      htw.generate(newHT);
+  }
+  var insert = getQueryVariable("insert");
+  if (insert.length > 0) {
+    $('#v-insert').val(insert);
+    openInsert();
+  }
+  var remove = getQueryVariable("remove");
+  if (remove.length > 0) {
+    $('#v-remove').val(remove);
+    openRemove();
+  }
+
+  $('#create').click(function() {
+    closeSearch();
+    closeInsert();
+    closeRemove();
+    openCreate();
+  });
+  $('#search').click(function() {
+    closeCreate();
+    closeInsert();
+    closeRemove();
+    openSearch();
+  });
+  $('#insert').click(function() {
+    closeCreate();
+    closeSearch();
+    closeRemove();
+    openInsert();
+  });
+  $('#remove').click(function() {
+    closeCreate();
+    closeSearch();
+    closeInsert();
+    openRemove();
+  });
+});
+
+
+function createTable() {
+  if (isPlaying) stop();
+  var input = parseInt($('#v-create').val());
+  if (htw.createTable(input)) {
+    $('#progress-bar').slider("option", "max", 0);
+    closeCreate();
+    isPlaying = false;
+  }
+  hideStatusPanel();
+  hideCodetracePanel();
+}
+
+function createTableSpecial(_HT) {
+  if (isPlaying) stop();
+  htw.createTableSpecial(_HT);
+  $('#progress-bar').slider("option", "max", 0);
+  closeCreate();
+  isPlaying = false;
+  hideStatusPanel();
+  hideCodetracePanel();
+}
+
+function insertInteger(callback) {
+  if (isPlaying) stop();
+  var input = $('#v-insert').val();
+  commonAction(htw.getActiveStatus() == "SC" ? htw.insertSC(input, callback) : htw.insert(input, callback), "Chèn " + input);
+  // setTimeout(function() {
+  //   var existing = hw.saveArray();
+  //   var next_num = 1 + Math.floor(Math.random()*88);
+  //   while (existing.includes(next_num)) next_num = 1 + Math.floor(Math.random()*88);
+  //   $("#v-insert").val(next_num); // randomized for next click between [1..89}, and it won't exist before (allow for a few more insertion of 90-99, still two digits)
+  // }, 500);
+}
+
+function searchInteger(callback) {
+  if (isPlaying) stop();
+  var input = parseInt($('#v-search').val());
+  commonAction(htw.getActiveStatus() == "SC" ? htw.searchSC(input, callback) : htw.search(input, callback), "Tìm kiếm " + input);
+}
+
+function removeInteger(callback) {
+  if (isPlaying) stop();
+  var input = parseInt($('#v-remove').val());
+  commonAction(htw.getActiveStatus() == "SC" ? htw.removeSC(input, callback) : htw.remove(input, callback), "Di chuyển " + input);
+}
+
+// Implement these functions in each visualisation
+// var userGraph = {
+//   'vl': {},
+//   'el': {},
+// };
+
+// This function will be called before entering E-Lecture Mode
+function ENTER_LECTURE_MODE() {
+  //if (bw) userGraph = bw.getGraph();
+}
+
+// This function will be called before returning to Explore Mode
+function ENTER_EXPLORE_MODE() {
+  //loadGraph(userGraph);
+}
+
+// Lecture action functions
+function CUSTOM_ACTION(action, data, mode) {
+  if (action == 'create_special') {
+    createTableSpecial(data);
+  }
+  else if (action == 'search') {
+    hideSlide(function() {
+      $('#v-search').val(data); // force
+      searchInteger(showSlide);
+    });
+  }
+  else if (action == 'insert') {
+    hideSlide(function() {
+      $('#v-insert').val(data); // force
+      insertInteger(showSlide);
+    });
+  }
+  else if (action == 'remove') {
+    hideSlide(function() {
+      $('#v-remove').val(data); // force
+      removeInteger(showSlide);
+    });
+  }
+}
+</script>
+</body>
+
+<!-- Mirrored from visualgo.net/vi/hashtable by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 26 Nov 2020 06:40:19 GMT -->
+</html>
