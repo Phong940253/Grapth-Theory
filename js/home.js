@@ -12,7 +12,7 @@ $(document).ready(function () {
     //tags
     var sssp = new Array(
         "sssp",
-        "Đường đi ngắn nhất (một đỉnh phát)",
+        "Đường đi ngắn nhất (từ một đỉnh)",
         "sssp",
         "single-source",
         "bfs",
@@ -55,7 +55,7 @@ $(document).ready(function () {
         "cấu trúc dữ liệu"
     );
     var bfsdfs = new Array(
-        "dfsbfs",
+        "bfsdfs",
         "graph traversal",
         "bfs",
         "dfs",
