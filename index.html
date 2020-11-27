@@ -22,36 +22,19 @@
 
 <body>
 
-<!--facebook login stuff-->
-<!-- <div id="fb-root"></div>
-<script>
-  // Load the SDK asynchronously
-  (function(d){
-   var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-   if (d.getElementById(id)) {return;}
-   js = d.createElement('script'); js.id = id; js.async = true;
-   js.src = "//connect.facebook.net/en_US/all.js";
-   ref.parentNode.insertBefore(js, ref);
-  }(document));
-</script> -->
-<!-- end facebook login stuff-->
-
 <div id="top-bar">
 	<a id="home" href="">we<span class="colour">need</span>a<span class="colour">name</span></a>
-    <a id="fb-login" href="#" target="_blank">Facebook connect</a>
-    <span id="trick">
-		<fb:login-button show-faces="false" width="200" max-rows="1" style="float: right; margin-top: 9px;"></fb:login-button>
-    </span>
+    
 </div>
 
 <h1>we<span class="colour">need</span>a<span class="colour">name</span></h1>
-<h2>visualising data structures and algorithms</h2>
+<h2>mô phỏng cấu trúc dữ liệu và thuật toán</h2>
 <form id="searchbar">
-	<input id="search" type="text" autocomplete="off" value="Search..."
+    <input id="search" type="text" autocomplete="off" value="Tìm kiếm..."
     ><div id="show-filters" title="show/hide filters"><img src="img/arrow_white.png"/></div>
 </form>
 <div id="active-tags"></div>
-<div id="emptySearchMsg">No results were found.</div>
+<div id="emptySearchMsg">Không tìm thấy kết quả.</div>
 <div id="filters-and-lines">
     <div class="line" style="margin-top: 20px;"></div>
     <div id="filters"></div>
