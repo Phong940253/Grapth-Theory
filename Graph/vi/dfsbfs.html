@@ -84,43 +84,22 @@
 .scc { bottom: 92px;}
 .twosat { bottom: 65px; }
 </style>
-<script>
-      function changeURL() {
-        var URL = window.location.href.split('https://visualgo.net/');
-        var val = document.getElementById("Language").value;
-        URL[3] = val;
-        window.location.assign(URL.join('https://visualgo.net/'));
-      }
-    </script>
 </head>
 <body>
 <div id="top-bar">
 <a href="http://www.comp.nus.edu.sg/~stevenha"><span class="colour" style="border: 1px solid green; border-radius: 25px;">7</span></a>&nbsp;&nbsp;&nbsp;
  <a id="home" href="https://visualgo.net/">Visu<span class="colour">Algo</span><span style="font-size: 40%">.net</span></a>
 /
-<select id="Language" onchange="changeURL()">
+<select id="Language"">
 <option value="en">en</option>
-<option value="zh">zh</option>
-<option value="es">es</option>
-<option value="pt">pt</option>
-<option value="ru">ru</option>
-<option value="id">id</option>
-<option value="de">de</option>
-<option value="bn">bn</option>
-<option value="ja">ja</option>
-<option value="ko">ko</option>
 <option value="vi" selected>vi</option>
 </select>
 /dfsbfs
-<span class="right-links" id="useraccount">Login</span>
 <span id="title">
 <a id='title-dfsbfs' class='selected-viz'>Xét toàn đồ thị (DFS/BFS)</a>
 </span>
 <div id="mode-menu">
 <div id='mode-button' title='exploration'>Chế độ thăm dò &#9663;</div>
-<div id='other-modes'>
-<a title='e-Lecture'>Chế độ Bài giảng trực tuyến</a>
-</div>
 </div>
 </div>
 <div id="dark-overlay"></div>
@@ -818,7 +797,7 @@ VisuAlgo miễn phí đối với cộng đồng Khoa học Máy tính trên to�
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','../../www.google-analytics.com/analytics.js','ga');
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
       ga('create', 'UA-1566631-4', 'auto');
       ga('send', 'pageview');
@@ -1408,7 +1387,7 @@ example(CP3_4_9);
               'page': '/dfsbfs'.substring(1),
             };
 
-            $.post("/visitpage", postData, function(data) {
+            $.post("../visitpage", postData, function(data) {
               // non critical request...
             });
 
@@ -2091,7 +2070,7 @@ example(CP3_4_9);
         adjustPopupToImageSize();
       }
 
-      function URL(url.html) {
+      function URL(url,html) {
         window.open(url, '_blank');
       }
 
@@ -4455,7 +4434,7 @@ function drawCancel() {
 //   if (mode == "exploration") {
 //     var n = Math.floor(Math.random()*6 + 5);
 //     $.ajax({
-//       url: PHP_DOMAIN + "/php/Graph.php?mode=" + MODE_GET_RANDOM_SUBMITTED_GRAPH + "&directed=" + 1 + "&connected=" + 1
+//       url: PHP_DOMAIN + "../php/Graph.php?mode=" + MODE_GET_RANDOM_SUBMITTED_GRAPH + "&directed=" + 1 + "&connected=" + 1
 //     }).done(function(data) {
 //       data = JSON.parse(data);
 //       var graph = extractQnGraph(data.graph);
