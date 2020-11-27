@@ -23,7 +23,7 @@
 <body>
 
 <!--facebook login stuff-->
-<div id="fb-root"></div>
+<!-- <div id="fb-root"></div>
 <script>
   // Load the SDK asynchronously
   (function(d){
@@ -33,7 +33,7 @@
    js.src = "//connect.facebook.net/en_US/all.js";
    ref.parentNode.insertBefore(js, ref);
   }(document));
-</script>
+</script> -->
 <!-- end facebook login stuff-->
 
 <div id="top-bar">
@@ -62,12 +62,24 @@
 <ul id="list">
     <li class="viz" id="graphs">
     	<div class="li-wrapper">
-            <a class="thumbnail" >
+            <a class="thumbnail" href="Graph/vi/graphds.html">
             	<img src="img/graphds.gif">
                 <img class="static" src="img/graphds.jpg">
             </a>
             <div class="info">
-                <h3><a href="">Graphs</a></h3>
+                <h3><a href="">Cấu trúc đồ thị</a></h3>
+                <div class="indv-viz-filters"></div>
+            </div>
+        </div>
+    </li>
+    <li class="viz" id="bfsdfs">
+    	<div class="li-wrapper">
+            <a class="thumbnail" href="Graph/vi/dfsbfs.html">
+            	<img src="img/bfsdfs.gif">
+                <img class="static" src="img/bfsdfs.jpg">
+            </a>
+            <div class="info">
+                <h3><a href="">Graphs Traversal</a></h3>
                 <div class="indv-viz-filters"></div>
             </div>
         </div>

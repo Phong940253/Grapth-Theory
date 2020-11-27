@@ -40,9 +40,38 @@ $(document).ready(function () {
         "cây",
         "thuật toán"
     );
-    var graphs = new Array("graphs", "tree");
-
-    var allViz = new Array(sssp, graphs, mst);
+    var graphs = new Array(
+        "graphs",
+        "các cấu trúc Đồ thị",
+        "cây",
+        "complete",
+        "hai phía",
+        "đồ thị có hướng không chu trình",
+        "cs2010",
+        "cs2020",
+        "cs2040",
+        "đồ thị",
+        "ds",
+        "cấu trúc dữ liệu"
+    );
+    var bfsdfs = new Array(
+        "dfsbfs",
+        "graph traversal",
+        "bfs",
+        "dfs",
+        "cs2010",
+        "cs2020",
+        "cs2040",
+        "hai phía",
+        "thành phần liên thông mạnh",
+        "khớp",
+        "khớp",
+        "cầu",
+        "cs2020",
+        "đồ thị",
+        "thuật toán"
+    );
+    var allViz = new Array(sssp, graphs, mst, bfsdfs);
 
     //generate tags
     function createFilters() {
