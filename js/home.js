@@ -12,16 +12,13 @@ $(document).ready(function () {
     //tags
     var sssp = new Array(
         "sssp",
-        "Đường đi ngắn nhất (từ một đỉnh)",
-        "sssp",
-        "single-source",
+        "dfs",
         "bfs",
         "dijkstra",
         "bellman ford",
-        "cs2010",
-        "cs2020",
-        "cs2040",
-        "single source",
+        "Đường đi ngắn nhất (từ một đỉnh)",
+        "sssp",
+        "single-source",
         "đường đi ngắn nhất",
         "đồ thị",
         "thuật toán"
@@ -54,24 +51,7 @@ $(document).ready(function () {
         "ds",
         "cấu trúc dữ liệu"
     );
-    var bfsdfs = new Array(
-        "bfsdfs",
-        "graph traversal",
-        "bfs",
-        "dfs",
-        "cs2010",
-        "cs2020",
-        "cs2040",
-        "hai phía",
-        "thành phần liên thông mạnh",
-        "khớp",
-        "khớp",
-        "cầu",
-        "cs2020",
-        "đồ thị",
-        "thuật toán"
-    );
-    var allViz = new Array(sssp, graphs, mst, bfsdfs);
+    var allViz = new Array(sssp, graphs, mst);
 
     //generate tags
     function createFilters() {

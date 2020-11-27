@@ -1137,17 +1137,13 @@
       if (isPlaying) stop();
       if (mode == "exploration") {
         var n = Math.floor(Math.random()*6 + 5);
-        $.ajax({
-          url: PHP_DOMAIN + "../php/Graph.php?mode=" + MODE_GET_RANDOM_SUBMITTED_GRAPH + "&directed=" + 1 + "&connected=" + 1
-        }).done(function(data) {
-          data = JSON.parse(data);
-          var graph = extractQnGraph(data.graph);
-          if (data.graphID == randomGraphID) // to ensure we get different graph per click (make sure #graph > 1 in the database)
-            createRandom();
-          randomGraphID = data.graphID;
-          gtw.initRandom(graph);
-          $('#rate-sample-graph').show();
-        })
+        data = JSON.parse(data);
+        var graph = extractQnGraph(data.graph);
+        if (data.graphID == randomGraphID) // to ensure we get different graph per click (make sure #graph > 1 in the database)
+          createRandom();
+        randomGraphID = data.graphID;
+        gtw.initRandom(graph);
+        $('#rate-sample-graph').show();
         $('#progress-bar').slider("option", "max", 0);
         closeExamples();
         isPlaying = false;
