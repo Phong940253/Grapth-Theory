@@ -50,6 +50,8 @@
     <div id="current-action" class="panel"><p></p></div>
     
     <div id="actions" class="panel">
+        <p id="input">Nhập đồ thị từ file</p>
+        <p id="random">Đồ thị ngẫu nhiên</p>
         <p id="sample" class="execAction">Sample Graphs</p>
         <p id="bfs" class="execAction">BFS</p>
         <p id="bellmanford" class="execAction">Bellman Ford's Algo</p>
@@ -116,39 +118,6 @@
 <div id="about" class="overlays"></div>
 <div id="team" class="overlays"></div>
 <div id="termsofuse" class="overlays"></div>
-
-<!--tutorial dialogs here-->
-<div id="sssp-tutorial-1" class="tutorial-dialog">
-	In the Single-Source Shortest Path (SSSP) problem, we aim to find the shortest paths from a particular start node to all other vertices in the graph (if they exist). <br/><br/>Different algorithms can be used depending on the nature of the graph, i.e. weighted/ unweighted, with/without negative weights/ cycles.
-     <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
-</div>
-<div id="sssp-tutorial-2" class="tutorial-dialog">
-	Choose a sample graph <!--or draw your own graph-->and try running the different SSSP algorithms on it:<br/><br/>The O(V + E) <strong>Breadth-first search</strong> (only for unweighted graphs),<br/>The general purpose O(VE) <strong>Bellman Ford's algorithm</strong>, or<br/>The O((V + E) log V) <strong>Dijkstra's algorithm</strong> (only for graphs without negative weights/negative weight cycles)
-    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
-</div>
-<div id="sssp-tutorial-3" class="tutorial-dialog">
-	When the SSSP algorithm animation is running, the input graph will be shown on the left, and the SSSP spanning tree will be shown on the right with the corresponding distance information.
-    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
-</div>
-<div id="sssp-tutorial-4" class="tutorial-dialog">
-	The status bar explains the execution of the algorithm at each animation step.
-    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
-</div>
-<div id="sssp-tutorial-5" class="tutorial-dialog">
-	You can also follow the psuedocode highlights to trace the algorithm.
-    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
-</div>
-<div id="sssp-tutorial-6" class="tutorial-dialog">
-  Control the animation with the player controls! Keyboard shortcuts are:<br/>
-    <div style="margin-top: 8px;"><strong>Spacebar:</strong> play/pause/replay</div>
-    <strong>Left/right arrows:</strong> step backward/step forward<br/>
-    <strong>-/+:</strong> decrease/increase speed<br/>
-    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
-</div>
-<div id="sssp-tutorial-7" class="tutorial-dialog">
-  Return to "Exploration Mode" to start exploring!
-</div>
-
 <script src="js/graph_library/constant.js"></script>
 <script src="js/graph_library/properties.js"></script>
 <script src="js/graph_library/helperObjects.js"></script>

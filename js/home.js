@@ -51,7 +51,8 @@ $(document).ready(function () {
         "ds",
         "cấu trúc dữ liệu"
     );
-    var allViz = new Array(sssp, graphs, mst);
+    var dfsbfs = new Array("dfsbfs", "dfs", "bfs");
+    var allViz = new Array(sssp, graphs, mst, dfsbfs);
 
     //generate tags
     function createFilters() {
