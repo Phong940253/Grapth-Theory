@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<head>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Visualizations - Graphs</title>
+
+	<!--css-->
+	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/common.css">
+	<link rel="stylesheet" href="css/viz.css">
+
+	<link rel="stylesheet" href="css/heap.css">
+
+	<!--js-->
+	<script src="js/external/jquery-1.10.2.js"></script>
+	<script src="js/external/jquery-ui.js"></script>
+	<script src="js/external/d3.v3.js"></script>
+	<script src="js/viz.js"></script>
+	<script src="js/common.js"></script>
+	<!-- Graphds scripts are below-->
+
+	<!--fonts-->
+	<link href="fonts/silkscreen/stylesheet.css" rel='stylesheet' type='text/css'>
+	<link href="fonts/googleapi.css" rel='stylesheet' type='text/css'>
+
+</head>
+
+<body>
+
+	<div id="top-bar">
+		<a id="home" href="index.html">we<span class="colour">need</span>a<span class="colour">name</span></a>
+		<span id="title">
+			<a class="selected-viz">Graphs</a>
+		</span>
+		<div id="mode-menu">
+			<div id="mode-button">Exploration Mode &#9663;</div>
+		</div>
+	</div>
+
+	<div id="main">
+		<div id="viz">
+		</div>
+		<div id="fake" width="100px">
+			<div>
+				<div style="float:left" left="100px">
+					<table id="myTablefake" border="1" width="180px" border-collapse:collapse style="visibility:hidden">
+					</table>
+				</div>
+			</div>
+		</div>
+		<div id="isTree0" style="float:left">Is tree</div>
+		<div id="isTree" style="float:left"></div>
+
+		<div id="fake2" width="20px">
+			<div>
+				<div style="float:left" left="10px">
+					<table id="myTablefake" border="1" width="30px" border-collapse:collapse style="visibility:hidden">
+					</table>
+				</div>
+			</div>
+			<div id="isComplete0" style="float:left">Is complete</div>
+			<div id="isComplete" style="float:left"></div>
+			<div id="fake2" width="20px">
+				<div>
+					<div style="float:left" left="10px">
+						<table id="myTablefake" border="1" width="30px" border-collapse:collapse
+							style="visibility:hidden">
+						</table>
+					</div>
+				</div>
+				<div id="isBipartite0" style="float:left">Is bipartite</div>
+				<div id="isBipartite" style="float:left"></div>
+				<div id="fake" width="20px">
+					<div>
+						<div style="float:left" left="100px">
+							<table id="myTablefake" border="1" width="200px" border-collapse:collapse
+								style="visibility:hidden">
+							</table>
+						</div>
+					</div>
+					<div style="float:left">
+						<input id="direct_checkbox" type="checkbox" value="Submit" style="vertical-align: middle"
+							onclick="switchDirectIndirect()">Directed </input>
+					</div>
+					<div>
+						<div style="float:left" left="100px">
+							<table id="myTablefake" border="1" width="30px" border-collapse:collapse
+								style="visibility:hidden">
+							</table>
+						</div>
+					</div>
+					<input id="weighted_checkbox" type="checkbox" value="Submit" style="vertical-align: middle"
+						checked="true" onclick="convertDirectIndirectGraph()">Weighted </input>
+					<div id="fake" width="100px">
+						<div>
+							<div style="float:left" left="100px">
+								<table id="myTablefake" border="1" width="180px" border-collapse:collapse
+									style="visibility:hidden">
+								</table>
+							</div>
+						</div>
+
+						<div id="adj_matrix">
+							<div style="float:left; border:1px solid; max-height: 200px; max-width:400px; overflow: auto"
+								left="100px">
+								<div style="float:left"> Adjacency matrix </div>
+								<table id="adj_matrix_table" border="0" width="400px" border-collapse:collapse
+									style="border-top:1px solid; table-layout:fixed">
+									<tbody class="tb1">
+										<TR>
+											<td height="150px"> Content </td>
+										</tr>
+									</tbody>
+
+								</table>
+							</div>
+						</div>
+						<div id="fake2" width="2px">
+							<div>
+								<div style="float:left" left="1px">
+									<table id="myTablefake" border="1" width="1px" border-collapse:collapse
+										style="visibility:hidden">
+									</table>
+								</div>
+							</div>
+
+							<div id="adj_list">
+								<div
+									style="float:left; border:1px solid; max-height: 200px; max-width:200px; overflow-y: scroll; overflow-x:hidden">
+									<div style="float:left"> Adjacency list </div>
+									<table id="adj_list_table" border="0" width="200px" border-collapse:collapse
+										style="border-top:1px solid; table-layout:fixed; overflow-x: hidden">
+										<tbody class="tb1">
+											<TR>
+												<td height="150px"> Content </td>
+											</tr>
+										</tbody>
+
+									</table>
+								</div>
+							</div>
+							<div id="fake3" width="2px">
+								<div>
+									<div style="float:left" left="1px">
+										<table id="myTablefake" border="1" width="1px" border-collapse:collapse
+											style="visibility:hidden">
+										</table>
+									</div>
+								</div>
+
+								<div id="edge_list">
+									<div
+										style="float:left; border:1px solid; max-height: 200px; max-width:200px; overflow-y: scroll; overflow-x:hidden">
+										<div style="float:left"> Edge list </div>
+										<table id="edge_list_table" border="0" width="200px" border-collapse:collapse
+											style="border-top:1px solid; table-layout:fixed; overflow-x: hidden">
+											<tbody class="tb1">
+												<TR>
+													<td height="150px"> Content </td>
+												</tr>
+											</tbody>
+
+										</table>
+									</div>
+								</div>
+
+								<div id="fake3" width="2px">
+									<div>
+										<div style="float:left" left="1px">
+											<table id="myTablefake" border="1" width="1px" border-collapse:collapse
+												style="visibility:hidden">
+											</table>
+										</div>
+									</div>
+
+									<div id="current-action" class="panel">
+										<p></p>
+									</div>
+
+									<div id="actions" class="panel" style="height:165px">
+										<p id="tree_graph" class="execAction" onclick=clearScreen()>Clear</p>
+										<p id="tree_graph" class="execAction" onclick=showTree()>Tree</p>
+										<p id="tree_graph" class="execAction" onclick=showStar()>Star</p>
+										<p id="tree_graph" class="execAction" onclick=showCP45()>CP4.5</p>
+										<p id="tree_graph" class="execAction" onclick=showCP48()>CP4.8</p>
+										<p id="tree_graph" class="execAction" onclick=showCP22()>CP2.2</p>
+										<p id="tree_graph" class="execAction" onclick=showCP42()>CP4.2</p>
+										<p id="tree_graph" class="execAction" onclick=showK5()>K5</p>
+
+									</div>
+									<div id="actions-hide" class="panel-hide" style="height:36px"><img
+											src="img/arrow_white_right.png" title="show/hide actions panel" /></div>
+									<!--put all the extra action pullouts (input) and error messages here-->
+
+									<div id="status" class="panel">
+										<p></p>
+									</div>
+									<div id="status-hide" class="panel-hide"><img src="img/arrow_white_right.png"
+											title="show/hide status panel" /></div>
+
+									<div id="codetrace" class="panel">
+										<!--can add class "highlighed" to hightlight one line-->
+										<p id="code1" style="padding-top: 10px;"></p>
+										<p id="code2"></p>
+										<p id="code3"></p>
+										<p id="code4"></p>
+										<p id="code5"></p>
+										<p id="code6"></p>
+										<p id="code7" style="padding-bottom: 10px;"></p>
+									</div>
+									<div id="codetrace-hide" class="panel-hide"><img src="img/arrow_white_right.png"
+											title="show/hide codetrace panel" /></div>
+
+								</div>
+
+								<div id="left-bar"></div>
+								<div id="right-bar"></div>
+								<!-- Bottom bar and overlay popups -->
+								<div id="bottom-bar">
+									<a id="trigger-about">About</a>
+									<a id="trigger-team">Team</a>
+									<a id="trigger-terms">Terms of use</a>
+								</div>
+
+
+								<div id="dark-overlay"></div>
+
+
+								<script src="js/graph_library/constant.js"></script>
+								<script src="js/graph_library/properties.js"></script>
+								<script src="js/graph_library/helperObjects.js"></script>
+								<script src="js/graph_library/misc.js"></script>
+								<script src="js/graph_library/Widget.js"></script>
+								<script src="js/graph_library/GraphWidget.js"></script>
+								<script src="js/graph_library/GraphVertexWidget.js"></script>
+								<script src="js/graph_library/GraphEdgeWidget.js"></script>
+								<script src="js/widgets/GraphDSWidget.js"></script>
+
+								<script type="text/javascript">
+									//start by showing actions panel
+									//enableActionsOnly();
+									$('#play').hide();
+
+									var GraphDTWidget = new Graph();
+									var gw = GraphDTWidget.getGraphWidget();
+
+									showTree();
+
+									function switchDirectIndirect() {
+										GraphDTWidget.switchDirectIndirect();
+									}
+
+									function convertDirectIndirectGraph() {
+										GraphDTWidget.convertDirectIndirectGraph();
+									}
+
+									function showTree() {
+										GraphDTWidget.showTree();
+									}
+
+									function showStar() {
+										GraphDTWidget.showStar();
+									}
+
+									function showK5() {
+										GraphDTWidget.showK5();
+									}
+
+									function showCP22() {
+										GraphDTWidget.showCP22();
+									}
+
+									function showCP42() {
+										GraphDTWidget.showCP42();
+									}
+
+									function showCP45() {
+										GraphDTWidget.showCP45();
+									}
+
+									function showCP48() {
+										GraphDTWidget.showCP48();
+									}
+
+									function clearScreen() {
+										GraphDTWidget.clrscr();
+									}
+								</script>
+
+</body>
+
+</html>
