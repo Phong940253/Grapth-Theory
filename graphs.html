@@ -30,13 +30,8 @@
 
 <body>
   <div id="top-bar">
-    <a href=""><span class="colour" style="border: 1px solid green; border-radius: 25px;">7</span></a>&nbsp;&nbsp;&nbsp;
+    <!-- <a href=""><span class="colour" style="border: 1px solid green; border-radius: 25px;">7</span></a>&nbsp;&nbsp;&nbsp; -->
     <a id="home" href="">Visu<span class="colour">Algo</span><span style="font-size: 40%">.net</span></a>
-    /
-    <select id="Language">
-      <option value="vi" selected>vi</option>
-    </select>
-    /graphds
     <span id="title">
       <a id='menu1' class='selected-viz'>Có trọng số/ Không trọng số</a>
       <a id='menu2'>U/W</a>
@@ -234,7 +229,7 @@
       //setTimeout(function() {
       if (
         retval
-        ) { // mode == "exploration" && // now not only for exploration mode, but check if this opens other problems
+      ) { // mode == "exploration" && // now not only for exploration mode, but check if this opens other problems
         $('#current-action').show();
         $('#current-action').html(mode == "exploration" ? msg : ("e-Lecture Example (auto play until done)<br>" + msg));
         $('#progress-bar').slider("option", "max", gw.getTotalIteration() - 1);
@@ -324,10 +319,10 @@
   </script>
 
   <script src="js/external/jquery-ui.js"></script>
-  <script src="js/external/d3.v3.js"></script>
+  <script src="js/external/d3.min.js"></script>
   <script src="js/viz.js"></script>
-  <!-- <script src="../js/visualgo_print.js"></script>
-  <script src="../js/graph_library.js"></script> -->
+  <script src="js/visualgo_print.js"></script>
+  <script src="js/graph_library.js"></script>
   <script>
     window.onpopstate = function (event) {
       var slide = event.state['slide'];
