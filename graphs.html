@@ -167,21 +167,12 @@
       title="show/hide actions panel" /></div>
   <script src="js/external/jquery-3.3.1.min.js"></script>
   <script>
-    var PHP_DOMAIN = "";
 
     // surprise colour!
     // Referenced to in  home.js and viz.js also
     var colourArray = ["#52bc69", "#d65775" /*"#ed5a7d"*/ , "#2ebbd1", "#d9513c", "#fec515", "#4b65ba", "#ff8a27",
       "#a7d41e"
     ]; // green, pink, blue, red, yellow, indigo, orange, lime
-
-    function disableScroll() {
-      $('html').css('overflow', 'hidden');
-    }
-
-    function enableScroll() {
-      $('html').css('overflow', 'visible');
-    }
 
     function replaceAll(find, replace, str) {
       return str.replace(new RegExp(find, 'g'), replace);
@@ -196,6 +187,7 @@
       }
       return generatedColours;
     }
+    // lấy màu ngẫu nhiênnhiên
 
     function isOn(value, position) {
       return (value >> position) & 1 === 1;
@@ -215,29 +207,7 @@
         });
       });
     }
-
-    function showLoadingScreen() {
-      $('#loading-overlay').show();
-      $('#loading-message').show();
-    }
-
-    function hideLoadingScreen() {
-      $('#loading-overlay').hide();
-    }
-
-    function commonAction(retval, msg) {
-      //setTimeout(function() {
-      if (
-        retval
-      ) { // mode == "exploration" && // now not only for exploration mode, but check if this opens other problems
-        $('#current-action').show();
-        $('#current-action').html(mode == "exploration" ? msg : ("e-Lecture Example (auto play until done)<br>" + msg));
-        $('#progress-bar').slider("option", "max", gw.getTotalIteration() - 1);
-        triggerRightPanels();
-        isPlaying = true;
-      }
-      //}, 500);
-    }
+    // Tùy chỉnh thông báo
 
     function getQueryVariable(variable) {
       var query = window.location.search.substring(1);
@@ -257,151 +227,18 @@
     var colourTheFourth = colourArray[generatedColours[3]];
 
     $(function () {
-      $('.links').css('background', surpriseColour);
-      $('.right-links').css('background', surpriseColour);
-      $('#login-go').css('background', surpriseColour);
-
       $('.colour').css("color", surpriseColour); // name
-      $('h4').css("background-color", surpriseColour); // about, contact us etc. button background
-
-      // title
-      $('#title a').click(function () {
-        $('#title a').removeClass('selected-viz');
-        $(this).addClass('selected-viz');
-        // temporary quick fix for Google Chrome Aug 2016 issue...
-        setTimeout(function () {
-          document.body.style.zoom = "100.1%";
-        }, 100); // force resize/redraw...
-        setTimeout(function () {
-          document.body.style.zoom = "100%";
-        }, 600);
-      });
-
-      // overlays stuffs
-      $('#trigger-about').click(function () {
-        if ($(window).width() > 600) {
-          $('#dark-overlay').fadeIn(function () {
-            $('#about').fadeIn();
-          });
-        } else
-          alert('Sorry, this dialog is too big. Please load it on bigger screen');
-      });
-
-      $('#trigger-team').click(function () {
-        if ($(window).width() > 600) {
-          $('#dark-overlay').fadeIn(function () {
-            $('#team').fadeIn();
-          });
-        } else
-          alert('Sorry, this dialog is too big. Please load it on bigger screen');
-      });
-
-      $('#trigger-terms').click(function () {
-        if ($(window).width() > 600) {
-          $('#dark-overlay').fadeIn(function () {
-            $('#termsofuse').fadeIn();
-          });
-        } else
-          alert('Sorry, this dialog is too big. Please load it on bigger screen');
-      });
-
-      $('.close-overlay').click(function () {
-        $('.overlays').fadeOut(function () {
-          $('#dark-overlay').fadeOut();
-        });
-      });
-
-      $('#dark-overlay').click(function () {
-        $('.overlays').fadeOut();
-        $('#dark-overlay').fadeOut();
-      });
     });
   </script>
 
-  <script src="js/external/jquery-ui.js"></script>
+  <script src="js/external/jquery-ui.min.js"></script>
   <script src="js/external/d3.min.js"></script>
   <script src="js/viz.js"></script>
-  <script src="js/visualgo_print.js"></script>
-  <script src="js/graph_library.js"></script>
   <script>
-    window.onpopstate = function (event) {
-      var slide = event.state['slide'];
-      openSlide(slide, function () {
-        runSlide(slide);
-      });
-    };
-
-    function getUrlParameter(sParam) {
-      var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-        sURLVariables = sPageURL.split('&'),
-        sParameterName, i;
-
-      for (i = 0; i < sURLVariables.length; i++) {
-        sParameterName = sURLVariables[i].split('=');
-        if (sParameterName[0] === sParam) return sParameterName[1] === undefined ? true : sParameterName[1];
-      }
-    };
-
-    function pushState(slideValue) {
-      var url = '/vi/graphds';
-      if (typeof slideValue != 'undefined' && slideValue != null) url += '?slide=' + slideValue;
-      window.history.pushState({
-        slide: slideValue
-      }, "slide " + slideValue, url);
-    }
-
-    function showPopup(callback) {
-      $('#popup').fadeIn(100, callback);
-    }
-
-    function hidePopup(callback) {
-      $('#popup').fadeOut(100, callback);
-    }
-
-    function showOverlay() {
-      $('#overlay').css('opacity', 0.5);
-      $('#overlay').show();
-    }
-
-    function hideOverlay() {
-      $('#overlay').hide();
-      $("#e-lecture").html("");
-    }
-
-    function makeOverlayTransparent() {
-      $('#overlay').css('opacity', 0);
-    }
-
-    function doButtonAction109() {
-      GraphVisu(true, true, 'CP2.5C');
-    }
-
-    function adjustPopupToImageSize() {
-      var width = $('#popup-image').prop('width');
-      var height = $('#popup-image').prop('height');
-      $('#popup').width(width + 20);
-      $('#popup').height(height + 20);
-      if (width == 0 && height == 0) {
-        setTimeout(adjustPopupToImageSize, 200);
-      } else {
-        showPopup();
-      }
-    }
-
-    function POPUP_IMAGE(url) {
-      $('#popup-content').html('<img id="popup-image" src="' + url + '">');
-      adjustPopupToImageSize();
-    }
-    // This function will be called before returning to Explore Mode
-    function ENTER_EXPLORE_MODE() {}
-
-    // Lecture action functions
-    function CUSTOM_ACTION(action, data, mode) {}
-  </script>
-  <script>
-    function toggleActionMenu() {
-      $("#actions").toggle();
-    }
+    // function toggleActionMenu() {
+    //   $("#actions").toggle();
+    // }
+    // thay đổi trạng thái thanh điều hướng (đóng/mở)
 
     // Graph DS actions
     var actionsWidth = 170;
