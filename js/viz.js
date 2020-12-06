@@ -1,3 +1,6 @@
+// File chứa các hiệu ứng hiển thị, các tương tác của người dùng với trang web
+// Các hàm sẽ được chạy ngay khi load trang web
+
 var mode = "exploration";
 var codetraceColor = "white";
 
@@ -21,6 +24,7 @@ function highlightLine(lineNumbers) {
             .css("color", "white");
     }
 }
+// Làm sáng cạnh đồ thị
 
 var isPlaying = false;
 //Opening and closing panels
@@ -40,6 +44,8 @@ function showActionsPanel() {
         isActionsOpen = true;
     }
 }
+// Hiển thị thanh điều hướng
+
 function hideActionsPanel() {
     if (isActionsOpen) {
         $("#actions-hide img")
@@ -51,6 +57,8 @@ function hideActionsPanel() {
         isActionsOpen = false;
     }
 }
+// Đóng thanh điều hướng
+
 function showStatusPanel() {
     if (!isStatusOpen) {
         $("#status-hide img").removeClass("rotateLeft").addClass("rotateRight");
@@ -61,6 +69,8 @@ function showStatusPanel() {
         isStatusOpen = true;
     }
 }
+// Hiển thị thanh trạng thái
+
 function hideStatusPanel() {
     if (isStatusOpen) {
         $("#status-hide img").removeClass("rotateRight").addClass("rotateLeft");
@@ -71,6 +81,8 @@ function hideStatusPanel() {
         isStatusOpen = false;
     }
 }
+// Đóng thanh trạng thái
+
 function showCodetracePanel() {
     if (!isCodetraceOpen) {
         $("#codetrace-hide img")
@@ -82,6 +94,8 @@ function showCodetracePanel() {
         isCodetraceOpen = true;
     }
 }
+// Hiển thị thanh mã giả
+
 function hideCodetracePanel() {
     if (isCodetraceOpen) {
         $("#codetrace-hide img")
@@ -93,6 +107,8 @@ function hideCodetracePanel() {
         isCodetraceOpen = false;
     }
 }
+// Đóng thanh mã giả
+
 function triggerRightPanels() {
     hideActionsPanel();
     showStatusPanel();
