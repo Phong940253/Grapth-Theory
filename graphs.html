@@ -42,6 +42,7 @@
       <div id='mode-button' title='exploration'>Chế độ thăm dò &#9663;</div>
     </div>
   </div>
+  <p><textarea id="myTextarea" style="padding: 80px; margin-left: 1000px;">Nhập ma trận ở đây</textarea></p>
   <div id="dark-overlay"></div>
   <div id="left-bar"></div>
   <div id="right-bar"></div>
@@ -146,7 +147,9 @@
     </tr>
   </table>
   <div id="actions" class="panel">
-    <p onClick="GraphVisu(true , true , 'CP3Fig2.4');">Nhập đồ thị từ file</p>
+    <p onClick="DrawGraMatrix();">vẽ đồ thị</p>
+    <!--<p onClick="matrixInput();">Nhập đồ thị từ ma trận</p> -->
+    <p onClick="GraphVisu(false, false, 'aaaaa');">aaaaaaaa*</p>
     <p onClick="GraphVisu(true , true , 'CP3Fig2.4');">Đồ thị ngẫu nhiên</p>
     <p onClick="GraphVisu(true , true , 'CP3Fig2.4');">U/U: CP3 Fig 2.4</p>
     <p onClick="GraphVisu(true , true , 'CP3Fig2.4_disjoint');">U/U: CP3 Fig 2.4, disjoint</p>
@@ -167,7 +170,9 @@
       title="show/hide actions panel" /></div>
   <script src="js/external/jquery-3.3.1.min.js"></script>
   <script>
-
+    // global
+    var Adja_Matrix=[];
+    var Adja_Matrix_E=[];
     // surprise colour!
     // Referenced to in  home.js and viz.js also
     var colourArray = ["#52bc69", "#d65775" /*"#ed5a7d"*/ , "#2ebbd1", "#d9513c", "#fec515", "#4b65ba", "#ff8a27",
@@ -481,7 +486,70 @@
             }
           }
         ];
-      } else if (arg3 === "CP3Fig2.4_disjoint") {
+      } 
+      else if (arg3 === "aaaaa") {
+        nodes = [{
+            id: 0,
+            x: 220,
+            y: 270
+          },
+          {
+            id: 1,
+            x: 120,
+            y: 180
+          },
+          {
+            id: 2,
+            x: 320,
+            y: 180
+          }];
+          links = [{
+            source: {
+              id: 0
+            },
+            target: {
+              id: 1
+            },
+            weight: "2"
+          },
+          {
+            source: {
+              id: 0
+            },
+            target: {
+              id: 2
+            },
+            weight: "7"
+          },
+          {
+            source: {
+              id: 1
+            },
+            target: {
+              id: 2
+            },
+            weight: "4"
+          },
+          {
+            source: {
+              id: 2
+            },
+            target: {
+              id: 0
+            },
+            weight: "1"
+          },
+          {
+            source: {
+              id: 2
+            },
+            target: {
+              id: 1
+            },
+            weight: "4"
+          }];
+      }
+      else if (arg3 === "CP3Fig2.4_disjoint") {
         nodes = [{
             id: 0,
             x: 220,
@@ -1328,7 +1396,9 @@
             weight: "3"
           },
         ];
-      } else if (arg3 === "CP3Fig4.4") {
+      } 
+      
+      else if (arg3 === "CP3Fig4.4") {
         nodes = [{
             id: 0,
             x: 100,
@@ -1592,6 +1662,11 @@
             }
           }
         ];
+      } else if(arg3==="MaIN"){
+        nodes=[];
+        links=[];
+        nodes=Adja_Matrix;
+        links=Adja_Matrix_E;
       } else if (arg3 === "CP3Fig4.26B") {
         nodes = [{
             id: 0,
@@ -2581,6 +2656,140 @@
         .on('keydown', keydown)
         .on('keyup', keyup);
       restart();
+    }
+
+
+    
+    function DrawGraMatrix() {
+      var a;
+      Adja_Matrix=[];
+      Adja_Matrix_E=[];
+      //let emptySVG=document.getElementById("svgidd");
+      //emptySVG.empty();
+      $("#svgidd").empty();
+        a = document.getElementById("myTextarea").value;
+          document.getElementById("demo").innerHTML = a;
+          //line
+          a= a.split('\n');
+          for(i=1; i<=a[0][0]; i++){
+              a[i]=a[i].split(" ");
+          }
+          udc=function(a){
+            for(i=1; i<=a[0][0]; i++){
+              for(j=i-1; j<a[0][0]; j++){
+                if(a[i][j]!=a[j+1][i-1]){
+                  return false;
+                }
+              }
+            }
+            return true;
+          }
+          uwc = function(a){
+            for(i=1; i<=a[0][0]; i++){
+              for(j=0; j<a[0][0]; j++){
+                if(a[i][j]>1 || a[i][j]<0){
+                  return false;
+                }
+              }
+            }
+            return true;
+          }
+          UDC=udc(a);
+          UWC=uwc(a);
+      
+      
+      
+          for(i=0; i<a[0][0]; i++){
+              tep={
+                      id: i,
+                          x: Math.floor(Math.random()*630)+10,
+                          y: Math.floor(Math.random()*350)+10
+                  }     
+              Adja_Matrix.push(tep);
+          }
+          if(UWC){
+            if(UDC){
+              for(i=1; i<=a[0][0]; i++){
+                for(j=i-1; j<a[0][0]; j++){
+                    if(a[i][j]!=0 && j!=i-1){
+                        temp={
+                              source: {
+                                id: i-1
+                              },
+                              target: {
+                                id: j
+                              }
+                            }
+                          Adja_Matrix_E.push(temp);
+                        }
+                        
+                    }
+                }  
+            }
+            else{
+              for(i=1; i<=a[0][0]; i++){
+                for(j=0; j<a[0][0]; j++){
+                    if(a[i][j]!=0 && j!=i-1){
+                        temp={
+                              source: {
+                                id: i-1
+                              },
+                              target: {
+                                id: j
+                              }
+                            }
+                          Adja_Matrix_E.push(temp);
+                        }
+                        
+                    }
+                }
+            }
+            
+          }
+          else{
+            if(UDC){
+              for(i=1; i<=a[0][0]; i++){
+                for(j=i-1; j<a[0][0]; j++){
+                    if(a[i][j]!=0 && j!=i-1){
+                        temp={
+                              source: {
+                                id: i-1
+                              },
+                              target: {
+                                id: j
+                              },
+                              weight:  a[i][j]
+                            }
+                          Adja_Matrix_E.push(temp);
+                        }
+                        
+                    }
+                }
+            }
+            else{
+              for(i=1; i<=a[0][0]; i++){
+                for(j=0; j<a[0][0]; j++){
+                    if(a[i][j]!=0 && j!=i-1){
+                        temp={
+                              source: {
+                                id: i-1
+                              },
+                              target: {
+                                id: j
+                              },
+                              weight:  a[i][j]
+                            }
+                          Adja_Matrix_E.push(temp);
+                        }
+                        
+                    }
+                }
+            }
+            
+            }
+            
+          
+      GraphVisu(UDC, UWC , 'MaIN'); 
     }
   </script>
 </body>
