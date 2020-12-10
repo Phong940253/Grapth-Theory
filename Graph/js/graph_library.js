@@ -1,3 +1,42 @@
+var Adja_Matrix={};
+var Adja_Matrix_E={};
+
+function readGraph(){
+    a = document.getElementById("myTextarea").value;
+        //document.getElementById("demo").innerHTML = a;
+    Adja_Matrix={};
+    Adja_Matrix_E={};
+    //line
+    a= a.split('\n');
+    for(i=1; i<=a[0][0]; i++){
+        a[i]=a[i].split(" ");
+    }
+    
+    for(i=0; i<a[0][0]; i++){
+        tep={
+                
+                    x: Math.floor(Math.random()*630)+10,
+                    y: Math.floor(Math.random()*350)+10
+            }     
+        Adja_Matrix[i]=tep;
+    }
+    
+    for(i=1; i<=a[0][0]; i++){
+        for(j=0; j<a[0][0]; j++){
+            if(a[i][j]!=0 && j!=i-1){
+                k=i-1;
+                temp={
+                        u: i-1 , v: j , w:  a[i][j]
+                    }                        
+                
+                Adja_Matrix_E[i-1]=temp;
+                }
+                
+            }
+        }
+        matrik=false;
+}
+    
 function IsUndirected(t, e) {
     if (0 == t.length) return !0;
     var r = [];
@@ -133,6 +172,11 @@ function HasNegativeWeightCycle(t, e, r) {
     return x;
 }
 function getExampleGraph(t, e) {
+    if(t==matrixx){
+        readGraph();
+        if(e==VL) return Adja_Matrix;
+        if(e==EL) return Adja_Matrix_E;
+    }
     if (t == CP3_4_1) {
         if (e == VL)
             return {
@@ -163,7 +207,8 @@ function getExampleGraph(t, e) {
                 12: { u: 7, v: 6, w: 1 },
                 13: { u: 8, v: 6, w: 1 },
             };
-    } else if (t == CP3_4_3) {
+    }
+    else if (t == CP3_4_3) {
         if (e == VL)
             return {
                 0: { x: 200, y: 50 },
@@ -2157,6 +2202,7 @@ var UfdsHelper = function () {
     },
     VL = 0,
     EL = 1,
+    matrixx=0,
     CP3_4_1 = 0,
     CP3_4_3 = 1,
     CP3_4_4 = 2,
