@@ -130,7 +130,10 @@
     </span>
     <div id="mode-menu">
       <div id='mode-button' title='exploration'>Chế độ thăm dò &#9663;</div>
+      
     </div>
+    <p id="demo"></p>
+    <p><textarea id="myTextarea" style="padding: 80px; margin-left: 1000px;">Nhập ma trận ở đây</textarea></p>
   </div>
   <div id="dark-overlay"></div>
   <div id="status" class="panel">
@@ -177,6 +180,7 @@
     <p id="dfs">Depth-First Search(s)</p>
     <p id="bfs">Breadth-First Search(s)</p>
     <p id="randomgraph">Đồ thị ngẫu nhiên</p>
+    <p onclick="example(matrixx)">Đọc đồ thị từ ma trận</p>
   </div>
   <div id="actions-hide" class="panel-hide"><img src="../img/arrow_white_right.png" alt=">"
       title='Hiện/Ẩn Trung tâm Hành động'></div>
@@ -237,7 +241,10 @@
   <script src="../js/jquery-3.3.1.min.js"></script>
   <script>
     var PHP_DOMAIN = "";
-
+    var matrik=false;
+    function readMatrix(){
+      matrik=true;
+    }
     // surprise colour!
     // Referenced to in  home.js and viz.js also
     var colourArray = ["#52bc69", "#d65775" /*"#ed5a7d"*/ , "#2ebbd1", "#d9513c", "#fec515", "#4b65ba", "#ff8a27",
@@ -1060,6 +1067,7 @@
       gtw = new GraphTraversal();
       gw = gtw.getGraphWidget();
       var options = [CP3_4_1, CP3_4_3, CP3_4_4, CP3_4_9, CP3_4_17, CP3_4_18, CP3_4_19];
+      //var options=[CP3_4_1];
       gtw.examples(options[Math.floor(Math.random() * 7)]);
       randomGraphID = -1;
       var graphJSON = getQueryVariable("create");
