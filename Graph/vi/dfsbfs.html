@@ -80,8 +80,14 @@
     </div>
     <p id="demo"></p>
     <p>
-      <textarea id="myTextarea" class="overlays">
-Nhập ma trận ở đây</textarea>
+      <div id="textArea" class="overlays">
+        <div id="infoTextArea"></div>
+        <textarea id="myTextarea" class="overlays">Nhập ma trận kề vào đây...</textarea>
+        <div class="scrollmenu" id="actionTextArea">
+          <a onclick="closeTextArea()">Đóng</a>
+          <a onclick="example(matrixx); closeTextArea()">Xong</a>
+        </div>
+      </div>
     </p>
   </div>
   <div id="dark-overlay"></div>
@@ -1277,23 +1283,27 @@ Nhập ma trận ở đây</textarea>
     }
 
     function showTextArea(callback) {
+      //$("#textArea").toggle();
       $("#myTextarea").toggle();
       if (isPlaying) stop();
       if (mode == "exploration") {
         $("#dark-overlay").fadeIn(function () {
-
-          $("#myTextarea").fadeIn();
+          $("#textArea").fadeIn();
         });
         isPlaying = false;
       }
     }
 
-    $('#myTextarea').on('keydown', function(event) {
-        console.log(event.keyCode);
-        switch(event.keyCode){
-         //....your actions for the keys .....
-        }
-    });
+    function closeTextArea(callback) {
+      $("#myTextarea").toggle();
+      if (isPlaying) stop();
+      if (mode == "exploration") {
+        $("#dark-overlay").fadeOut(function () {
+          $("#textArea").fadeOut("fast");
+        });
+        isPlaying = false;
+      }
+    }
 
     function loadGraph(graph) {
       if (gtw) {

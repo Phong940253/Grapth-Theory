@@ -406,6 +406,16 @@ html {
 }
 
 #myTextarea {
+    font-size: 15px;
+    display: none;
+    height: 450px;
+    width: 665px;
+    margin: 0 auto;
+    margin-left: -335px;
+    margin-top: -200px;
+}
+
+#textArea {
     display: none;
     height: 530px;
     width: 700px;
@@ -423,4 +433,28 @@ html {
     z-index: 1003;
     overflow-x: hidden;
     overflow-y: hidden
+}
+.scrollmenu {
+    background-color: #333;
+    overflow: auto;
+    white-space: nowrap;
+}
+
+.scrollmenu a {
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px;
+    text-decoration: none;
+}
+
+.scrollmenu a:hover {
+    background-color: #777;
+}
+
+#actionTextArea {
+    top: 50%;
+    left: 50%;
+    margin: 0 auto;
+    margin-top: 485px;
 }
