@@ -169,8 +169,8 @@
   <script src="../js/jquery-3.3.1.min.js"></script>
   <script>
     // global
-    var Adja_Matrix=[];
-    var Adja_Matrix_E=[];
+    var Adja_Matrix = [];
+    var Adja_Matrix_E = [];
   </script>
   <script src="../js/init.js"></script>
   <script src="../js/jquery-ui.min.js"></script>
@@ -423,8 +423,7 @@
             }
           }
         ];
-      } 
-      else if (arg3 === "aaaaa") {
+      } else if (arg3 === "aaaaa") {
         nodes = [{
             id: 0,
             x: 220,
@@ -439,8 +438,9 @@
             id: 2,
             x: 320,
             y: 180
-          }];
-          links = [{
+          }
+        ];
+        links = [{
             source: {
               id: 0
             },
@@ -484,9 +484,9 @@
               id: 1
             },
             weight: "4"
-          }];
-      }
-      else if (arg3 === "CP3Fig2.4_disjoint") {
+          }
+        ];
+      } else if (arg3 === "CP3Fig2.4_disjoint") {
         nodes = [{
             id: 0,
             x: 220,
@@ -1333,14 +1333,12 @@
             weight: "3"
           },
         ];
-      } 
-      
-      else if (arg3 === "CP3Fig4.4") {
+      } else if (arg3 === "CP3Fig4.4") {
         nodes = [{
             id: 0,
             x: 100,
             y: 100
-          },                     
+          },
           {
             id: 1,
             x: 210,
@@ -1599,11 +1597,11 @@
             }
           }
         ];
-      } else if(arg3==="MaIN"){
-        nodes=[];
-        links=[];
-        nodes=Adja_Matrix;
-        links=Adja_Matrix_E;
+      } else if (arg3 === "MaIN") {
+        nodes = [];
+        links = [];
+        nodes = Adja_Matrix;
+        links = Adja_Matrix_E;
       } else if (arg3 === "CP3Fig4.26B") {
         nodes = [{
             id: 0,
@@ -2596,137 +2594,134 @@
     }
 
 
-    
+
     function DrawGraMatrix() {
       var a;
-      Adja_Matrix=[];
-      Adja_Matrix_E=[];
+      Adja_Matrix = [];
+      Adja_Matrix_E = [];
       //let emptySVG=document.getElementById("svgidd");
       //emptySVG.empty();
       $("#svgidd").empty();
-        a = document.getElementById("myTextarea").value;
-          document.getElementById("demo").innerHTML = a;
-          //line
-          a= a.split('\n');
-          for(i=1; i<=a[0][0]; i++){
-              a[i]=a[i].split(" ");
+      a = document.getElementById("myTextarea").value;
+      document.getElementById("demo").innerHTML = a;
+      //line
+      a = a.split('\n');
+      for (i = 1; i <= a[0][0]; i++) {
+        a[i] = a[i].split(" ");
+      }
+      udc = function (a) {
+        for (i = 1; i <= a[0][0]; i++) {
+          for (j = i - 1; j < a[0][0]; j++) {
+            if (a[i][j] != a[j + 1][i - 1]) {
+              return false;
+            }
           }
-          udc=function(a){
-            for(i=1; i<=a[0][0]; i++){
-              for(j=i-1; j<a[0][0]; j++){
-                if(a[i][j]!=a[j+1][i-1]){
-                  return false;
+        }
+        return true;
+      }
+      uwc = function (a) {
+        for (i = 1; i <= a[0][0]; i++) {
+          for (j = 0; j < a[0][0]; j++) {
+            if (a[i][j] > 1 || a[i][j] < 0) {
+              return false;
+            }
+          }
+        }
+        return true;
+      }
+      UDC = udc(a);
+      UWC = uwc(a);
+
+
+
+      for (i = 0; i < a[0][0]; i++) {
+        tep = {
+          id: i,
+          x: Math.floor(Math.random() * 630) + 10,
+          y: Math.floor(Math.random() * 350) + 10
+        }
+        Adja_Matrix.push(tep);
+      }
+      if (UWC) {
+        if (UDC) {
+          for (i = 1; i <= a[0][0]; i++) {
+            for (j = i - 1; j < a[0][0]; j++) {
+              if (a[i][j] != 0 && j != i - 1) {
+                temp = {
+                  source: {
+                    id: i - 1
+                  },
+                  target: {
+                    id: j
+                  }
                 }
+                Adja_Matrix_E.push(temp);
               }
+
             }
-            return true;
           }
-          uwc = function(a){
-            for(i=1; i<=a[0][0]; i++){
-              for(j=0; j<a[0][0]; j++){
-                if(a[i][j]>1 || a[i][j]<0){
-                  return false;
+        } else {
+          for (i = 1; i <= a[0][0]; i++) {
+            for (j = 0; j < a[0][0]; j++) {
+              if (a[i][j] != 0 && j != i - 1) {
+                temp = {
+                  source: {
+                    id: i - 1
+                  },
+                  target: {
+                    id: j
+                  }
                 }
+                Adja_Matrix_E.push(temp);
               }
+
             }
-            return true;
           }
-          UDC=udc(a);
-          UWC=uwc(a);
-      
-      
-      
-          for(i=0; i<a[0][0]; i++){
-              tep={
-                      id: i,
-                          x: Math.floor(Math.random()*630)+10,
-                          y: Math.floor(Math.random()*350)+10
-                  }     
-              Adja_Matrix.push(tep);
+        }
+
+      } else {
+        if (UDC) {
+          for (i = 1; i <= a[0][0]; i++) {
+            for (j = i - 1; j < a[0][0]; j++) {
+              if (a[i][j] != 0 && j != i - 1) {
+                temp = {
+                  source: {
+                    id: i - 1
+                  },
+                  target: {
+                    id: j
+                  },
+                  weight: a[i][j]
+                }
+                Adja_Matrix_E.push(temp);
+              }
+
+            }
           }
-          if(UWC){
-            if(UDC){
-              for(i=1; i<=a[0][0]; i++){
-                for(j=i-1; j<a[0][0]; j++){
-                    if(a[i][j]!=0 && j!=i-1){
-                        temp={
-                              source: {
-                                id: i-1
-                              },
-                              target: {
-                                id: j
-                              }
-                            }
-                          Adja_Matrix_E.push(temp);
-                        }
-                        
-                    }
-                }  
-            }
-            else{
-              for(i=1; i<=a[0][0]; i++){
-                for(j=0; j<a[0][0]; j++){
-                    if(a[i][j]!=0 && j!=i-1){
-                        temp={
-                              source: {
-                                id: i-1
-                              },
-                              target: {
-                                id: j
-                              }
-                            }
-                          Adja_Matrix_E.push(temp);
-                        }
-                        
-                    }
+        } else {
+          for (i = 1; i <= a[0][0]; i++) {
+            for (j = 0; j < a[0][0]; j++) {
+              if (a[i][j] != 0 && j != i - 1) {
+                temp = {
+                  source: {
+                    id: i - 1
+                  },
+                  target: {
+                    id: j
+                  },
+                  weight: a[i][j]
                 }
+                Adja_Matrix_E.push(temp);
+              }
+
             }
-            
           }
-          else{
-            if(UDC){
-              for(i=1; i<=a[0][0]; i++){
-                for(j=i-1; j<a[0][0]; j++){
-                    if(a[i][j]!=0 && j!=i-1){
-                        temp={
-                              source: {
-                                id: i-1
-                              },
-                              target: {
-                                id: j
-                              },
-                              weight:  a[i][j]
-                            }
-                          Adja_Matrix_E.push(temp);
-                        }
-                        
-                    }
-                }
-            }
-            else{
-              for(i=1; i<=a[0][0]; i++){
-                for(j=0; j<a[0][0]; j++){
-                    if(a[i][j]!=0 && j!=i-1){
-                        temp={
-                              source: {
-                                id: i-1
-                              },
-                              target: {
-                                id: j
-                              },
-                              weight:  a[i][j]
-                            }
-                          Adja_Matrix_E.push(temp);
-                        }
-                        
-                    }
-                }
-            }
-            
-            }
-            
-          
-      GraphVisu(UDC, UWC , 'MaIN'); 
+        }
+
+      }
+
+
+      GraphVisu(UDC, UWC, 'MaIN');
     }
   </script>
 </body>
