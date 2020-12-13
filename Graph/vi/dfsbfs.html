@@ -24,45 +24,7 @@
   <link rel="stylesheet" href="../css/viz-1.0.1.css">
   <link rel="stylesheet" href="../css/visual.css">
   <link rel="stylesheet" href="../css/drawgraph.css">
-  <style>
-    #e-lecture {
-      top: 45px;
-      right: 130px;
-      width: 400px;
-      display: block;
-      background: none;
-      /*overflow: normal;*/
-      white-space: normal;
-      text-align: right;
-      color: black;
-      font-weight: bold;
-      font-size: 20px;
-    }
-
-    .electure-prev,
-    .electure-next {
-      /* force update, copied from viz.css */
-      position: absolute;
-      /* bottom: -12px; */
-      top: -20px;
-      /*bottom: '';*/
-      padding: 3px 8px;
-      background: #999;
-      color: white;
-      cursor: pointer;
-      border-radius: 2px;
-    }
-
-    .electure-prev {
-      left: -10px;
-      /* right: 30px; */
-    }
-
-    .electure-next {
-      right: -10px;
-      color: white;
-    }
-  </style>
+ 
   <style>
     .execAction {
       padding: 5px 8px;
@@ -311,19 +273,19 @@
 
       warnChecking = function () {
         var warn = "";
-        if (amountVertex >= 10) warn += 'Too much vertex on screen, consider drawing smaller graph. ';
-        if (warn == "") $("#draw-warn p").html('No Warning.');
+        if (amountVertex >= 10) warn += 'Quá nhiều đỉnh trên màn hình, hãy vẽ đồ thị nhỏ hơn. ';
+        if (warn == "") $("#draw-warn p").html('Không cảnh báo.');
         else $("#draw-warn p").html(warn);
       }
 
       errorChecking = function () {
         var error = "";
         if (amountVertex == 0) {
-          $("#draw-err p").html('Graph cannot be empty. ');
+          $("#draw-err p").html('Đồ thị không thể để trống. ');
           return;
         }
 
-        if (error == "") $("#draw-err p").html('No Error');
+        if (error == "") $("#draw-err p").html('Không có lỗi');
         else $("#draw-err p").html(error);
       }
 
@@ -343,7 +305,7 @@
       }
 
       this.draw = function () {
-        if ($("#draw-err p").html() != 'No Error')
+        if ($("#draw-err p").html() != 'Không có lỗi')
           return false;
         if ($("#submit").is(':checked'))
           this.submit(JSONresult);
