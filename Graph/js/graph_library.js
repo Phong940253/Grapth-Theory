@@ -1,7 +1,23 @@
 var Adja_Matrix={};
 var Adja_Matrix_E={};
 
+Object.size = function(obj) {
+    var size = 0, key;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) size++;
+    }
+    return size;
+};
+
 function readGraph() {
+    Object.size = function(obj) {
+        var size = 0, key;
+        for (key in obj) {
+            if (obj.hasOwnProperty(key)) size++;
+        }
+        return size;
+    };
+    
     a = document.getElementById("myTextarea").value;
     //document.getElementById("demo").innerHTML = a;
     Adja_Matrix = {};
@@ -13,23 +29,34 @@ function readGraph() {
     }
 
     for (i = 0; i < a[0][0]; i++) {
-        tep = {
-            x: Math.floor(Math.random() * 630) + 10,
-            y: Math.floor(Math.random() * 350) + 10
+        var checkNear = true;
+        while (checkNear) {
+            checkNear = false;
+            tep = {
+                x: Math.floor(Math.random() * 630) + 10,
+                y: Math.floor(Math.random() * 350) + 10
+            }
+            for (j = 0; j < Adja_Matrix.size; j++) {
+                if ((Adja_Matrix[j]["x"] - temp["x"]) <= 50 || (Adja_Matrix[j]["y"] - temp["y"]) <= 50) {
+                    checkNear = true;
+                    break;
+                }
+            }
         }
         Adja_Matrix[i] = tep;
     }
-
+    var dem = -1;
     for (i = 1; i <= a[0][0]; i++) {
         for (j = 0; j < a[0][0]; j++) {
             if (a[i][j] != 0 && j != i - 1) {
+                dem++;
                 k = i - 1;
                 temp = {
                     u: i - 1,
                     v: j,
                     w: a[i][j]
                 }
-                Adja_Matrix_E[i - 1] = temp;
+                Adja_Matrix_E[dem] = temp;
             }
         }
     }
@@ -2201,7 +2228,7 @@ var UfdsHelper = function () {
     },
     VL = 0,
     EL = 1,
-    matrixx=0,
+    matrixx = -1,
     CP3_4_1 = 0,
     CP3_4_3 = 1,
     CP3_4_4 = 2,
