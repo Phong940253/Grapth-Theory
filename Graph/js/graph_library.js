@@ -28,38 +28,44 @@ function readGraph() {
         a[i] = a[i].split(" ");
     }
 
-    for (i = 0; i < a[0][0]; i++) {
-        var checkNear = true;
-        while (checkNear) {
-            checkNear = false;
-            tep = {
-                x: Math.floor(Math.random() * 630) + 10,
-                y: Math.floor(Math.random() * 350) + 10
-            }
-            for (j = 0; j < Adja_Matrix.size; j++) {
-                if ((Adja_Matrix[j]["x"] - temp["x"]) <= 50 || (Adja_Matrix[j]["y"] - temp["y"]) <= 50) {
-                    checkNear = true;
-                    break;
-                }
+    let checkX=[];
+    let checkY=[];
+    for(i=0; i<a[0][0]; i++){
+        XX=Math.floor(Math.random()*630)+10;
+        YY=Math.floor(Math.random()*350)+10;
+        goTo=false;
+        for(j=0; j<checkY.length; j++){
+            if(Math.abs(XX-checkX[j]) <=60 && Math.abs(YY-checkY[j]) <=60){
+                goTo=true;
+                break;
             }
         }
-        Adja_Matrix[i] = tep;
+        if(goTo==false){
+            checkX.push(XX);
+            checkY.push(YY);
+            tep={
+                    
+                    x: XX,
+                    y: YY
+                }     
+            Adja_Matrix[i]=tep;
+        }
+        else i--;
     }
-    var dem = -1;
-    for (i = 1; i <= a[0][0]; i++) {
-        for (j = 0; j < a[0][0]; j++) {
-            if (a[i][j] != 0 && j != i - 1) {
-                dem++;
-                k = i - 1;
-                temp = {
-                    u: i - 1,
-                    v: j,
-                    w: a[i][j]
+    
+    for(i=1; i<=a[0][0]; i++){
+        for(j=0; j<a[0][0]; j++){
+            if(a[i][j]!=0 && j!=i-1){
+                k=i-1;
+                temp={
+                        u: i-1 , v: j , w:  a[i][j]
+                    }                        
+                
+                Adja_Matrix_E[i-1]=temp;
                 }
-                Adja_Matrix_E[dem] = temp;
+                
             }
         }
-    }
     matrik = false;
 }
     
