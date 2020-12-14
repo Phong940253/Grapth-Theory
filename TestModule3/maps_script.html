@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+    <style>
+        #map {
+            height: 80%;
+            width: 80%;
+        }
+    </style>
+    <title>Maps</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="stylesheet" href="bootstrap.min.css" />
+    <script src="jquery.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">A.I.R.S.</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="maps.html">Map</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div id="map" style="position: fixed; left: 10%"></div>
+    <br />
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBIwzALxUPNbatRBj3Xi1Uhp0fFzwWNBkE&libraries=drawing&callback=initMap"></script>
+    <script>
+
+        var airport = {
+            lat: 10.760928821426653,
+            lng: 106.68241515925986,
+        };
+        var map;
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 18,
+                center: airport,
+                mapTypeId: "terrain",
+            });
+        }
+
+    </script>
+</body>
+
+</html>
