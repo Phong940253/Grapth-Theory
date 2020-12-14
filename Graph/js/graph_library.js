@@ -56,7 +56,6 @@ function readGraph() {
     for(i=1; i<=a[0][0]; i++){
         for(j=0; j<a[0][0]; j++){
             if(a[i][j]!=0 && j!=i-1){
-                k=i-1;
                 temp={
                         u: i-1 , v: j , w:  a[i][j]
                     }                        
