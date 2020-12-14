@@ -52,7 +52,7 @@ function readGraph() {
         }
         else i--;
     }
-    
+    let k=0;
     for(i=1; i<=a[0][0]; i++){
         for(j=0; j<a[0][0]; j++){
             if(a[i][j]!=0 && j!=i-1){
@@ -61,7 +61,8 @@ function readGraph() {
                         u: i-1 , v: j , w:  a[i][j]
                     }                        
                 
-                Adja_Matrix_E[i-1]=temp;
+                Adja_Matrix_E[k]=temp;
+                k++;
                 }
                 
             }
