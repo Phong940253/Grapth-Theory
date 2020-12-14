@@ -39,8 +39,19 @@
     <div id="mode-menu">
       <div id='mode-button' title='exploration'>Chế độ thăm dò &#9663;</div>
     </div>
+    <p id="demo"></p>
+    <p>
+      <div id="textArea" class="overlays">
+        <div id="infoTextArea"></div>
+        <textarea id="myTextarea" class="overlays">Nhập ma trận kề vào đây...</textarea>
+        <div class="scrollmenu" id="actionTextArea">
+          <a onclick="closeTextArea()">Đóng</a>
+          <a onclick="DrawGraMatrix(); closeTextArea()">Xong</a>
+        </div>
+      </div>
+    </p>
   </div>
-  <p><textarea id="myTextarea" style="padding: 80px; margin-left: 1000px;">Nhập ma trận ở đây</textarea></p>
+  
   <div id="dark-overlay"></div>
   <div id="left-bar"></div>
   <div id="right-bar"></div>
@@ -145,10 +156,7 @@
     </tr>
   </table>
   <div id="actions" class="panel">
-    <p onClick="DrawGraMatrix();">vẽ đồ thị</p>
     <!--<p onClick="matrixInput();">Nhập đồ thị từ ma trận</p> -->
-    <p onClick="GraphVisu(false, false, 'aaaaa');">aaaaaaaa*</p>
-    <p onClick="GraphVisu(true , true , 'CP3Fig2.4');">Đồ thị ngẫu nhiên</p>
     <p onClick="GraphVisu(true , true , 'CP3Fig2.4');">U/U: CP3 Fig 2.4</p>
     <p onClick="GraphVisu(true , true , 'CP3Fig2.4_disjoint');">U/U: CP3 Fig 2.4, disjoint</p>
     <p onClick="GraphVisu(true , true , 'tree');">U/U: Tree</p>
@@ -163,6 +171,8 @@
     <p onClick="GraphVisu(false, true , 'cyclic');">D/U: Cyclic</p>
     <p onClick="GraphVisu(false, false, 'CP3Fig4.26B');">D/W: CP3 Fig 4.26B*</p>
     <p onClick="GraphVisu(false, false, 'sssp');">D/W: Four 0&rarr;4 Paths</p>
+    <p id="randomgraph">Đồ thị ngẫu nhiên</p>
+    <p id="readAdj" onclick="showTextArea()">Đọc đồ thị từ ma trận</p>
   </div>
   <div id="actions-hide" class="panel-hide"><img src="../img/arrow_white_right.png" alt=">"
       title="show/hide actions panel" /></div>
@@ -2593,7 +2603,28 @@
       restart();
     }
 
+    function showTextArea(callback) {
+      //$("#textArea").toggle();
+      $("#myTextarea").toggle();
+      if (isPlaying) stop();
+      if (mode == "exploration") {
+        $("#dark-overlay").fadeIn(function () {
+          $("#textArea").fadeIn();
+        });
+        isPlaying = false;
+      }
+    }
 
+    function closeTextArea(callback) {
+      $("#myTextarea").toggle();
+      if (isPlaying) stop();
+      if (mode == "exploration") {
+        $("#dark-overlay").fadeOut(function () {
+          $("#textArea").fadeOut("fast");
+        });
+        isPlaying = false;
+      }
+    }
 
     function DrawGraMatrix() {
       var a;
