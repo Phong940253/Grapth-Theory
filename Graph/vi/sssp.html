@@ -111,7 +111,6 @@
 <body>
   <div id="top-bar">
     <a id="home" href="../../index.html">Neural<span class="colour">Network</span>Brain</a>
-    <span class="right-links" id="useraccount">Login</span>
     <span id="title">
       <a id='title-sssp' class='selected-viz'>Đường đi ngắn nhất từ nguồn đơn</a>
     </span>
@@ -123,14 +122,14 @@
     </div>
   </div>
   <p>
-    <div id="textArea" class="overlays">
-      <div id="infoTextArea"></div>
-      <textarea id="myTextarea" class="overlays">Nhập ma trận kề vào đây...</textarea>
-      <div class="scrollmenu" id="actionTextArea">
-        <a onclick="closeTextArea()">Đóng</a>
-        <a onclick="example(matrixx); closeTextArea()">Xong</a>
-      </div>
+  <div id="textArea" class="overlays">
+    <div id="infoTextArea"></div>
+    <textarea id="myTextarea" class="overlays">Nhập ma trận kề vào đây...</textarea>
+    <div class="scrollmenu" id="actionTextArea">
+      <a onclick="closeTextArea()">Đóng</a>
+      <a onclick="example(matrixx); closeTextArea()">Xong</a>
     </div>
+  </div>
   </p>
   <div id="dark-overlay"></div>
   <div id="status" class="panel">
@@ -180,7 +179,7 @@
     <p id="dijkstra">Dijkstra&#39;s Algorithm(s)</p>
     <p id="randomgraph">Đồ thị ngẫu nhiên</p>
     <p id="readAdj" onclick="showTextArea()">Đọc đồ thị từ ma trận</p>
-    
+
   </div>
   <div id="actions-hide" class="panel-hide"><img src="../img/arrow_white_right.png" alt=">"
       title="Hiện/Ẩn Trung tâm Hành động"></div>
@@ -313,7 +312,7 @@
       statusChecking = function () {
         $("#draw-status p").html(
           'Please draw a <b>directed weighted graph</b> where <b>vertex 0 is the source</b>. Please <b>create many paths</b> to make it <b>challenging for various SSSP algorithms</b>.'
-          );
+        );
       }
 
       warnChecking = function () {
@@ -739,8 +738,8 @@
                     delete edgeHighlighted[k];
                     edgeGrey[k] = true; // now make it "grey"
                   }
-                else if (iEL[k]["u"] == v && iEL[k]["v"] == p[v] && edgeHighlighted[k])
-                  delete edgeHighlighted[k];
+                  else if (iEL[k]["u"] == v && iEL[k]["v"] == p[v] && edgeHighlighted[k])
+                    delete edgeHighlighted[k];
               }
 
               delete edgeGrey[j]; // just in case the update is on the same edge
@@ -762,7 +761,7 @@
                 w + " = " + d[v] + ", p[" + v + "] = " + p[v] + ", PQ = " + ShowPQ() + ".";
             } else {
               thisStatus = thisStatus + ".<br>d[" + u + "]+w(" + u + "," + v + ") > d[" + v + "], i.e. " + (d[u] ==
-                  999 ? "Inf" : d[u]) + "+" + w + " &gt; " + (d[v] == 999 ? "Inf" : d[v]) +
+                999 ? "Inf" : d[u]) + "+" + w + " &gt; " + (d[v] == 999 ? "Inf" : d[v]) +
                 ", so there is no change.";
               edgeGrey[j] = true; // make this grey
             }
@@ -904,8 +903,8 @@
                     delete edgeHighlighted[k];
                     edgeGrey[k] = true; // now make it "grey"
                   }
-                else if (iEL[k]["u"] == v && iEL[k]["v"] == p[v] && edgeHighlighted[k])
-                  delete edgeHighlighted[k];
+                  else if (iEL[k]["u"] == v && iEL[k]["v"] == p[v] && edgeHighlighted[k])
+                    delete edgeHighlighted[k];
               }
 
               q.push(v);
@@ -1024,8 +1023,8 @@
                     delete edgeHighlighted[k];
                     edgeGrey[k] = true; // now make it "grey"
                   }
-                else if (iEL[k]["u"] == v && iEL[k]["v"] == p[v] && edgeHighlighted[k])
-                  delete edgeHighlighted[k];
+                  else if (iEL[k]["u"] == v && iEL[k]["v"] == p[v] && edgeHighlighted[k])
+                    delete edgeHighlighted[k];
               }
 
               delete edgeGrey[j]; // just in case the update is on the same edge
@@ -1174,8 +1173,8 @@
                     delete edgeHighlighted[k];
                     edgeGrey[k] = true; // now make it "grey"
                   }
-                else if (iEL[k]["u"] == v && iEL[k]["v"] == p[v] && edgeHighlighted[k])
-                  delete edgeHighlighted[k];
+                  else if (iEL[k]["u"] == v && iEL[k]["v"] == p[v] && edgeHighlighted[k])
+                    delete edgeHighlighted[k];
               }
 
               delete edgeGrey[j]; // just in case the update is on the same edge
@@ -1305,7 +1304,7 @@
             $('#code6').html('&nbsp;&nbsp;if can still relax that edge, -&infin; cycle found');
             $('#code7').html(
               '// <b><a href="http://cpbook.net/#downloads" target="_blank">ch4_06_bellman_ford.cpp/java, ch4, CP3</a></b>'
-              );
+            );
             break;
           case 1: // Original Dijkstra's
             $('#code1').html('show warning if the graph has -ve weight edge');
@@ -1315,7 +1314,7 @@
             $('#code5').html('&nbsp;&nbsp;&nbsp;&nbsp;relax(u, v, w(u, v)) + update PQ');
             $('#code6').html(
               '// <b><a href="http://cpbook.net/#downloads" target="_blank">ch4_05_dijkstra.cpp/java, ch4, CP3</a></b>'
-              );
+            );
             $('#code7').html('');
             break;
           case 2: // Modified Dijkstra's
@@ -1327,7 +1326,7 @@
             $('#code6').html('&nbsp;&nbsp;&nbsp;&nbsp;relax(u, v, w(u, v)) + insert new pair to PQ');
             $('#code7').html(
               '// <b><a href="http://cpbook.net/#downloads" target="_blank">ch4_05_dijkstra.cpp/java, ch4, CP3</a></b>'
-              );
+            );
             break;
           case 3: // BFS
             $('#code1').html('show warning if the graph is weighted');

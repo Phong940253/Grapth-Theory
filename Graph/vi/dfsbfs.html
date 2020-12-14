@@ -80,15 +80,16 @@
     </div>
     <p id="demo"></p>
     <p>
-      <div id="textArea" class="overlays">
-        <div id="infoTextArea"></div>
-        <textarea id="myTextarea" class="overlays">Nhập ma trận kề vào đây...</textarea>
-        <div class="scrollmenu" id="actionTextArea">
-          <a onclick="closeTextArea()">Đóng</a>
-          <a onclick="example(matrixx); closeTextArea()">Xong</a>
-        </div>
+    <div id="textArea" class="overlays">
+      <div id="infoTextArea"></div>
+      <textarea id="myTextarea" class="overlays">Nhập ma trận kề vào đây...</textarea>
+      <div class="scrollmenu" id="actionTextArea">
+        <a onclick="closeTextArea()">Đóng</a>
+        <a onclick="example(matrixx); closeTextArea()">Xong</a>
       </div>
+    </div>
     </p>
+
   </div>
   <div id="dark-overlay"></div>
   <div id="status" class="panel">
@@ -191,6 +192,11 @@
       </div>
       <div id="bfs-err" class="err"></div>
     </div>
+    <div class="action-menu-pullout">
+      <div id="" class="new-menu-option">
+        <input type="file" id="uploader" multiple size="50" onchange="myFunction()">
+      </div>
+    </div>
     <div class="randomgraph action-menu-pullout">
       <div id="toposortDfs" class="execAction new-menu-option coloured-menu-option" onclick="createRandom()">
         <p>DFS version</p>
@@ -282,7 +288,7 @@
         var warn = "";
         if (amountVertex >= 10)
           warn +=
-          "Quá nhiều đỉnh trên màn hình, hãy vẽ đồ thị nhỏ hơn. ";
+            "Quá nhiều đỉnh trên màn hình, hãy vẽ đồ thị nhỏ hơn. ";
         if (warn == "") $("#draw-warn p").html("Không cảnh báo.");
         else $("#draw-warn p").html(warn);
       };
@@ -543,12 +549,12 @@
               );
               cs["lineNo"] = [3];
               cs[
-                  "status"
-                ] =
+                "status"
+              ] =
                 'Thử cạnh {u} → {v}<br>Dỉnh {v} chưa được ghé thăm, chúng ta có <font color="red">tree edge</font>.'
-                .replace("{u}", u)
-                .replace("{v}", v)
-                .replace("{v}", v);
+                  .replace("{u}", u)
+                  .replace("{v}", v)
+                  .replace("{v}", v);
               stateList.push(cs);
 
               p[v] = u;
@@ -569,8 +575,8 @@
                 forwardEdge
               );
               cs[
-                  "status"
-                ] = "Kết thúc DFS({v}), quay lui DFS({u})."
+                "status"
+              ] = "Kết thúc DFS({v}), quay lui DFS({u})."
                 .replace("{u}", u)
                 .replace("{v}", v);
               cs["lineNo"] = 1;
@@ -603,12 +609,12 @@
                 .replace("{v}", v);
               if (p[u] == v)
                 thisStatus =
-                thisStatus +
-                '<font color="blue">cạnh hai chiều</font> (a trivial cycle).';
+                  thisStatus +
+                  '<font color="blue">cạnh hai chiều</font> (a trivial cycle).';
               else
                 thisStatus =
-                thisStatus +
-                '<font color="blue">trở lại cạnh</font> (a true cycle).';
+                  thisStatus +
+                  '<font color="blue">trở lại cạnh</font> (a true cycle).';
               cs["status"] = thisStatus;
               cs["lineNo"] = 4;
               stateList.push(cs);
@@ -633,12 +639,12 @@
                 forwardEdge
               );
               cs[
-                  "status"
-                ] =
+                "status"
+              ] =
                 'Thử cạnh {u} → {v}<br>Đỉnh {v} đã tới, chúng ta có một <font color="grey">forward/cross edge</font>.'
-                .replace("{u}", u)
-                .replace("{v}", v)
-                .replace("{v}", v);
+                  .replace("{u}", u)
+                  .replace("{v}", v)
+                  .replace("{v}", v);
               cs["lineNo"] = 5;
               stateList.push(cs);
             }
@@ -662,13 +668,13 @@
           forwardEdge
         );
         cs[
-            "status"
-          ] =
+          "status"
+        ] =
           'DFS({sourceVertex}) đã hoàn thành. Cạnh <font color="red">đỏ</font>/<font color="grey">xám</font>/<font color="blue">xanh</font> là <font color="red">tree</font>/<font color="grey">cross/forward</font>/<font color="blue">back</font> edge của cây khung DFS, tương ứng.'
-          .replace(
-            "{sourceVertex}",
-            sourceVertex
-          );
+            .replace(
+              "{sourceVertex}",
+              sourceVertex
+            );
         cs["lineNo"] = 0;
         stateList.push(cs);
 
@@ -734,8 +740,8 @@
           forwardEdge
         );
         cs[
-            "status"
-          ] = "Bắt đầu từ đỉnh s = {sourceVertex}.<br>Thiết lập Q = {{sourceVertex}}."
+          "status"
+        ] = "Bắt đầu từ đỉnh s = {sourceVertex}.<br>Thiết lập Q = {{sourceVertex}}."
           .replace("{sourceVertex}", sourceVertex)
           .replace("{sourceVertex}", sourceVertex); // d[" + sourceVertex + "] = 0,
         cs["lineNo"] = 1;
@@ -758,8 +764,8 @@
             forwardEdge
           );
           cs[
-              "status"
-            ] = "Hàng đợi hiện tại {{queue}}.<br>Duyệt đỉnh kề u = {Lis}."
+            "status"
+          ] = "Hàng đợi hiện tại {{queue}}.<br>Duyệt đỉnh kề u = {Lis}."
             .replace("{queue}", q)
             .replace("{Lis}", q[0]);
           cs["lineNo"] = [2, 3];
@@ -838,8 +844,8 @@
                   forwardEdge
                 );
                 cs[
-                    "status"
-                  ] = 'Try edge {u} → {v}<br>Đỉnh {v} chưa tới, chúng ta có <font color="red">tree edge</font>.'
+                  "status"
+                ] = 'Try edge {u} → {v}<br>Đỉnh {v} chưa tới, chúng ta có <font color="red">tree edge</font>.'
                   .replace("{u}", u)
                   .replace("{v}", v)
                   .replace("{v}", v);
@@ -875,12 +881,12 @@
                   forwardEdge
                 );
                 cs[
-                    "status"
-                  ] =
+                  "status"
+                ] =
                   'Thử cạnh {u} → {v}<br>Đỉnh {v} đã được ghé thăm, chúng ta bỏ <font color="grey">non-tree edge</font> này.'
-                  .replace("{u}", u)
-                  .replace("{v}", v)
-                  .replace("{v}", v);
+                    .replace("{u}", u)
+                    .replace("{v}", v)
+                    .replace("{v}", v);
                 cs["lineNo"] = 5;
               }
               stateList.push(cs);
@@ -905,13 +911,13 @@
           forwardEdge
         );
         cs[
-            "status"
-          ] =
+          "status"
+        ] =
           'BFS({sourceVertex}) đã hoàn thành. Cạnh <font color="red">đỏ</font>/<font color="grey">xám</font> là <font color="red">tree</font>/<font color="grey">non-tree</font> edge của cây khung BFS và SSSP (for unweighted graph).'
-          .replace(
-            "{sourceVertex}",
-            sourceVertex
-          );
+            .replace(
+              "{sourceVertex}",
+              sourceVertex
+            );
         stateList.push(cs);
 
         populatePseudocode(1);
@@ -1164,7 +1170,7 @@
       //     directedChange();
       // }
 
-      
+
 
       $("#examples").click(function () {
         openExamples();
@@ -1320,6 +1326,36 @@
     // This function will be called before returning to Explore Mode
     function ENTER_EXPLORE_MODE() {
       loadGraph(userGraph);
+    }
+
+    function uploadFile() {
+      var x = document.getElementById("uploader");
+      var txt = "";
+      if ('files' in x) {
+        if (x.files.length == 0) {
+          txt = "Select one or more files.";
+        } else {
+          for (var i = 0; i < x.files.length; i++) {
+            txt += "<br><strong>" + (i + 1) + ". file</strong><br>";
+            var file = x.files[i];
+            if ('name' in file) {
+              txt += "name: " + file.name + "<br>";
+            }
+            if ('size' in file) {
+              txt += "size: " + file.size + " bytes <br>";
+            }
+          }
+        }
+      }
+      else {
+        if (x.value == "") {
+          txt += "Select one or more files.";
+        } else {
+          txt += "The files property is not supported by your browser!";
+          txt += "<br>The path of the selected file: " + x.value; // If the browser does not support the files property, it will return the path of the selected file instead. 
+        }
+      }
+      document.getElementById("demo").innerHTML = txt;
     }
 
     // Lecture action functions
