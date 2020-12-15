@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyBIwzALxUPNbatRBj3Xi1Uhp0fFzwWNBkE"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyA66KwUrjxcFG5u0exynlJ45CrbrNe3hEc"></script>
     <script src="../Graph/js/jquery-1.10.2-min.js" type="text/javascript"></script>
     <link href="../Graph/css/style.css" rel="stylesheet" />
     <script type="text/javascript">
@@ -29,10 +29,6 @@
             // Create map click event
             google.maps.event.addListener(map, 'click', function (event) {
                 // Add destination (max 9)
-                if (nodes.length >= 9) {
-                    alert('Max destinations added');
-                    return;
-                }
 
                 // If there are directions being shown, clear them
                 clearDirections();
