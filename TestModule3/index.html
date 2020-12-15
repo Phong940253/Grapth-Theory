@@ -57,6 +57,7 @@
             map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
             locationButton.addEventListener("click", () => {
                 initializeMap();
+                clearMap();
             });
 
             // Add "my location" button
