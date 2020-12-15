@@ -51,8 +51,9 @@ $(document).ready(function () {
         "ds",
         "cấu trúc dữ liệu"
     );
+    var salesman = new Array( "salesman", "google map", "TSP");
     var dfsbfs = new Array("dfsbfs", "dfs", "bfs");
-    var allViz = new Array(sssp, graphs, mst, dfsbfs);
+    var allViz = new Array(sssp, graphs, mst, dfsbfs, salesman);
 
     //generate tags
     function createFilters() {
