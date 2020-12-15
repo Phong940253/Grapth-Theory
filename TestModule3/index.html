@@ -29,6 +29,10 @@
             // Create map click event
             google.maps.event.addListener(map, 'click', function (event) {
                 // Add destination (max 9)
+                if (nodes.length >= 9) {
+                    alert('Số đánh dấu đã tối đa');
+                    return;
+                }
 
                 // If there are directions being shown, clear them
                 clearDirections();
