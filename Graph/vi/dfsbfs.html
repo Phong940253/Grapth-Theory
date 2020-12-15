@@ -89,7 +89,16 @@
       </div>
     </div>
     </p>
-
+    <p>
+      <div id="uploadFile" class="overlays">
+        <div id="infoUploadFile"></div>
+        <input type="file" id="uploader" multiple onchange="myFunction()">
+        <div class="scrollmenu" id="actionTextArea">
+          <a onclick="closeTextArea()">Đóng</a>
+          <a onclick="example(matrixx); closeTextArea()">Xong</a>
+        </div>
+      </div>
+    </p>
   </div>
   <div id="dark-overlay"></div>
   <div id="status" class="panel">
@@ -137,7 +146,7 @@
   <div id="overlay" hidden></div>
   <div id="dropdown-temp-holder" hidden></div>
   <div id="actions" class="panel">
-    <p id="readFile">Nhập từ file</p>
+    <p id="readFile" onclick="showUploadFile()">Nhập từ file</p>
     <p id="draw" onclick="drawGraph()">Vẽ đồ thị</p>
     <p id="examples">Đồ thị ví dụ</p>
     <p id="dfs">Depth-First Search(s)</p>
@@ -191,11 +200,6 @@
         <p>Go</p>
       </div>
       <div id="bfs-err" class="err"></div>
-    </div>
-    <div class="action-menu-pullout">
-      <div id="" class="new-menu-option">
-        <input type="file" id="uploader" multiple size="50" onchange="myFunction()">
-      </div>
     </div>
     <div class="randomgraph action-menu-pullout">
       <div id="toposortDfs" class="execAction new-menu-option coloured-menu-option" onclick="createRandom()">
@@ -1306,6 +1310,29 @@
       if (mode == "exploration") {
         $("#dark-overlay").fadeOut(function () {
           $("#textArea").fadeOut("fast");
+        });
+        isPlaying = false;
+      }
+    }
+
+    function showUploadFile(callback) {
+      //$("#textArea").toggle();
+      $("#uploader").toggle();
+      if (isPlaying) stop();
+      if (mode == "exploration") {
+        $("#dark-overlay").fadeIn(function () {
+          $("#uploadFile").fadeIn();
+        });
+        isPlaying = false;
+      }
+    }
+
+    function closeUploadFile(callback) {
+      $("#uploader").toggle();
+      if (isPlaying) stop();
+      if (mode == "exploration") {
+        $("#dark-overlay").fadeOut(function () {
+          $("#uploadFile").fadeOut("fast");
         });
         isPlaying = false;
       }

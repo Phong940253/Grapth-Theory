@@ -460,5 +460,20 @@ html {
 }
 
 #uploader {
-    
+    font-size: 15px;
+    display: none;
+    height: 450px;
+    width: 665px;
+    margin: 0 auto;
+    margin-left: -335px;
+    margin-top: -200px;
+}
+
+#uploadFile {
+    display: none;
+    height: 530px;
+    width: 300px;
+    margin: 0 auto;
+    margin-left: -350px;
+    margin-top: -215px;
 }
