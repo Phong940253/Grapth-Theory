@@ -121,6 +121,12 @@
         </div>
       </div>
     </p>
+    <p>
+      <div id="uploadFile" class="overlays">
+        <div id="infoUploadFile">Click any where below</div>
+        <input type="file" id="uploader" multiple onchange="loadFileAsText()">
+      </div>
+    </p>
   </div>
   <div id="dark-overlay"></div>
   <div id="status" class="panel">
@@ -162,7 +168,7 @@
   <div id='e-lecture' class='panel'></div>
   <div id="overlay" hidden></div>
   <div id="actions" class="panel">
-    <p id="readFile">Nhập từ file</p>
+    <p id="readFile" onclick="showUploadFile()">Nhập từ file</p>
     <p id="draw" onclick=drawGraph()>Vẽ đồ thị</p>
     <p id="examples" class="execAction">Đồ thị ví dụ</p>
     <p id="kruskals" class="execAction" onclick="kruskals()">Thuật toán Kruskal</p>
@@ -245,10 +251,11 @@
         var sortedArray = [];
         for (key in iEL) {
           sortedArray.push(new ObjectTriple(parseInt(iEL[key]["w"]), parseInt(iEL[key]["u"]), parseInt(iEL[key][
-            "v"])));
+            "v"
+          ])));
         }
         sortedArray.sort(ObjectTriple
-        .compare); // sort by increasing w, and if ties, by increasing u, and if still ties, by increasing v
+          .compare); // sort by increasing w, and if ties, by increasing u, and if still ties, by increasing v
 
         for (var i = 0; i < sortedArray.length; i++) { // rearrange the keys in iEL based on our custom sort order
           iEL[i]["w"] = sortedArray[i].getFirst();
@@ -418,7 +425,7 @@
         numTaken = 0;
         while (sortedArray.length > 0) {
           cs = createState(iVL, iEL, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed,
-          edgeQueued);
+            edgeQueued);
           cs["status"] = "Những cạnh còn lại là " + sortedArrayToString() + ".";
           cs["lineNo"] = 3;
           stateList.push(cs);
@@ -434,7 +441,7 @@
           vertexHighlighted[v] = true;
 
           cs = createState(iVL, iEL, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed,
-          edgeQueued);
+            edgeQueued);
           cs["status"] = "Kiểm tra có xuất hiện một chu trình nếu chúng ta thêm cạnh này:  (" + w + ",(" + u + "," +
             v + ")).";
           cs["lineNo"] = 4;
@@ -456,7 +463,7 @@
           delete vertexHighlighted[v];
 
           cs = createState(iVL, iEL, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed,
-          edgeQueued);
+            edgeQueued);
           if (noCycle) {
             cs["status"] =
               "Thêm cạnh đấy sẽ không tạo thành chu trình, vì thế chúng ta thêm nó vào T. Trọng số của T bây giờ là " +
@@ -576,7 +583,7 @@
           vertexHighlighted[otherVertex] = true;
           edgeHighlighted[edgeId] = true;
           cs = createState(iVL, iEL, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed,
-          edgeQueued);
+            edgeQueued);
           cs["status"] = "(" + dequeuedEdge.getFirst() + "," + otherVertex +
             ") bị loại bỏ ra khỏi PQ. Kiểm tra nếu cạnh " + otherVertex + " is in T.<br>The PQ is now " +
             sortedArrayToString() + ".";
@@ -742,7 +749,7 @@
             $('#code6').html("&nbsp;&nbsp;else ignore e");
             $('#code7').html(
               'MST = T // <b><a href="https://cpbook.net/#downloads" target="_blank">ch4_03_kruskal_prim.cpp/java, ch4, CP3</a></b>'
-              );
+            );
             break;
           case 1: // Kruskal's
             $('#code1').html("Sắp xếp E cạnh tăng dần theo trọng số");
@@ -753,7 +760,7 @@
             $('#code6').html("&nbsp;&nbsp;else ignore e");
             $('#code7').html(
               'MST = T // <b><a href="https://cpbook.net/#downloads" target="_blank">ch4_03_kruskal_prim.cpp/java, ch4, CP3</a></b>'
-              );
+            );
             break;
         }
       }
@@ -987,6 +994,40 @@
           primsWithInput(data, showSlide);
         });
       }
+    }
+    function showUploadFile(callback) {
+      //$("#textArea").toggle();
+      $("#uploader").toggle();
+      if (isPlaying) stop();
+      if (mode == "exploration") {
+        $("#dark-overlay").fadeIn(function () {
+          $("#uploadFile").fadeIn();
+        });
+        isPlaying = false;
+      }
+    } function closeUploadFile(callback) {
+      $("#uploader").toggle();
+      if (isPlaying) stop();
+      if (mode == "exploration") {
+        $("#dark-overlay").fadeOut(function () {
+          $("#uploadFile").fadeOut("fast");
+        });
+        isPlaying = false;
+      }
+    }
+
+    function loadFileAsText() {
+      var fileToLoad = document.getElementById("uploader").files[0];
+
+      var fileReader = new FileReader();
+      fileReader.onload = function (fileLoadedEvent) {
+        var textFromFileLoaded = fileLoadedEvent.target.result;
+        document.getElementById("myTextarea").value = textFromFileLoaded;
+      };
+
+      fileReader.readAsText(fileToLoad, "UTF-8");
+      closeUploadFile();
+      example(matrixx);
     }
   </script>
 </body>

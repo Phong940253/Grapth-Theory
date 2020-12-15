@@ -122,14 +122,20 @@
     </div>
   </div>
   <p>
-  <div id="textArea" class="overlays">
-    <div id="infoTextArea"></div>
-    <textarea id="myTextarea" class="overlays">Nhập ma trận kề vào đây...</textarea>
-    <div class="scrollmenu" id="actionTextArea">
-      <a onclick="closeTextArea()">Đóng</a>
-      <a onclick="example(matrixx); closeTextArea()">Xong</a>
+    <div id="textArea" class="overlays">
+      <div id="infoTextArea"></div>
+      <textarea id="myTextarea" class="overlays">Nhập ma trận kề vào đây...</textarea>
+      <div class="scrollmenu" id="actionTextArea">
+        <a onclick="closeTextArea()">Đóng</a>
+        <a onclick="example(matrixx); closeTextArea()">Xong</a>
+      </div>
     </div>
-  </div>
+  </p>
+  <p>
+    <div id="uploadFile" class="overlays">
+      <div id="infoUploadFile">Click any where below</div>
+      <input type="file" id="uploader" multiple onchange="loadFileAsText()">
+    </div>
   </p>
   <div id="dark-overlay"></div>
   <div id="status" class="panel">
@@ -172,7 +178,7 @@
   <div id="overlay" hidden></div>
   <div id="dropdown-temp-holder" hidden></div>
   <div id="actions" class="panel">
-    <p id="readFile">Nhập từ file</p>
+    <p id="readFile" onclick="showUploadFile()">Nhập từ file</p>
     <p id="draw" onclick="drawGraph()">Vẽ đồ thị</p>
     <p id="examples">Đồ thị ví dụ</p>
     <p id="bellmanford">Bellman Ford&#39;s(s)</p>
@@ -666,7 +672,7 @@
         while (pq.length > 0) {
           pq.sort(ObjectPair.compare); // sort by distance, then by vertex number, lousy O(n log n) PQ update
           if (versionType == 2 && (EdgeProcessed >= 100 && HasNegativeWeightCycle(iVL, iEL,
-            sourceVertex))) { // to prevent infinite loop in Modified Dijkstra on negative cycle
+              sourceVertex))) { // to prevent infinite loop in Modified Dijkstra on negative cycle
             cs = createState(iVL, iEL, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeGrey);
             cs["status"] = "#edge_processed = " + EdgeProcessed +
               '... Modified Dijkstra&#39;s algorithm is stopped prematurely in order to prevent infinite loop.';
@@ -738,8 +744,8 @@
                     delete edgeHighlighted[k];
                     edgeGrey[k] = true; // now make it "grey"
                   }
-                  else if (iEL[k]["u"] == v && iEL[k]["v"] == p[v] && edgeHighlighted[k])
-                    delete edgeHighlighted[k];
+                else if (iEL[k]["u"] == v && iEL[k]["v"] == p[v] && edgeHighlighted[k])
+                  delete edgeHighlighted[k];
               }
 
               delete edgeGrey[j]; // just in case the update is on the same edge
@@ -761,7 +767,7 @@
                 w + " = " + d[v] + ", p[" + v + "] = " + p[v] + ", PQ = " + ShowPQ() + ".";
             } else {
               thisStatus = thisStatus + ".<br>d[" + u + "]+w(" + u + "," + v + ") > d[" + v + "], i.e. " + (d[u] ==
-                999 ? "Inf" : d[u]) + "+" + w + " &gt; " + (d[v] == 999 ? "Inf" : d[v]) +
+                  999 ? "Inf" : d[u]) + "+" + w + " &gt; " + (d[v] == 999 ? "Inf" : d[v]) +
                 ", so there is no change.";
               edgeGrey[j] = true; // make this grey
             }
@@ -789,7 +795,7 @@
         }
 
         if (versionType == 1 || (versionType == 2 && EdgeProcessed <
-          100)) // to prevent infinite loop in Modified Dijkstra on negative cycle
+            100)) // to prevent infinite loop in Modified Dijkstra on negative cycle
           stateList.push(processEnding(iVL, iEL, sourceVertex, vertexHighlighted, edgeHighlighted, vertexTraversed,
             edgeGrey, "#edge_processed = " + EdgeProcessed + ", O((V+E) log V) = " + Math.ceil((amountVertex +
               amountEdge) * Math.log(amountVertex) / Math.log(2.0)) + ".<br>", d));
@@ -890,7 +896,8 @@
             var thisStatus = "relax(" + u + "," + v + "," + w + "), #edge_processed = " + EdgeProcessed;
 
             if ((d[u] != 999) && (d[v] ==
-              999)) { // only if the destination has not been visited yet (most likely lead to Wrong Answer for unweighted graphs)
+                999
+                )) { // only if the destination has not been visited yet (most likely lead to Wrong Answer for unweighted graphs)
               d[v] = d[u] + w;
 
               edgeHighlighted[j] = true;
@@ -903,8 +910,8 @@
                     delete edgeHighlighted[k];
                     edgeGrey[k] = true; // now make it "grey"
                   }
-                  else if (iEL[k]["u"] == v && iEL[k]["v"] == p[v] && edgeHighlighted[k])
-                    delete edgeHighlighted[k];
+                else if (iEL[k]["u"] == v && iEL[k]["v"] == p[v] && edgeHighlighted[k])
+                  delete edgeHighlighted[k];
               }
 
               q.push(v);
@@ -1023,8 +1030,8 @@
                     delete edgeHighlighted[k];
                     edgeGrey[k] = true; // now make it "grey"
                   }
-                  else if (iEL[k]["u"] == v && iEL[k]["v"] == p[v] && edgeHighlighted[k])
-                    delete edgeHighlighted[k];
+                else if (iEL[k]["u"] == v && iEL[k]["v"] == p[v] && edgeHighlighted[k])
+                  delete edgeHighlighted[k];
               }
 
               delete edgeGrey[j]; // just in case the update is on the same edge
@@ -1173,8 +1180,8 @@
                     delete edgeHighlighted[k];
                     edgeGrey[k] = true; // now make it "grey"
                   }
-                  else if (iEL[k]["u"] == v && iEL[k]["v"] == p[v] && edgeHighlighted[k])
-                    delete edgeHighlighted[k];
+                else if (iEL[k]["u"] == v && iEL[k]["v"] == p[v] && edgeHighlighted[k])
+                  delete edgeHighlighted[k];
               }
 
               delete edgeGrey[j]; // just in case the update is on the same edge
@@ -1277,7 +1284,8 @@
             complementHighlighted = false;
           for (key2 in iELObject)
             if ((iELObject[key]["u"] == iELObject[key2]["v"]) && (iELObject[key]["v"] == iELObject[key2][
-              "u"])) { // if one on top another...
+                "u"
+              ])) { // if one on top another...
               hasComplement = true;
               for (key3 in edgeHighlighted)
                 if (key3 == key2)
@@ -1471,7 +1479,26 @@
       hideActionsPanel();
     }
 
-
+    function showUploadFile(callback) {
+      //$("#textArea").toggle();
+      $("#uploader").toggle();
+      if (isPlaying) stop();
+      if (mode == "exploration") {
+        $("#dark-overlay").fadeIn(function () {
+          $("#uploadFile").fadeIn();
+        });
+        isPlaying = false;
+      }
+    }function closeUploadFile(callback) {
+      $("#uploader").toggle();
+      if (isPlaying) stop();
+      if (mode == "exploration") {
+        $("#dark-overlay").fadeOut(function () {
+          $("#uploadFile").fadeOut("fast");
+        });
+        isPlaying = false;
+      }
+    }
 
     // local
     write(false, false);
@@ -1737,6 +1764,20 @@
           dp(showSlide);
         });
       }
+    }
+
+    function loadFileAsText() {
+      var fileToLoad = document.getElementById("uploader").files[0];
+
+      var fileReader = new FileReader();
+      fileReader.onload = function (fileLoadedEvent) {
+        var textFromFileLoaded = fileLoadedEvent.target.result;
+        document.getElementById("myTextarea").value = textFromFileLoaded;
+      };
+
+      fileReader.readAsText(fileToLoad, "UTF-8");
+      closeUploadFile();
+      example(matrixx);
     }
   </script>
 </body>
