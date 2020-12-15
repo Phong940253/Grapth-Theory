@@ -28,8 +28,8 @@
 
             // Create map click event
             google.maps.event.addListener(map, 'click', function (event) {
-                // Add destination (max 9)
-                if (nodes.length >= 9) {
+                // Add destination (max 10)
+                if (nodes.length >= 10) {
                     alert('Số đánh dấu đã tối đa');
                     return;
                 }
@@ -40,6 +40,7 @@
                 // Add a node to map
                 marker = new google.maps.Marker({
                     position: event.latLng,
+                    animation: google.maps.Animation.DROP,
                     map: map
                 });
                 markers.push(marker);
