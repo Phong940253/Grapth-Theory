@@ -1,22 +1,7 @@
 var Adja_Matrix={};
 var Adja_Matrix_E={};
 
-Object.size = function(obj) {
-    var size = 0, key;
-    for (key in obj) {
-        if (obj.hasOwnProperty(key)) size++;
-    }
-    return size;
-};
-
 function readGraph() {
-    Object.size = function(obj) {
-        var size = 0, key;
-        for (key in obj) {
-            if (obj.hasOwnProperty(key)) size++;
-        }
-        return size;
-    };
     
     a = document.getElementById("myTextarea").value;
     //document.getElementById("demo").innerHTML = a;
@@ -70,14 +55,6 @@ function readGraph() {
 }
 
 function readGraphMST() {
-    Object.size = function(obj) {
-        var size = 0, key;
-        for (key in obj) {
-            if (obj.hasOwnProperty(key)) size++;
-        }
-        return size;
-    };
-    
     a = document.getElementById("myTextarea").value;
     //document.getElementById("demo").innerHTML = a;
     Adja_Matrix = {};
@@ -155,59 +132,6 @@ function HasNegativeWeight(t, e) {
     if (0 == t.length) return !1;
     for (var r in e) if (parseInt(e[r].w) < 0) return !0;
     return !1;
-}
-function IsTree(t, e) {
-    function r(t) {
-        a[t] = !0;
-        for (var i in e) e[i].u === t && !1 === a[e[i].v] && r(e[i].v);
-    }
-    if (0 == t.length) return !0;
-    if (!IsUndirected(t, e)) return !1;
-    var i = 0,
-        n = 0,
-        a = [];
-    for (var l in t) i++, (a[l] = !1);
-    for (var l in e) n++;
-    if (n / 2 != i - 1) return !1;
-    r(0);
-    for (var l in t) if (!1 === a[l]) return !1;
-    return !0;
-}
-function IsDAG(t, e) {
-    if (0 == t.length) return !0;
-    if (IsUndirected(t, e)) return !1;
-    var r = 0;
-    for (var i in t) r++;
-    var n = [];
-    for (var a in t) {
-        n[a] = [];
-        for (var l in t) n[a][l] = 0;
-    }
-    for (var i in e) {
-        var o = e[i].u,
-            u = e[i].v;
-        n[o][u] = 1;
-    }
-    for (var f = 0; f < r; f++)
-        for (var a = 0; a < r; a++)
-            for (var l = 0; l < r; l++)
-                1 == n[a][f] && 1 == n[f][l] && (n[a][l] = 1);
-    for (var a = 0; a < r; a++) if (1 == n[a][a]) return !1;
-    return !0;
-}
-function TopoSort(t, e) {
-    function r(t) {
-        i[t] = !0;
-        for (var a in e) e[a].u === t && !1 === i[e[a].v] && r(e[a].v);
-        n.unshift(t);
-    }
-    if (0 == t.length) return {};
-    if (!IsDAG(t, e)) return {};
-    var i = [],
-        n = [];
-    for (var a in t) i[a] = !1;
-    for (var a in t) i[a] || r(parseInt(a));
-    return n;
 }
 function RunBellmanFord(t, e, r) {
     function i(t) {

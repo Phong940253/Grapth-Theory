@@ -94,55 +94,11 @@ function extractQnGraph(graph) {
     }
     return graph;
 }
-function closeSlide(slide, callback) {
-    if (typeof slide == "undefined" || slide == null) {
-        if (typeof callback == "function") callback();
-        return;
-    }
-    lectureDropdownSelect = $("#electure-dropdown");
-    $(".menu-highlighted").removeClass("menu-highlighted");
-    $(".electure-dialog#electure-" + slide).fadeOut(100, function () {
-        var lectureDropdownSelect = $("#electure-dropdown");
-        lectureDropdownSelect.detach();
-        lectureDropdownSelect.appendTo("#dropdown-temp-holder");
-        if (typeof callback == "function") callback();
-    });
-}
 function canContinue() {
     var this_click = new Date().getTime();
     if (this_click - last_click < 200) return false;
     last_click = this_click;
     return true;
-}
-function openSlide(slide, callback) {
-    mode = "e-Lecture";
-    isPlaying = false;
-    if (
-        typeof gw != "undefined" &&
-        gw != null &&
-        typeof gw.stop == "function" &&
-        isPlaying
-    ) {
-        try {
-            gw.stop();
-        } catch (err) {}
-    }
-    if (!canContinue()) return;
-    closeSlide(cur_slide, function () {
-        cur_slide = slide;
-        var lectureDropdownSelect = $("#electure-dropdown");
-        lectureDropdownSelect.detach();
-        lectureDropdownSelect.appendTo(
-            ".electure-dialog#electure-" + cur_slide
-        );
-        $("select.lecture-dropdown").val(cur_slide);
-        $(".electure-dialog#electure-" + cur_slide).fadeIn(100, function () {
-            if (typeof callback == "function") callback();
-        });
-    });
-    setTimeout(function () {
-        $("select.lecture-dropdown").focus();
-    }, 150);
 }
 function initUI() {
     var actionsHeight = $("#actions p").length * 27 + 10;
@@ -189,12 +145,6 @@ function initUI() {
             $("#status-hide img").attr("src", imgUrl.replace("white", "black"));
         }
     }
-}
-function end_eLecture() {
-    $("#mode-menu a").trigger("click");
-    hideOverlay();
-    closeSlide(cur_slide);
-    mode = "exploration";
 }
 $(function () {
     $("#speed-input").slider({
