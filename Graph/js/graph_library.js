@@ -68,6 +68,66 @@ function readGraph() {
         }
     matrik = false;
 }
+
+function readGraphMST() {
+    Object.size = function(obj) {
+        var size = 0, key;
+        for (key in obj) {
+            if (obj.hasOwnProperty(key)) size++;
+        }
+        return size;
+    };
+    
+    a = document.getElementById("myTextarea").value;
+    //document.getElementById("demo").innerHTML = a;
+    Adja_Matrix = {};
+    Adja_Matrix_E = {};
+    //line
+    a = a.split('\n');
+    for (i = 1; i <= a[0][0]; i++) {
+        a[i] = a[i].split(" ");
+    }
+
+    let checkX=[];
+    let checkY=[];
+    for(i=0; i<a[0][0]; i++){
+        XX=Math.floor(Math.random()*630)+10;
+        YY=Math.floor(Math.random()*350)+10;
+        goTo=false;
+        for(j=0; j<checkY.length; j++){
+            if(Math.abs(XX-checkX[j]) <=60 && Math.abs(YY-checkY[j]) <=60){
+                goTo=true;
+                break;
+            }
+        }
+        if(goTo==false){
+            checkX.push(XX);
+            checkY.push(YY);
+            tep={
+                    
+                    x: XX,
+                    y: YY
+                }     
+            Adja_Matrix[i]=tep;
+        }
+        else i--;
+    }
+    let k=0;
+    for(i=1; i<=a[0][0]; i++){
+        for(j=i - 1; j<a[0][0]; j++){
+            if(a[i][j]!=0 && j!=i-1){
+                temp={
+                        u: i-1 , v: j , w:  a[i][j]
+                    }                        
+                
+                Adja_Matrix_E[k]=temp;
+                k++;
+                }
+                
+            }
+        }
+    matrik = false;
+}
     
 function IsUndirected(t, e) {
     if (0 == t.length) return !0;
@@ -206,6 +266,11 @@ function HasNegativeWeightCycle(t, e, r) {
 function getExampleGraph(t, e) {
     if(t==matrixx){
         readGraph();
+        if(e==VL) return Adja_Matrix;
+        if(e==EL) return Adja_Matrix_E;
+    }
+    if(t==mst){
+        readGraphMST();
         if(e==VL) return Adja_Matrix;
         if(e==EL) return Adja_Matrix_E;
     }
@@ -1164,8 +1229,8 @@ function GraphVisu(t, e, r, i, n, a) {
             (R = _.append("svg:g").selectAll("g")),
             (O = _.append("svg:g").selectAll("text")),
             (R = R.data(P, function (t) {
-                return t.id;
-            })),
+                return t.id;aa
+            })),aaaaaaqaZaaaaa
             R.selectAll("circle").style("fill", function (t) {
                 return t === N
                     ? d3.rgb(m(t.id)).brighter().toString()
@@ -2234,6 +2299,7 @@ var UfdsHelper = function () {
     },
     VL = 0,
     EL = 1,
+    mst = -2,
     matrixx = -1,
     CP3_4_1 = 0,
     CP3_4_3 = 1,
