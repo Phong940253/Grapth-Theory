@@ -1154,7 +1154,7 @@ function GraphVisu(t, e, r, i, n, a) {
             (O = _.append("svg:g").selectAll("text")),
             (R = R.data(P, function (t) {
                 return t.id;aa
-            })),aaaaaaqaZaaaaa
+            })),
             R.selectAll("circle").style("fill", function (t) {
                 return t === N
                     ? d3.rgb(m(t.id)).brighter().toString()
